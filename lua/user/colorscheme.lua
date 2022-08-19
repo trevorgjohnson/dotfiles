@@ -2,7 +2,7 @@ local colorscheme = "carbonfox"
 
 require('nightfox').setup({
   options = {
-    transparent = true;
+    transparent = false;
   }
 })
 
