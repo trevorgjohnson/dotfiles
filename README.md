@@ -9,7 +9,7 @@ Make sure to remove or move your current `nvim` directory
 git clone git@github.com:trevorgjohnson/nvim-config.git ~/.config/nvim
 ```
 
-or if you're on windows
+or if you're on windows (switch to `windows` branch)
 
 ```
 git clone https://github.com/trevorgjohnson/nvim-config.git ~/Appdata/Local/nvim
