@@ -9,9 +9,10 @@ local diagnostics = null_ls.builtins.diagnostics
 null_ls.setup({
   debug = false,
   sources = {
-    formatting.prettier,
-    diagnostics.eslint,
-    diagnostics.solhint,
-    -- require("null-ls").builtins.completion.spell,
+    formatting.prettier.with({
+      extra_filetypes = { "toml", "solidity" },
+    }),
+    --[[ diagnostics.eslint, ]]
+    --[[ diagnostics.solhint, ]]
   },
 })

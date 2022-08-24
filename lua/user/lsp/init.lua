@@ -25,7 +25,9 @@ mason_lspconfig.setup_handlers({
 
 require("user.lsp.symbols-outline")
 
--- RUST TOOLS -- 
+require("lsp_signature").setup()
+
+-- RUST TOOLS --
 local rt = require("rust-tools")
 
 rt.setup({

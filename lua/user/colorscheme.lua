@@ -8,6 +8,9 @@ require('nightfox').setup({
 
 require'colorizer'.setup()
 
+vim.g.t_co = 256
+vim.g.background = "dark"
+
 local status_ok, _ = pcall(vim.cmd, "colorscheme " .. colorscheme)
 if not status_ok then
   vim.notify("colorscheme " .. colorscheme .. " not found!")
