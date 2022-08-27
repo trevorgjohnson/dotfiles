@@ -264,6 +264,11 @@ _G.packer_plugins = {
     path = "/Users/trevorjohnson/.local/share/nvim/site/pack/packer/start/symbols-outline.nvim",
     url = "https://github.com/simrat39/symbols-outline.nvim"
   },
+  ["telescope-project.nvim"] = {
+    loaded = true,
+    path = "/Users/trevorjohnson/.local/share/nvim/site/pack/packer/start/telescope-project.nvim",
+    url = "https://github.com/nvim-telescope/telescope-project.nvim"
+  },
   ["telescope.nvim"] = {
     loaded = true,
     path = "/Users/trevorjohnson/.local/share/nvim/site/pack/packer/start/telescope.nvim",

@@ -12,7 +12,9 @@ null_ls.setup({
     formatting.prettier.with({
       extra_filetypes = { "toml", "solidity" },
     }),
+    diagnostics.solhint.with({
+      extra_args = { "--formatter prettier", "--fix " }
+    }),
     --[[ diagnostics.eslint, ]]
-    --[[ diagnostics.solhint, ]]
   },
 })
