@@ -59,6 +59,7 @@ return packer.startup(function(use)
   -- colorschemes
   -- use "lunarvim/colorschemes"
   use "EdenEast/nightfox.nvim"
+  use "catppuccin/nvim"
   use "marko-cerovac/material.nvim"
   use "shaeinst/roshnivim-cs"
 
@@ -81,6 +82,7 @@ return packer.startup(function(use)
   use "williamboman/mason.nvim" -- simple to use language server installer
   use "williamboman/mason-lspconfig.nvim" -- bridges mason.nvim with the lspconfig plugin
   use "jose-elias-alvarez/null-ls.nvim" -- for formatters and linters
+  use "folke/trouble.nvim" -- shows list for showing diagnostics, references, telescope results
   use "simrat39/rust-tools.nvim" -- includes more rust LSP helpers
   use "simrat39/symbols-outline.nvim" -- simple tree view for lsp symbols
 

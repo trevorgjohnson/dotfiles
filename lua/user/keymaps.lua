@@ -83,3 +83,5 @@ keymap("n", "<leader>ff", "<cmd>Telescope find_files<cr>", opts)
     "<cmd>lua require'telescope.builtin'.find_files(require('telescope.themes').get_cursor({ }))<cr>", opts) ]]
 keymap("n", "<leader>fg", "<cmd>Telescope live_grep<cr>", opts)
 keymap("n", "<leader>fb", "<cmd>Telescope buffers<cr>", opts)
+
+keymap("n", "<leader>x", "<cmd>TroubleToggle<cr>", opts)

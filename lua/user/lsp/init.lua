@@ -23,8 +23,9 @@ mason_lspconfig.setup_handlers({
   end,
 })
 
+require("lsp-colors").setup()
+require("trouble").setup()
 require("user.lsp.symbols-outline")
-
 require("lsp_signature").setup()
 
 -- RUST TOOLS --
