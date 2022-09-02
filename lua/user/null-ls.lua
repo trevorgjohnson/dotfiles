@@ -11,6 +11,7 @@ null_ls.setup({
   sources = {
     formatting.prettier.with({
       extra_filetypes = { "toml", "solidity" },
+      disabled_filetypes = { 'json' }
     }),
     diagnostics.solhint.with({
       extra_args = { "--formatter prettier", "--fix " }

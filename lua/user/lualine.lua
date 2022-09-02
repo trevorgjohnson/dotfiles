@@ -63,7 +63,7 @@ lualine.setup {
     lualine_a = { mode },
     lualine_b = { branch, diagnostics },
     lualine_c = { diff },
-    lualine_x = { "require'lsp-status'.status()" },
+    lualine_x = { '' },
     lualine_y = { 'filetype' },
     lualine_z = { 'progress' }
   },

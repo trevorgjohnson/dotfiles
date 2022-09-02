@@ -164,6 +164,7 @@ local schemas = {
 }
 
 local opts = {
+  formatting = false,
   settings = {
     --[[ json = {
       schemas = schemas,

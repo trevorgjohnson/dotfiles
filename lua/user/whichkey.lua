@@ -91,10 +91,7 @@ local mappings = {
   ["Q"] = { "<cmd>q!<CR>", "Hard Quit" },
   ["c"] = { "<cmd>Bdelete!<CR>", "Close Buffer" },
   ["h"] = { "<cmd>nohlsearch<CR>", "No Highlight" },
-  --[[ ["f"] = { ]]
-  --[[   "<cmd>lua require('telescope.builtin').find_files(require('telescope.themes').get_dropdown{previewer = false})<cr>", ]]
-  --[[   "Find files", ]]
-  --[[ }, ]]
+  ["f"] = { "<cmd>lua vim.lsp.buf.formatting()<cr>", "Format" },
   --[[ ["F"] = { "<cmd>Telescope live_grep theme=ivy<cr>", "Find Text" }, ]]
   ["P"] = { "<cmd>Telescope project<cr>", "Projects" },
 
@@ -141,7 +138,7 @@ local mappings = {
       "<cmd>Telescope lsp_workspace_diagnostics<cr>",
       "Workspace Diagnostics",
     },
-    f = { "<cmd>lua vim.lsp.buf.formatting()<cr>", "Format" },
+    --[[ f = { "<cmd>lua vim.lsp.buf.formatting()<cr>", "Format" }, ]]
     i = { "<cmd>LspInfo<cr>", "Info" },
     I = { "<cmd>LspInstallInfo<cr>", "Installer Info" },
     j = {
