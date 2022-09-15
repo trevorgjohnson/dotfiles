@@ -17,6 +17,8 @@ git clone https://github.com/trevorgjohnson/nvim-config.git ~/Appdata/Local/nvim
 
 Run `nvim` and wait for the plugins to be installed 
 
+Also run `npm i solidity-ls -g` for a working solidity lsp (_until the solc lsp works better_)
+
 **NOTE** (You will notice treesitter pulling in a bunch of parsers the next time you open Neovim) 
 
 ### Plugin List

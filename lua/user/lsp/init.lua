@@ -14,13 +14,28 @@ mason_lspconfig.setup_handlers({
       settings = {}
     end
 
+    if server_name == "solc" then
+      return
+    end
+
+    if server_name == "solang" then
+      return
+    end
+
     lspconfig[server_name].setup {
       on_attach = handler.on_attach,
       capabilities = handler.capabilities,
       flags = handler.lsp_flags,
       settings = settings,
     }
+
   end,
+
+  lspconfig.solidity.setup {
+    on_attach = handler.on_attach,
+    capabilities = handler.capabilities,
+    flags = handler.lsp_flags,
+  },
 })
 
 require("trouble").setup()
