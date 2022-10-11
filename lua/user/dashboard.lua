@@ -205,10 +205,12 @@ dashboard.section.buttons.val = {
   dashboard.button("t", "  Find text", ":Telescope live_grep <CR>"),
 
   --For windows
-  --[[ dashboard.button("c", "  Configuration", ":e ~/Appdata/Local/nvim/init.lua <CR>"), ]]
+  --[[ dashboard.button("c", "  Neovim Config", ":e ~/Appdata/Local/nvim/init.lua <CR>"), ]]
+  --[[ dashboard.button("c", "  Alacritty Config", ":e ~/Appdata/Local/alacritty/alacritty.yml <CR>"), ]]
 
   --For MacOS/Linux
-  dashboard.button("c", "  Configuration", ":e ~/.config/nvim/init.lua <CR>"),
+  dashboard.button("c", "  Neovim Config", ":e ~/.config/nvim/init.lua <CR>"),
+  dashboard.button("a", "  Alacritty Config", ":e ~/.config/alacritty/alacritty.yml <CR>"),
 
   dashboard.button("q", "  Quit Neovim", ":qa<CR>"),
 }

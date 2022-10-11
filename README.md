@@ -8,13 +8,13 @@ Make sure to remove or move your current `nvim` directory
 
 ### MacOS/Linux
 
-```
+```bash
 git clone git@github.com:trevorgjohnson/nvim-config.git ~/.config/nvim
 ```
 
 ### Windows
 
-```
+```bash
 git clone https://github.com/trevorgjohnson/nvim-config.git ~/Appdata/Local/nvim
 ```
 
@@ -28,6 +28,18 @@ _e.g._
 --uncomment below for Windows
 local install_path = fn.stdpath('data') .. "\\site\\pack\\packer\\start\\packer.nvim"
 
+```
+
+---
+
+### Alacritty
+if you would like to try out the alacritty config as well, use this command:
+```bash
+# MacOS/Linux
+mv ~/nvim/alacritty ~/alacritty 
+
+# Windows
+mv ~/Appdata/Local/nvim/alacritty ~/Appdata/Local/ 
 ```
 
 ---
