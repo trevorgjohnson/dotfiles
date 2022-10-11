@@ -13,6 +13,7 @@ null_ls.setup({
       extra_filetypes = { "toml", "solidity" },
       disabled_filetypes = { 'json' }
     }),
+    formatting.rustfmt,
     diagnostics.solhint.with({
       extra_args = { "--formatter prettier", "--fix " }
     }),

@@ -90,6 +90,10 @@ M.on_attach = function(client, bufnr)
     client.resolved_capabilities.document_formatting = false
     client.resolved_capabilities.document_range_formatting = false
   end
+  if client.name == "solidity" then
+    client.resolved_capabilities.document_formatting = false
+    client.resolved_capabilities.document_range_formatting = false
+  end
   lsp_highlight_document(client)
 
   -- Enable completion triggered by <c-x><c-o>

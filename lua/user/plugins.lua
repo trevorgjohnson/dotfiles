@@ -90,6 +90,7 @@ return packer.startup(function(use)
   use "jose-elias-alvarez/null-ls.nvim" -- for formatters and linters
   use "folke/trouble.nvim" -- shows list for showing diagnostics, references, telescope results
   use "simrat39/rust-tools.nvim" -- includes more rust LSP helpers
+  use 'mfussenegger/nvim-dap' -- for debugging rust-tools
   use "simrat39/symbols-outline.nvim" -- simple tree view for lsp symbols
 
   -- Telescope

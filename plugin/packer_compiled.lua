@@ -209,6 +209,11 @@ _G.packer_plugins = {
     path = "/home/trevorjohnson/.local/share/nvim/site/pack/packer/start/nvim-colorizer.lua",
     url = "https://github.com/NvChad/nvim-colorizer.lua"
   },
+  ["nvim-dap"] = {
+    loaded = true,
+    path = "/Users/trevorjohnson/.local/share/nvim/site/pack/packer/start/nvim-dap",
+    url = "https://github.com/mfussenegger/nvim-dap"
+  },
   ["nvim-lspconfig"] = {
     loaded = true,
     path = "/home/trevorjohnson/.local/share/nvim/site/pack/packer/start/nvim-lspconfig",
