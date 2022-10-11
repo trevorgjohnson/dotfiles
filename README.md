@@ -36,10 +36,10 @@ local install_path = fn.stdpath('data') .. "\\site\\pack\\packer\\start\\packer.
 if you would like to try out the alacritty config as well, use this command:
 ```bash
 # MacOS/Linux
-mv ~/nvim/alacritty ~/alacritty 
+cp -r ~/nvim/alacritty ~/alacritty 
 
 # Windows
-mv ~/Appdata/Local/nvim/alacritty ~/Appdata/Local/ 
+cp -r /Appdata/Local/nvim/alacritty ~/Appdata/Local/ 
 ```
 
 ---
