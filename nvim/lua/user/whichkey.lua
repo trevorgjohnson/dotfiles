@@ -91,7 +91,7 @@ local mappings = {
   ["Q"] = { "<cmd>q!<CR>", "Hard Quit" },
   ["c"] = { "<cmd>Bdelete!<CR>", "Close Buffer" },
   ["h"] = { "<cmd>nohlsearch<CR>", "No Highlight" },
-  ["f"] = { "<cmd>lua vim.lsp.buf.formatting()<cr>", "Format" },
+  ["f"] = { "<cmd>lua vim.lsp.buf.format{async=true}<cr>", "Format" },
   --[[ ["F"] = { "<cmd>Telescope live_grep theme=ivy<cr>", "Find Text" }, ]]
   ["P"] = { "<cmd>Telescope project<cr>", "Projects" },
 
