@@ -30,6 +30,14 @@ keymap("n", "<C-j>", "<C-w>j", opts)
 keymap("n", "<C-k>", "<C-w>k", opts)
 keymap("n", "<C-l>", "<C-w>l", opts)
 
+-- Vertical jumping keeps cursor in middle
+keymap("n", "<C-d>", "<C-d>zz", opts)
+keymap("n", "<C-u>", "<C-u>zz", opts)
+
+-- Increment searching keeps cursor in middle ("zv" is for folding)
+keymap("n", "<n>", "nzzzv", opts)
+keymap("n", "<N>", "Nzzzv", opts)
+
 -- keymap("n", "<C-`l>", ":lua _LAZYGIT_TOGGLE()<cr>", opts)
 
 keymap("n", "<leader>e", ":NvimTreeToggle<cr>", opts)
