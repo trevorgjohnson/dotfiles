@@ -57,7 +57,7 @@ end
 
 local function lsp_highlight_document(client)
   -- Set autocommands conditional on server_capabilities
-  if client.resolved_capabilities.document_highlight then
+  if client.server_capabilities.document_highlight then
     vim.api.nvim_exec([[
         augroup lsp_document_highlight
           autocmd! * <buffer>
@@ -83,16 +83,16 @@ vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
 -- after the language server attaches to the current buffer
 M.on_attach = function(client, bufnr)
   if client.name == "tsserver" then
-    client.resolved_capabilities.document_formatting = false
-    client.resolved_capabilities.document_range_formatting = false
+    client.server_capabilities.document_formatting = false
+    client.server_capabilities.document_range_formatting = false
   end
   if client.name == "rust_analyzer" then
-    client.resolved_capabilities.document_formatting = false
-    client.resolved_capabilities.document_range_formatting = false
+    client.server_capabilities.document_formatting = false
+    client.server_capabilities.document_range_formatting = false
   end
   if client.name == "solidity" then
-    client.resolved_capabilities.document_formatting = false
-    client.resolved_capabilities.document_range_formatting = false
+    client.server_capabilities.document_formatting = false
+    client.server_capabilities.document_range_formatting = false
   end
   lsp_highlight_document(client)
 
@@ -120,7 +120,7 @@ M.on_attach = function(client, bufnr)
   vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
   vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
   vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
-  vim.keymap.set('n', '<space>fm', vim.lsp.buf.formatting, bufopts)
+  vim.keymap.set('n', '<space>fm', vim.lsp.buf.format, bufopts)
 end
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
