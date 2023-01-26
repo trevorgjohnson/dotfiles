@@ -1,1 +1,11 @@
-alacritty/catppuccin
+*
+!*/
+
+!alacritty/*
+!alacritty/**/*
+
+!nvim/*
+!nvim/**/*
+
+!awesome/*
+!awesome/**/*
