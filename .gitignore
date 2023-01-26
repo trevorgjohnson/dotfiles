@@ -1,6 +1,9 @@
 *
 !*/
 
+!wallpapers/*
+!wallpapers/**/*
+
 !alacritty/*
 !alacritty/**/*
 
