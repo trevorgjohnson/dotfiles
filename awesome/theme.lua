@@ -7,11 +7,6 @@
 ---------------------------
 -- Default awesome theme --
 ---------------------------
-
-local wibox = require("wibox")
-local awful = require("awful")
-local gears = require("gears")
-
 local theme_assets = require("beautiful.theme_assets")
 local dpi = require("beautiful.xresources").apply_dpi
 
@@ -36,7 +31,7 @@ theme.fg_focus    = "#f5e0dc"
 theme.fg_urgent   = "#f5e0dc"
 theme.fg_minimize = "#f5e0dc"
 
-theme.useless_gap   = dpi(10)
+theme.useless_gap   = dpi(6)
 theme.border_width  = dpi(1)
 theme.border_normal = "#131020"
 theme.border_focus  = "#f5e0dc"
