@@ -52,13 +52,19 @@ vim.keymap.set("v", "<K>", ":m .-2<CR>==", opts)
 vim.keymap.set("v", "p", '"_dP', opts)
 
 -- map 'x' to copy deleted text into blackhole registry
-vim.keymap.set("", "x", '"_x', opts)
+vim.keymap.set("", "x", '"_x', { desc = "[Q]uit buffer" })
+
+-- write and quit currently open buffer
+vim.keymap.set("", "<leader>q", ':wq<CR>', { desc = "[W]rite and [Q]uit buffer" })
+
+-- write and quit all currently open buffers
+vim.keymap.set("", "<leader>Q", ':wqa<CR>', { desc = "[W]rite and [Q]uit [A]ll buffers" })
 
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
-vim.keymap.set('n', '<space>d', vim.diagnostic.open_float, {desc = "Show [D]iagnostics"})
-vim.keymap.set('n', '<space>dl', vim.diagnostic.setloclist, {desc = "Show [D]iagnostic [L]oclist"})
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, {desc = "Goto previous [D]iagnostic"})
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, {desc = "Goto next [D]iagnostic"})
+vim.keymap.set('n', '<leader>d', vim.diagnostic.open_float, { desc = "Show [D]iagnostics" })
+vim.keymap.set('n', '<leader>x', vim.diagnostic.setloclist, { desc = "[X] Show all warnings/errors" })
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = "Goto previous [D]iagnostic" })
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = "Goto next [D]iagnostic" })
 
 -- See `:help telescope.builtin`
 vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })

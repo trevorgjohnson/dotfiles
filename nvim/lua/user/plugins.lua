@@ -106,7 +106,7 @@ return packer.startup(function(use)
   use "lukas-reineke/indent-blankline.nvim" -- adds indentation guides
   use "numToStr/Comment.nvim" -- Easily comment stuff
   use "tpope/vim-sleuth" -- Detect tabstop and shiftwidth automatically
-  use "NvChad/nvim-colorizer.lua" -- highlights color hexcodes with the hexcode color
+  use "norcalli/nvim-colorizer.lua" -- highlights color hexcodes with the hexcode color
   use "nvim-lua/popup.nvim" -- An implementation of the Popup API from vim in Neovim
 
   -- Fuzzy Finder (files, lsp, etc)

@@ -91,7 +91,7 @@ M.on_attach = function(client, bufnr)
 
   nmap('<space>fm', vim.lsp.buf.format, "[F]or[m]at")
   nmap('<space>td', vim.lsp.buf.type_definition, "[T]ype [D]efinition")
-  nmap('<space>ds', require("telescope.builtin").lsp_document_symbols, "[D]ocument [S]ymbols")
+  nmap('<space>sm', require("telescope.builtin").lsp_document_symbols, "Document [S]y[m]bols")
   nmap('<space>rn', vim.lsp.buf.rename, "[R]e[n]ame")
   nmap('<space>ca', vim.lsp.buf.code_action, "[C]ode [A]ction")
 
