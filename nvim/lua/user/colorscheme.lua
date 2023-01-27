@@ -1,19 +1,34 @@
 local colorscheme = "catppuccin"
-
---[[ require('nightfox').setup({
-  options = {
-    transparent = true;
-  }
-}) ]]
-
 vim.g.catppuccin_flavour = "mocha" -- latte, frappe, macchiato, mocha
 
 require("catppuccin").setup({
   transparent_background = true;
+  flavour = "mocha",
   term_colors = true;
+  styles = {
+    comments = { "italic" },
+    keywords = { "bold" },
+  },
+  --[[ custom_highlights = function(colors)
+    return {
+      Comment = { fg = colors.flamingo },
+      ["@constant.builtin"] = { fg = colors.peach, style = {} },
+      ["@comment"] = { fg = colors.surface2, style = { "italic" } },
+    }
+  end; ]]
   integrations = {
     treesitter = true,
     treesitter_context = true,
+    cmp = true,
+    gitsigns = true,
+    telescope = true,
+    nvimtree = true,
+    markdown = true,
+    neotree = {
+      enabled = true,
+      show_root = true,
+      transparent_panel = true,
+    },
     native_lsp = {
       enabled = true,
       virtual_text = {
@@ -29,25 +44,6 @@ require("catppuccin").setup({
         information = { "underline" },
       },
     },
-    lsp_trouble = true,
-    cmp = true,
-    gitsigns = true,
-    telescope = true,
-    nvimtree = true,
-    neotree = {
-      enabled = true,
-      show_root = true,
-      transparent_panel = false,
-    },
-    which_key = true,
-    indent_blankline = {
-      enabled = true,
-      colored_indent_levels = true,
-    },
-    dashboard = true,
-    markdown = true,
-    ts_rainbow = true,
-    symbols_outline = true,
   },
 })
 
@@ -61,7 +57,3 @@ if not status_ok then
   vim.notify("colorscheme " .. colorscheme .. " not found!")
   return
 end
-
---[[ vim.g.material_style = 'deep ocean'
--- require('material').setup()
-vim.cmd 'colorscheme material' ]]

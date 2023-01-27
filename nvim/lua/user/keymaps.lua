@@ -3,93 +3,82 @@ local opts = {
   silent = true
 }
 
---[[ local term_opts = {
-  silent = true
-} ]]
-
--- Shorten function name
-local keymap = vim.api.nvim_set_keymap
-
 -- Remap space as leader key
-keymap("", "<Space>", "<Nop>", opts)
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
+vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
 
--- Modes
---   normal_mode = "n",
---   insert_mode = "i",
---   visual_mode = "v",
---   visual_block_mode = "x",
---   term_mode = "t",
---   command_mode = "c",
-
--- Normal --
 -- Better window navigation
-keymap("n", "<C-h>", "<C-w>h", opts)
-keymap("n", "<C-j>", "<C-w>j", opts)
-keymap("n", "<C-k>", "<C-w>k", opts)
-keymap("n", "<C-l>", "<C-w>l", opts)
+vim.keymap.set("n", "<C-h>", "<C-w>h", opts)
+vim.keymap.set("n", "<C-j>", "<C-w>j", opts)
+vim.keymap.set("n", "<C-k>", "<C-w>k", opts)
+vim.keymap.set("n", "<C-l>", "<C-w>l", opts)
 
 -- Vertical jumping keeps cursor in middle
-keymap("n", "<C-d>", "<C-d>zz", opts)
-keymap("n", "<C-u>", "<C-u>zz", opts)
+vim.keymap.set("n", "<C-d>", "<C-d>zz", opts)
+vim.keymap.set("n", "<C-u>", "<C-u>zz", opts)
 
 -- Increment searching keeps cursor in middle ("zv" is for folding)
-keymap("n", "<n>", "nzzzv", opts)
-keymap("n", "<N>", "Nzzzv", opts)
+vim.keymap.set("n", "<n>", "nzzzv", opts)
+vim.keymap.set("n", "<N>", "Nzzzv", opts)
 
--- keymap("n", "<C-`l>", ":lua _LAZYGIT_TOGGLE()<cr>", opts)
-
-keymap("n", "<leader>e", ":NvimTreeToggle<cr>", opts)
-keymap("n", "<leader>C", ":Bdelete<cr>", opts)
--- keymap("n", "<leader>e", ":Lex 30<cr>", opts)
+vim.keymap.set("n", "<leader>e", ":NvimTreeToggle<cr>", opts)
+vim.keymap.set("n", "<leader>C", ":Bdelete<cr>", opts)
+-- vim.keymap.set("n", "<leader>e", ":Lex 30<cr>", opts)
 
 -- Resize with arrows
-keymap("n", "<A-Up>", ":resize -2<CR>", opts)
-keymap("n", "<A-Down>", ":resize +2<CR>", opts)
-keymap("n", "<A-Left>", ":vertical resize -2<CR>", opts)
-keymap("n", "<A-Right>", ":vertical resize +2<CR>", opts)
+vim.keymap.set("n", "<A-Up>", ":resize -2<CR>", opts)
+vim.keymap.set("n", "<A-Down>", ":resize +2<CR>", opts)
+vim.keymap.set("n", "<A-Left>", ":vertical resize -2<CR>", opts)
+vim.keymap.set("n", "<A-Right>", ":vertical resize +2<CR>", opts)
 
 -- Navigate buffers
-keymap("n", "<S-l>", ":bnext<CR>", opts)
-keymap("n", "<S-h>", ":bprevious<CR>", opts)
-
+vim.keymap.set("n", "<S-l>", ":bnext<CR>", opts)
+vim.keymap.set("n", "<S-h>", ":bprevious<CR>", opts)
+--
 -- Move text up and down
-keymap("n", "<A-j>", "<Esc>:m .+1<CR>==gi", opts)
-keymap("n", "<A-k>", "<Esc>:m .-2<CR>==gi", opts)
+vim.keymap.set("x", "J", ":move '>+1<CR>gv-gv", opts)
+vim.keymap.set("x", "K", ":move '<-2<CR>gv-gv", opts)
 
--- Insert --
--- Press jk fast to enter
--- keymap("i", "jk", "<ESC>", opts)
-
--- Visual --
 -- Stay in indent mode
-keymap("v", "<", "<gv", opts)
-keymap("v", ">", ">gv", opts)
+vim.keymap.set("v", "<", "<gv", opts)
+vim.keymap.set("v", ">", ">gv", opts)
 
 -- Move text up and down
-keymap("v", "<A-j>", ":m .+1<CR>==", opts)
-keymap("v", "<A-k>", ":m .-2<CR>==", opts)
-keymap("v", "p", '"_dP', opts)
+vim.keymap.set("v", "<J>", ":m .+1<CR>==", opts)
+vim.keymap.set("v", "<K>", ":m .-2<CR>==", opts)
 
--- Visual Block --
--- Move text up and down
-keymap("x", "J", ":move '>+1<CR>gv-gv", opts)
-keymap("x", "K", ":move '<-2<CR>gv-gv", opts)
-keymap("x", "<A-j>", ":move '>+1<CR>gv-gv", opts)
-keymap("x", "<A-k>", ":move '<-2<CR>gv-gv", opts)
+-- map 'p' to paste over without putting into " registery
+vim.keymap.set("v", "p", '"_dP', opts)
 
--- Terminal --
--- Better terminal navigation
---[[ keymap("t", "<C-h>", "<C-\\><C-N><C-w>h", term_opts)
-keymap("t", "<C-j>", "<C-\\><C-N><C-w>j", term_opts)
-keymap("t", "<C-k>", "<C-\\><C-N><C-w>k", term_opts)
-keymap("t", "<C-l>", "<C-\\><C-N><C-w>l", term_opts) ]]
+-- map 'x' to copy deleted text into blackhole registry
+vim.keymap.set("", "x", '"_x', { desc = "[Q]uit buffer" })
 
-keymap("n", "<leader>ff", "<cmd>Telescope find_files<cr>", opts)
---[[ keymap("n", "<leader>f",
-    "<cmd>lua require'telescope.builtin'.find_files(require('telescope.themes').get_cursor({ }))<cr>", opts) ]]
-keymap("n", "<leader>fg", "<cmd>Telescope live_grep<cr>", opts)
-keymap("n", "<leader>fb", "<cmd>Telescope buffers<cr>", opts)
+-- write and quit currently open buffer
+vim.keymap.set("", "<leader>q", ':wq<CR>', { desc = "[W]rite and [Q]uit buffer" })
 
-keymap("n", "<leader>x", "<cmd>TroubleToggle<cr>", opts)
+-- write and quit all currently open buffers
+vim.keymap.set("", "<leader>Q", ':wqa<CR>', { desc = "[W]rite and [Q]uit [A]ll buffers" })
+
+-- See `:help vim.diagnostic.*` for documentation on any of the below functions
+vim.keymap.set('n', '<leader>d', vim.diagnostic.open_float, { desc = "Show [D]iagnostics" })
+vim.keymap.set('n', '<leader>x', vim.diagnostic.setloclist, { desc = "[X] Show all warnings/errors" })
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = "Goto previous [D]iagnostic" })
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = "Goto next [D]iagnostic" })
+
+-- See `:help telescope.builtin`
+vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
+vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
+vim.keymap.set('n', '<leader>/', function()
+  -- You can pass additional configuration to telescope to change theme, layout, etc.
+  require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
+    winblend = 10,
+    previewer = false,
+  })
+end, { desc = '[/] Fuzzily search in current buffer]' })
+
+vim.keymap.set('n', '<leader>ff', require('telescope.builtin').find_files, { desc = '[F]ind [F]iles' })
+vim.keymap.set('n', '<leader>fh', require('telescope.builtin').help_tags, { desc = '[F]ind [H]elp' })
+vim.keymap.set('n', '<leader>fw', require('telescope.builtin').grep_string, { desc = '[F]ind current [W]ord' })
+vim.keymap.set('n', '<leader>fg', require('telescope.builtin').live_grep, { desc = '[F]ind by [G]rep' })
+vim.keymap.set('n', '<leader>fd', require('telescope.builtin').diagnostics, { desc = '[F]ind [D]iagnostics' })
