@@ -1,9 +1,4 @@
-local status_ok, bufferline = pcall(require, "bufferline")
-if not status_ok then
-  return
-end
-
-bufferline.setup {
+require("bufferline").setup {
   options = {
     numbers = "none",
     close_command = "bdelete! %d", -- can be a string | function, see "Mouse actions"

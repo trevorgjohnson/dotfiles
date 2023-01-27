@@ -1,48 +1,60 @@
-local options = {
-  backup = false,                          -- creates a backup file
-  clipboard = "unnamedplus",               -- allows neovim to access the system clipboard
-  cmdheight = 1,                           -- more space in the neovim command line for displaying messages
-  completeopt = { "menuone", "noselect" }, -- mostly just for cmp
-  conceallevel = 0,                        -- so that `` is visible in markdown files
-  fileencoding = "utf-8",                  -- the encoding written to a file
-  encoding = "utf8",
-  hlsearch = false,                         -- highlight all matches on previous search pattern
-  incsearch = true,
-  ignorecase = true,                       -- ignore case in search patterns
-  mouse = "a",                             -- allow the mouse to be used in neovim
-  pumheight = 10,                          -- pop up menu height
-  showmode = true,                         -- we don't need to see things like -- INSERT -- anymore
-  showtabline = 2,                         -- always show tabs
-  smartcase = true,                        -- smart case
-  smartindent = true,                      -- make indenting smarter again
-  splitbelow = true,                       -- force all horizontal splits to go below current window
-  splitright = true,                       -- force all vertical splits to go to the right of current window
-  swapfile = false,                        -- creates a swapfile
-  termguicolors = true,                    -- set term gui colors (most terminals support this)
-  timeoutlen = 500,                        -- time to wait for a mapped sequence to complete (in milliseconds)
-  undofile = true,                         -- enable persistent undo
-  updatetime = 300,                        -- faster completion (4000ms default)
-  writebackup = false,                     -- if a file is being edited by another program (or was written to file while editing with another program), it is not allowed to be edited
-  expandtab = true,                        -- convert tabs to spaces
-  shiftwidth = 2,                          -- the number of spaces inserted for each indentation
-  tabstop = 2,                             -- insert 2 spaces for a tab
-  cursorline = false,                       -- highlight the current line
-  number = true,                           -- set numbered lines
-  relativenumber = true,                  -- set relative numbered lines
-  numberwidth = 4,                         -- set number column width to 2 {default 4}
-  signcolumn = "yes",                      -- always show the sign column, otherwise it would shift the text each time
-  wrap = false,                            -- display lines as one long line
-  scrolloff = 8,                           -- is one of my fav
-  sidescrolloff = 8,
-  guifont = "monospace:h17",               -- the font used in graphical neovim applications
-}
+vim.o.clipboard = "unnamedplus" -- allows neovim to access the system clipboard
+vim.o.cmdheight = 0 -- more space in the neovim command line for displaying messages
+vim.o.completeopt = "menuone,noselect" -- mostly just for cmp
+vim.o.mouse = "a" -- allow the mouse to be used in neovim
 
-vim.opt.shortmess:append "c"
+-- case insensitive searching UNLESS /C or capital in search
+vim.o.hlsearch = false
+vim.o.ignorecase = true
+vim.o.smartcase = true
 
-for k, v in pairs(options) do
-  vim.opt[k] = v
-end
+-- disable netrw for nvim-tree
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
 
-vim.cmd "set whichwrap+=<,>,[,],h,l"
-vim.cmd [[set iskeyword+=-]]
-vim.cmd [[set formatoptions-=cro]] -- TODO: this doesn't seem to work
+-- highlight current line
+vim.wo.cursorline = true
+
+-- make indenting smarter again
+vim.o.smartindent = true
+vim.o.breakindent = true
+
+-- display lines as one long line
+vim.o.wrap = false
+
+-- set term gui colors (most terminals support this)
+vim.o.termguicolors = true
+
+-- enable persistent undo
+vim.o.undofile = true
+
+-- faster completion (4000ms default)
+vim.o.updatetime = 250
+vim.wo.signcolumn = 'yes'
+
+-- Show relative line numbers
+vim.wo.number = true
+vim.wo.relativenumber = true
+
+-- set min amount of lines on buffer borders
+vim.o.scrolloff = 8
+vim.o.sidescrolloff = 8
+
+-- convert tabs to spaces and only use 2 spaces
+vim.o.expandtab = true
+vim.o.tabstop = 2
+vim.g.shiftwidth = 2
+
+vim.o.foldlevel = 20
+vim.o.foldmethod = "expr"
+vim.o.foldexpr = "nvim_treesitter#foldexpr()"
+
+-- Highlight briefly after yanking
+local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
+vim.api.nvim_create_autocmd('TextYankPost', {
+  callback = function()
+    vim.highlight.on_yank()
+  end,
+  group = highlight_group,
+  pattern = '*',
+})

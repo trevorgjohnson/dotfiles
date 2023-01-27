@@ -1,8 +1,3 @@
-local status_ok, lualine = pcall(require, "lualine")
-if not status_ok then
-  return
-end
-
 local diagnostics = {
   "diagnostics",
   sources = { "nvim_diagnostic" },
@@ -33,31 +28,17 @@ local mode = {
   end,
 }
 
---[[ -- cool function for progress
-local progress = function()
-  local current_line = vim.fn.line(".")
-  local total_lines = vim.fn.line("$")
-  local chars = { "__", "▁▁", "▂▂", "▃▃", "▄▄", "▅▅", "▆▆", "▇▇", "██" }
-  local line_ratio = current_line / total_lines
-  local index = math.ceil(line_ratio * #chars)
-  return chars[index]
-end ]]
-
-lualine.setup {
+require("lualine").setup {
   options = {
     icons_enabled = true,
-    theme = 'auto',
+    theme = "palenight",
     component_separators = { left = '|', right = '|' }, -- { left = '', right = ''},
     section_separators = { left = '', right = '' },
-    disabled_filetypes = { "alpha", "NvimTree", "Outline" },
-    ignore_focus = {},
-    always_divide_middle = true,
     globalstatus = true,
-    refresh = {
-      statusline = 1000,
-      tabline = 1000,
-      winbar = 1000,
-    }
+    -- disabled_filetypes = { "NvimTree", "Outline" },
+    -- ignore_focus = {},
+    -- always_divide_middle = true,
+    -- refresh = { statusline = 1000, tabline = 1000, winbar = 1000 }
   },
   sections = {
     lualine_a = { mode },
@@ -67,16 +48,18 @@ lualine.setup {
     lualine_y = { 'filetype' },
     lualine_z = { 'progress' }
   },
-  inactive_sections = {
-    lualine_a = {},
-    lualine_b = {},
-    lualine_c = { 'filename' },
-    lualine_x = { 'location' },
-    lualine_y = {},
-    lualine_z = {}
-  },
-  tabline = {},
-  winbar = {},
-  inactive_winbar = {},
-  extensions = {}
+  --[[
+    inactive_sections = {
+      lualine_a = {},
+      lualine_b = {},
+      lualine_c = { 'filename' },
+      lualine_x = { 'location' },
+      lualine_y = {},
+      lualine_z = {}
+    },
+    tabline = {},
+    winbar = {},
+    inactive_winbar = {},
+    extensions = {}
+  ]]
 }
