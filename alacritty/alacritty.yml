@@ -31,7 +31,7 @@ import:
 #TERM: alacritty
 
 window:
-  opacity: 0.80
+  opacity: 0.85
 
 padding:
   x: 0
@@ -481,8 +481,8 @@ font:
 # Default:
 #   - (Linux/BSD/macOS) `$SHELL` or the user's login shell, if `$SHELL` is unset
 #   - (Windows) powershell
-shell:
-  program: /usr/bin/fish
+#shell:
+#  program: /usr/bin/fish
 #  args:
 #    - --login
 
