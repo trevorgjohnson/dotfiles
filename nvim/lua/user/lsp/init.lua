@@ -42,10 +42,35 @@ require("lsp_signature").setup()
 mason_lspconfig.setup_handlers({
   function(server_name)
     if server_name == "rust_analyzer" then
+      -- Use simrat39/rust-tools.nvim instead of rust_analyzer
       require("rust-tools").setup({
+        tools = {
+          autoSetHints = true,
+          runnables = { use_telescope = true },
+          hover_actions = { auto_focus = true },
+          inlay_hints = {
+            auto = true,
+            show_parameter_hints = true,
+            parameter_hints_prefix = "",
+            other_hints_prefix = "",
+          },
+        },
         server = {
           capabilities = handler.capabilities,
-          on_attach = handler.on_attach,
+          on_attach = function(client, bufnr)
+            handler.on_attach(client, bufnr)
+
+            -- Set RT specific key maps
+            vim.keymap.set('n', '<space>ka', require("rust-tools").hover_actions.hover_actions,
+              { buffer = bufnr, desc = "RT: Hover [A]ctions" })
+            vim.keymap.set('n', '<space>ca', require("rust-tools").code_action_group.code_action_group,
+              { buffer = bufnr, desc = "RT: [C]ode [A]ctions" })
+
+            -- automatically refresh codelens when entering/writing buffer
+            vim.api.nvim_create_autocmd({ "BufEnter", "BufWrite" },
+              { callback = function() vim.lsp.codelens.refresh() end })
+          end,
+          settings = { ["rust-analyzer"] = { checkOnSave = { command = "clippy" } } }
         },
       })
       return

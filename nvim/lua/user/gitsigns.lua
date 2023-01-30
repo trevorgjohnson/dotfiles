@@ -69,7 +69,7 @@ require("gitsigns").setup {
     nmap('<leader>ph', gs.preview_hunk, "[P]review [H]unk")
     nmap('<leader>sb', function() gs.blame_line { full = true } end, "[S]how [B]lame")
     nmap('<leader>tb', gs.toggle_current_line_blame, "[T]oggle [B]lame")
-    nmap('<leader>sD', gs.diffthis, "[S]how [D]iff")
+    nmap('<leader>sd', gs.diffthis, "[S]how [D]iff")
 
     -- nmap('<leader>hS', gs.stage_buffer)
     -- nmap('<leader>hu', gs.undo_stage_hunk)
