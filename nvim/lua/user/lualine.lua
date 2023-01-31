@@ -24,16 +24,17 @@ local branch = {
 local mode = {
   "mode",
   fmt = function(str)
-    return "-- " .. str .. " --"
+    return "" .. str .. ""
   end,
 }
 
 require("lualine").setup {
   options = {
     icons_enabled = true,
-    theme = "palenight",
+    theme = "auto",
     component_separators = { left = '|', right = '|' }, -- { left = '', right = ''},
-    section_separators = { left = '', right = '' },
+    -- section_separators = { left = '', right = '' },
+    section_separators = { left = '', right = '' },
     globalstatus = true,
     -- disabled_filetypes = { "NvimTree", "Outline" },
     -- ignore_focus = {},
