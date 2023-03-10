@@ -286,7 +286,7 @@ globalkeys = gears.table.join(
     { description = "open FireFox", group = "launcher" }),
   awful.key({ modkey, "Shift" }, "s", function() awful.spawn.with_shell("flameshot gui") end,
     { description = "open Flameshot", group = "launcher" }),
-  awful.key({ modkey, }, ".", function() awful.with_shell("rofi -modi emoji -show emoji") end,
+  awful.key({ modkey, }, ".", function() awful.spawn.with_shell("rofi -modi emoji -show emoji") end,
     { description = "open emoji picker", group = "launcher" }),
   awful.key({ modkey, "Control" }, "r", awesome.restart,
     { description = "reload awesome", group = "awesome" }),
