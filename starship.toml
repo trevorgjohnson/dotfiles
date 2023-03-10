@@ -1,10 +1,13 @@
+# Sets user-defined palette
+palette = "catppuccin_mocha"
+
 format = """
-[ |](#fab387)\
+[ |](peach)\
 $directory\
-[|](#fab387)\
+[|](peach)\
 $git_branch\
 $git_status\
-[|](#fab387)\
+[|](peach)\
 $c\
 $elixir\
 $elm\
@@ -16,9 +19,9 @@ $nodejs\
 $nim\
 $rust\
 $scala\
-[|](#fab387)\
+[|](peach)\
 $docker_context\
-[   ](#fab387)\
+[   ](peach)\
 """
 
 # Disable the blank line at the start of the prompt
@@ -28,19 +31,19 @@ add_newline = false
 # and use the os module below
 [username]
 show_always = false
-style_user = "fg:#9A348E"
-style_root = "fg:#9A348E"
+style_user = "fg:maroon"
+style_root = "fg:maroon"
 format = '[$user ]($style)'
 disabled = true
 
 # An alternative to the username module which displays a symbol that
 # represents the current operating system
 [os]
-style = "fg:#9A348E"
+style = "fg:maroon"
 disabled = true # Disabled by default
 
 [directory]
-style = "fg:#cba6f7"
+style = "fg:mauve"
 format = "[ $path ]($style)"
 truncation_length = 1
 truncation_symbol = "…/"
@@ -60,76 +63,103 @@ truncation_symbol = "…/"
 
 [c]
 symbol = " "
-style = "fg:#89dceb bg:1e1e2e80"
+style = "fg: "
 format = '[ $symbol ($version) ]($style)'
 
 [docker_context]
 symbol = " "
-style = "fg:#94e2d5 bg:1e1e2e80"
+style = "fg:sky"
 format = '[ $symbol $context ]($style) $path'
 
 [elixir]
 symbol = " "
-style = "fg:#89dceb bg:1e1e2e80"
+style = "fg:sky"
 format = '[ $symbol ($version) ]($style)'
 
 [elm]
 symbol = " "
-style = "fg:#89dceb bg:1e1e2e80"
+style = "fg:sky"
 format = '[ $symbol ($version) ]($style)'
 
 [git_branch]
 symbol = ""
-style = "fg:#b4befe bg:1e1e2e80"
+style = "fg:lavender"
 format = '[ $symbol $branch ]($style)'
 
 [git_status]
-style = "fg:#b4befe bg:1e1e2e80"
+style = "fg:lavender"
 format = '[$all_status$ahead_behind ]($style)'
 
 [golang]
 symbol = " "
 format = '[ $symbol ($version) ]($style)'
-style = "fg:#89dceb bg:1e1e2e80"
+style = "fg:sky"
 
 [haskell]
 symbol = " "
-style = "fg:#89dceb bg:1e1e2e80"
+style = "fg:sky"
 format = '[ $symbol ($version) ]($style)'
 
 [java]
 symbol = " "
-style = "fg:#89dceb bg:1e1e2e80"
+style = "fg:sky"
 format = '[ $symbol ($version) ]($style)'
 
 [julia]
 symbol = " "
-style = "fg:#89dceb bg:1e1e2e80"
+style = "fg:sky"
 format = '[ $symbol ($version) ]($style)'
 
 [nodejs]
 symbol = ""
-style = "fg:#89dceb bg:1e1e2e80"
+style = "fg:sky"
 format = '[ $symbol ($version) ]($style)'
 
 [nim]
 symbol = " "
-style = "fg:#89dceb bg:1e1e2e80"
+style = "fg:sky"
 format = '[ $symbol ($version) ]($style)'
 
 [rust]
 symbol = ""
-style = "fg:#89dceb bg:1e1e2e80"
+style = "fg:sky"
 format = '[ $symbol ($version) ]($style)'
 
 [scala]
 symbol = " "
-style = "fg:#89dceb bg:1e1e2e80"
+style = "fg:sky"
 format = '[ $symbol ($version) ]($style)'
 
 [time]
 disabled = true
 time_format = "%R" # Hour:Minute Format
-style = "fg:#cba6f7 bg:1e1e2e80"
+style = "fg:lavender"
 format = '[ ♥ $time ]($style)'
 
+[palettes.catppuccin_mocha]
+rosewater = "#f5e0dc"
+flamingo = "#f2cdcd"
+pink = "#f5c2e7"
+mauve = "#cba6f7"
+red = "#f38ba8"
+maroon = "#eba0ac"
+peach = "#fab387"
+yellow = "#f9e2af"
+green = "#a6e3a1"
+teal = "#94e2d5"
+sky = "#89dceb"
+sapphire = "#74c7ec"
+blue = "#89b4fa"
+lavender = "#b4befe"
+text = "#cdd6f4"
+subtext1 = "#bac2de"
+subtext0 = "#a6adc8"
+overlay2 = "#9399b2"
+overlay1 = "#7f849c"
+overlay0 = "#6c7086"
+surface2 = "#585b70"
+surface1 = "#45475a"
+surface0 = "#313244"
+base = "#1e1e2e"
+mantle = "#181825"
+crust = "#11111b"
