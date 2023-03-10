@@ -1,0 +1,25 @@
+# bsp, stack, or float
+yabai -m config layout bsp
+
+# new windows go to the right
+yabai -m config window_placement second_child
+
+# padding
+yabai -m config top_padding 12
+yabai -m config bottom_padding 12
+yabai -m config left_padding 12
+yabai -m config right_padding 12
+yabai -m config window_gap 12
+
+# mouse
+yabai -m config mouse_follows_focus on
+
+yabai -m config mouse_modifier alt
+yabai -m config mouse_action1 move # opt + leftclk moves window
+yabai -m config mouse_action2 resize # opt + rightclk resizes window
+
+yabai -m config mouse_drop_action swap
+
+# Disable apps
+yabai -m rule --add app="^System Settings$" manage=off
+yabai -m rule --add app="^Calculator$" manage=off

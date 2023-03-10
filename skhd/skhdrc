@@ -1,0 +1,22 @@
+# Changing window focus
+alt - j : yabai -m window --focus south
+alt - k : yabai -m window --focus north
+alt - h : yabai -m window --focus west
+alt - l : yabai -m window --focus east
+
+# Moving windows
+shift + alt - j : yabai -m window --swap south
+shift + alt - k : yabai -m window --swap north
+shift + alt - h : yabai -m window --swap west
+shift + alt - l : yabai -m window --swap east
+
+# Move window to next/prev space
+cmd + alt - left : yabai -m window --space prev
+cmd + alt - right : yabai -m window --space next
+
+# Toggle floating window
+alt - y : yabai -m window --toggle float --grid 4:4:1:1:2:2
+
+# Maximize window
+shift + alt - m : yabai -m window --toggle zoom-fullscreen
+
