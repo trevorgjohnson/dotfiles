@@ -282,8 +282,10 @@ globalkeys = gears.table.join(
   -- Standard program
   awful.key({ modkey, }, "t", function() awful.spawn(terminal) end,
     { description = "open a terminal", group = "launcher" }),
-  awful.key({ modkey, }, "b", function() awful.util.spawn("firefox-developer-edition") end,
+  awful.key({ modkey, }, "b", function() awful.util.spawn("brave-nightly") end,
     { description = "open FireFox", group = "launcher" }),
+  awful.key({ modkey, "Shift" }, "s", function() awful.spawn.with_shell("flameshot gui") end,
+    { description = "open Flameshot", group = "launcher" }),
   awful.key({ modkey, }, ".", function() awful.util.spawn("emoji-picker") end,
     { description = "open emoji picker", group = "launcher" }),
   awful.key({ modkey, "Control" }, "r", awesome.restart,
