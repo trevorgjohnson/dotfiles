@@ -52,7 +52,7 @@ vim.keymap.set("v", "<K>", ":m .-2<CR>==", opts)
 vim.keymap.set("v", "p", '"_dP', opts)
 
 -- map 'x' to copy deleted text into blackhole registry
-vim.keymap.set("", "x", '"_x', { desc = "[Q]uit buffer" })
+vim.keymap.set("", "x", '"_x', { desc = "Delete to blackhole registry" })
 
 -- write and quit currently open buffer
 vim.keymap.set("", "<leader>q", ':wq<CR>', { desc = "[W]rite and [Q]uit buffer" })
@@ -72,7 +72,7 @@ vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { d
 vim.keymap.set('n', '<leader>/', function()
   -- You can pass additional configuration to telescope to change theme, layout, etc.
   require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-    winblend = 10,
+    -- winblend = 10,
     previewer = false,
   })
 end, { desc = '[/] Fuzzily search in current buffer]' })
