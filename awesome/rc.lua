@@ -286,7 +286,7 @@ globalkeys = gears.table.join(
     { description = "open FireFox", group = "launcher" }),
   awful.key({ modkey, "Shift" }, "s", function() awful.spawn.with_shell("flameshot gui") end,
     { description = "open Flameshot", group = "launcher" }),
-  awful.key({ modkey, }, ".", function() awful.util.spawn("emoji-picker") end,
+  awful.key({ modkey, }, ".", function() awful.with_shell("rofi -modi emoji -show emoji") end,
     { description = "open emoji picker", group = "launcher" }),
   awful.key({ modkey, "Control" }, "r", awesome.restart,
     { description = "reload awesome", group = "awesome" }),
@@ -338,8 +338,8 @@ globalkeys = gears.table.join(
     end,
     { description = "lua execute prompt", group = "awesome" }),
   -- Menubar
-  awful.key({ modkey }, "space", function() menubar.show() end,
-    { description = "show the menubar", group = "launcher" })
+  awful.key({ modkey }, "space", function() awful.spawn.with_shell("rofi -show drun") end,
+    { description = "show the rofi menubar", group = "launcher" })
 )
 
 clientkeys = gears.table.join(
