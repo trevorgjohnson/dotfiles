@@ -18,5 +18,4 @@ cmd + alt - right : yabai -m window --space next
 alt - y : yabai -m window --toggle float --grid 4:4:1:1:2:2
 
 # Maximize window
-shift + alt - m : yabai -m window --toggle zoom-fullscreen
-
+alt - f : yabai -m window --toggle zoom-fullscreen
