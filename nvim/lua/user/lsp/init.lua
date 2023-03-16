@@ -2,12 +2,12 @@ local servers = {
   tsserver = {},
   tailwindcss = {},
   jsonls = {},
-  sumneko_lua = {
+  --[[ sumneko_lua = {
     Lua = {
       workspace = { checkThirdParty = false },
       telemetry = { enable = false },
     },
-  },
+  }, ]]
 }
 
 -- Setup neovim lua configuration
