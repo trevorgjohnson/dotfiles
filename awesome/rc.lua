@@ -280,7 +280,7 @@ globalkeys = gears.table.join(
     { description = "go back", group = "client" }),
 
   -- Standard program
-  awful.key({ modkey, }, "t", function() awful.spawn(terminal) end,
+  awful.key({ modkey, }, "t", function() awful.spawn(terminal.." -e tmux a") end,
     { description = "open a terminal", group = "launcher" }),
   awful.key({ modkey, }, "b", function() awful.util.spawn("brave-nightly") end,
     { description = "open FireFox", group = "launcher" }),
