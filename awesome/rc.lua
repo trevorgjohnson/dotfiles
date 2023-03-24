@@ -538,7 +538,7 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 -- }}}
 
 -- Autostart Applications
--- awful.spawn.with_shell("xrandr --output DP-2 --mode 1920x1080 --pos 0x0 --rotate left  && xrandr --output DP-4 --primary --mode 1920x1080 --rotate normal --pos 1080x680 --rate 144")
+awful.spawn.with_shell("xrandr --output DP-2 --mode 1920x1080 --pos 0x0 --rotate left --rate 144 && xrandr --output DP-4 --primary --mode 2560x1440 --rotate normal --pos 1080x680 --rate 144")
 awful.spawn.with_shell("nvidia-settings --load-config-only")
 awful.spawn.with_shell("xset r rate 280 40")
 awful.spawn.with_shell("nitrogen --restore")
