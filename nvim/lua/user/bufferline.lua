@@ -1,15 +1,16 @@
+
 require("bufferline").setup {
   options = {
     numbers = "none",
-    close_command = "bdelete! %d", -- can be a string | function, see "Mouse actions"
+    close_command = "bdelete! %d",       -- can be a string | function, see "Mouse actions"
     right_mouse_command = "bdelete! %d", -- can be a string | function, see "Mouse actions"
-    left_mouse_command = "buffer %d", -- can be a string | function, see "Mouse actions"
-    middle_mouse_command = nil, -- can be a string | function, see "Mouse actions"
+    left_mouse_command = "buffer %d",    -- can be a string | function, see "Mouse actions"
+    middle_mouse_command = nil,          -- can be a string | function, see "Mouse actions"
     -- NOTE: this plugin is designed with this icon in mind,
     -- and so changing this is NOT recommended, this is intended
     -- as an escape hatch for people who cannot bear it for whatever reason
     indicator = {
-      icon = '▎', -- this should be omitted if indicator style is not 'icon'
+      icon = '▎',   -- this should be omitted if indicator style is not 'icon'
       style = 'icon', -- | 'underline' | 'none',
     },
     buffer_close_icon = '',
@@ -30,7 +31,7 @@ require("bufferline").setup {
     max_name_length = 18,
     max_prefix_length = 15, -- prefix used when a buffer is de-duplicated
     tab_size = 18,
-    diagnostics = false, -- | "nvim_lsp" | "coc",
+    diagnostics = false,    -- | "nvim_lsp" | "coc",
     diagnostics_update_in_insert = false,
     -- The diagnostics indicator can be set to nil to keep the buffer name highlight but delete the highlighting
     --[[ diagnostics_indicator = function(count, level, diagnostics_dict, context)
@@ -57,17 +58,16 @@ require("bufferline").setup {
         end
       end, ]]
     offsets = { { filetype = "NvimTree", text = "File Explorer", padding = 1 } },
-    color_icons = true, -- | false, -- whether or not to add the filetype icon highlights
-    show_buffer_icons = true, -- | false, -- disable filetype icons for buffers
-    show_buffer_close_icons = true, -- | false,
-    show_buffer_default_icon = true, -- | false, -- whether or not an unrecognised filetype should show a default icon
-    show_close_icon = true, -- | false,
-    show_tab_indicators = true, -- | false,
-    persist_buffer_sort = true, -- whether or not custom sorted buffers should persist
+    color_icons = true,              -- | false, -- whether or not to add the filetype icon highlights
+    show_buffer_icons = true,        -- | false, -- disable filetype icons for buffers
+    show_buffer_close_icons = true,  -- | false,
+    show_close_icon = true,          -- | false,
+    show_tab_indicators = true,      -- | false,
+    persist_buffer_sort = true,      -- whether or not custom sorted buffers should persist
     -- can also be a table containing 2 custom separators
     -- [focused and unfocused]. eg: { '|', '|' }
-    separator_style = "thin", -- "slant" | "thick" | "thin" | { 'any', 'any' },
-    enforce_regular_tabs = false, -- | true,
+    separator_style = "thin",      -- "slant" | "thick" | "thin" | { 'any', 'any' },
+    enforce_regular_tabs = false,  -- | true,
     always_show_bufferline = true, -- | false,
     --[[ sort_by = 'insert_after_current' | 'insert_at_end' | 'id' | 'extension' | 'relative_directory' | 'directory' | 'tabs'
         | function(buffer_a, buffer_b)

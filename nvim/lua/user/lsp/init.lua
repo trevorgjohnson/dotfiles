@@ -39,6 +39,20 @@ require('fidget').setup()
 -- Turn on function param signature help
 require("lsp_signature").setup()
 
+local configs = require 'lspconfig.configs'
+if not configs.nomic_solidity then
+  configs.nomic_solidity = {
+    default_config = {
+      cmd = { 'nomicfoundation-solidity-language-server', '--stdio' },
+      filetypes = { 'solidity' },
+      root_dir = require("lspconfig.util").find_git_ancestor,
+      require("lspconfig.util").root_pattern "foundry.toml",
+      single_file_support = true,
+      settings = {},
+    },
+  }
+end
+
 mason_lspconfig.setup_handlers({
   function(server_name)
     if server_name == "rust_analyzer" then
@@ -72,6 +86,16 @@ mason_lspconfig.setup_handlers({
           end,
           settings = { ["rust-analyzer"] = { checkOnSave = { command = "clippy" } } }
         },
+      })
+      return
+    end
+
+    if server_name == "solidity" then
+      require("lspconfig").nomic_solidity.setup({
+        on_attach = handler.on_attach,
+        capabilities = handler.capabilities,
+        flags = handler.lsp_flags,
+        -- settings = servers[server_name],
       })
       return
     end
