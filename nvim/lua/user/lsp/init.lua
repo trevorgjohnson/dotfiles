@@ -46,7 +46,7 @@ if not configs.nomic_solidity then
       cmd = { 'nomicfoundation-solidity-language-server', '--stdio' },
       filetypes = { 'solidity' },
       root_dir = require("lspconfig.util").find_git_ancestor,
-      require("lspconfig.util").root_pattern "foundry.toml",
+      require("lspconfig.util").root_pattern("foundry.toml", "hardhat.config.ts"),
       single_file_support = true,
       settings = {},
     },

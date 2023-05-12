@@ -1,0 +1,64 @@
+[user]
+	name = Trevor Johnson
+	email = 27569194+trevorgjohnson@users.noreply.github.com
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[safe]
+	directory = /Users/trevorjohnson/neovim
+[vars]
+	master = main
+	staging = develop
+[alias]
+	# pull changes from remote and update/init all submodules
+	up = "!git pull --rebase --prune $@ && git submodule update --init --recursive"
+
+	# add all changes to the 'stage' and commit with message
+	cm = "!git add -A && git commit -m"
+
+	# resets to last commit but doesn't delete any changes
+	undo = "reset HEAD~1 --mixed"
+
+	# get current branch name
+	branch-name = "!git rev-parse --abbrev-ref HEAD"
+
+	# push current branch to remote 'origin', and set it to track the upstream branch
+	publish = "!git push -u origin $(git branch-name)"
+
+	# delete remote version of the current branch
+	unpublish = "!git push origin :$(git branch-name)"
+
+	# add to '.gitignore'
+	ignore = !sh -c 'echo "$1" >> .gitignore' -
+
+	# add to '.gitexclude'
+	exclude = !sh -c 'echo "$1" >> .git/info/exclude' -
+
+	# unstage any files currently in staging area
+	unstage = reset HEAD
+
+	# Uhhhh, idk lmao
+	pr = "!f() { git fetch -fu $1 refs/pull/$2/head:pr/$2; git checkout pr/$2; } ; f"
+	pr-clean = "!git for-each-ref refs/heads/pr/* --format='%(refname)' | while read ref ; do branch=${ref#refs/heads/} ; git branch -D $branch ; done"
+	rm-merged = "!f() { git checkout --quiet $(git config --get vars.master) && git branch --merged | grep --invert-match '\\*' | xargs -n 1 git branch --delete; git checkout --quiet @{-1}; }; f"
+	rm-staged = "!f() { git checkout --quiet $(git config --get vars.staging) && git branch --merged | grep --invert-match '\\*' | xargs -n 1 git branch --delete; git checkout --quiet @{-1}; }; f"
+
+	# log git commits in a prettier, decorated fashion
+	lt = log --graph --decorate --pretty=oneline --abbrev-commit
+
+	# log git commits in a short, oneline format
+	ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
+
+	# uses grep to find pattern (eg. git f read => 'README.md)
+	f = "!git ls-files | grep -i"
+
+	# print out all git alias
+	alias = !git config --list | grep ^alias\\. | cut -c 7- | grep -Ei --color \"$1\" "#"
+
+	# delete merged branches except main/develop
+	sweep = !git branch --merged $([[ $1 != \"-f\" ]] \\\n&& git rev-parse develop) | egrep -v \"(^\\*|^\\s*(main|develop)$)\" \\\n| xargs git branch -d
+
+	# delete all branches except main/develop
+	bleach = !git branch --merged $([[ $1 != \"-f\" ]] \\\n&& git rev-parse develop) | egrep -v \"(^\\*|^\\s*(main|develop)$)\" \\\n| xargs git branch -D
