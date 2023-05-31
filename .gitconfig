@@ -61,4 +61,4 @@
 	sweep = !git branch --merged $([[ $1 != \"-f\" ]] \\\n&& git rev-parse develop) | egrep -v \"(^\\*|^\\s*(main|develop)$)\" \\\n| xargs git branch -d
 
 	# delete all branches except main/develop
-	bleach = !git branch --merged $([[ $1 != \"-f\" ]] \\\n&& git rev-parse develop) | egrep -v \"(^\\*|^\\s*(main|develop)$)\" \\\n| xargs git branch -D
+	bleach = "!git checkout main -q || git checkout develop -q && git branch | grep -vw -E 'main|develop' | xargs git branch -D && git prune"
