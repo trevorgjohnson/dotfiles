@@ -53,6 +53,18 @@
 
 	# uses grep to find pattern (eg. git f read => 'README.md)
 	f = "!git ls-files | grep -i"
+	
+	# gets the current detached branch name
+	get-detached-branch = "!git show -s --pretty=%D HEAD | tr \", \" \"\n\" | grep \"origin/\" | sed 's/origin.//' | tr '\n' ' ' | awk '{print $NF}'"
+
+	# attaches current detached remote branch to local copy (remotes/origin/branch-name -> branch-name)
+	attach = "!git switch $(git get-detached-branch)"
+
+	# creates an interactive checkout using [fzf](https://github.com/junegunn/fzf)
+	ic = "!git checkout $(git branch -a | fzf | xargs) -q && git attach"
+
+	# copy the current branch name
+	cb = "!git branch --show-current | pbcopy"
 
 	# print out all git alias
 	alias = !git config --list | grep ^alias\\. | cut -c 7- | grep -Ei --color \"$1\" "#"
