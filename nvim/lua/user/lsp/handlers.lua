@@ -58,19 +58,6 @@ end
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
 M.on_attach = function(client, bufnr)
-  if client.name == "tsserver" then
-    client.server_capabilities.document_formatting = false
-    client.server_capabilities.document_range_formatting = false
-  end
-  if client.name == "rust_analyzer" then
-    client.server_capabilities.document_formatting = false
-    client.server_capabilities.document_range_formatting = false
-  end
-  if client.name == "solidity" then
-    client.server_capabilities.document_formatting = false
-    client.server_capabilities.document_range_formatting = false
-  end
-
   -- Mappings.
   -- See `:help vim.lsp.*` for documentation on any of the below functions
   local nmap = function(keys, func, desc)
@@ -82,7 +69,7 @@ M.on_attach = function(client, bufnr)
   end
 
   nmap('K', vim.lsp.buf.hover, "Hover Documentation")
-  nmap('<C-k>', vim.lsp.buf.signature_help, "Signature Help")
+  nmap('<space>sk>', vim.lsp.buf.signature_help, "[S]ignature [hover] Help")
 
   nmap('gd', vim.lsp.buf.definition, "[G]oto [D]efinition")
   nmap('gD', vim.lsp.buf.declaration, "[G]oto [D]eclaration")
@@ -95,7 +82,7 @@ M.on_attach = function(client, bufnr)
   nmap('<space>rn', vim.lsp.buf.rename, "[R]e[n]ame")
   nmap('<space>ca', vim.lsp.buf.code_action, "[C]ode [A]ction")
 
-  nmap('<space>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, "[W]orkspace [S]ymbols")
+  nmap('<space>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols "[W]orkspace [S]ymbols")
   nmap('<space>wa', vim.lsp.buf.add_workspace_folder, "[W]orkspace [A]dd Folder")
   nmap('<space>wr', vim.lsp.buf.remove_workspace_folder, "[W]orkspace [R]emove Folder")
   nmap('<space>wl', function()

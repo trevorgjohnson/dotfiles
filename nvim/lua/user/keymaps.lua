@@ -8,6 +8,8 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
 
+
+
 -- Better window navigation
 vim.keymap.set("n", "<C-h>", "<C-w>h", opts)
 vim.keymap.set("n", "<C-j>", "<C-w>j", opts)
@@ -62,7 +64,6 @@ vim.keymap.set("", "<leader>Q", ':wqa<CR>', { desc = "[W]rite and [Q]uit [A]ll b
 
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
 vim.keymap.set('n', '<leader>d', vim.diagnostic.open_float, { desc = "Show [D]iagnostics" })
-vim.keymap.set('n', '<leader>x', vim.diagnostic.setloclist, { desc = "[X] Show all warnings/errors" })
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = "Goto previous [D]iagnostic" })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = "Goto next [D]iagnostic" })
 

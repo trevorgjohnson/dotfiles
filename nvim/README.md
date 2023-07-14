@@ -52,45 +52,4 @@ Also run `npm i solidity-ls -g` for a working solidity lsp (_until the solc lsp 
 
 ### Plugin List
 
-- Packer - Plugin Manager
-- popup - useful for popup windows
-- plenary - useful for many other plugins
-- autopairs - creates auto pairs of '(', '{', and '['
-- colorizer - highlights color hexcodes with that specific color
-- comment - for commenting ease
-- nvim-ts-context-commentstring - use TS context to correctly commment (eg. jsx)
-- impatient - speed up loading lua modules
-- indent-blankline - adds indentatino guides
-- alpha - adds dashboard on startup
-- FixCursorHold - needed to fix lsp doc highlight
-- which-key - displays popup with possible key bindings
-- colorschemes
-  - nightfox
-  - material
-  - roshnivim
-- nvim-cmp - completion
-- cmp-buffer - buffer completion
-- cmp-path - path completion
-- cmp-cmdline - cmdline completion
-- cmp_luasnip - snippet completion
-- cmp-nvim-lsp - LSP completion
-- cmp-nvim-lua - extra lua completion
-- luasnip - snippet engine
-- friendly-snippets - useful snippets
-- nvim-lspconfig - enable lsp
-- mason.nvim - lsp installer
-- mason-lspconfig - bridges mason with lspconfig
-- null-ls - for formatters and linters
-- rust-tools - for extra rust LSP helpers
-- symbols-outline - tree view for lsp symbols
-- telescope.nvim - fuzzy finder
-- ripgrep - needed for telescope live grep
-- treesitter - syntax highlighting
-- nvim-ts-rainbow - bracket colorization
-- gitsigns - vscode style git visualizations
-- nvim-web-devicons - for adding icons (Nerd Font required)
-- nvim-tree - file explorer
-- bufferline - for buffers (kinda like tabs)
-- vim-bbye - to close buffers
-- lualine - statusline at the bottom
-- toggleterm - easy use with floating terminal (also has lazy git support)
+_See [lua/user/plugins.lua]_

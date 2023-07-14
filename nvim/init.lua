@@ -35,29 +35,36 @@ require "user.lsp"
 require "user.cmp"
 
 -- Treesitter
-require "user.treesitter"
+require("nvim-treesitter.configs").setup { highlight = { enable = true } }
 
 -- Treelike file explorer
 require("nvim-tree").setup()
 
--- Buffers (Vscode Tabs)
-require "user.bufferline"
+-- set 'Huff' icon manually
+require("nvim-web-devicons").set_icon { huff = {
+  icon = "󰡘",
+  color = "#4242c7",
+  cterm_color = "65",
+  name = "Huff"
+} }
 
--- null ls
-local null_ls = require("null-ls")
-null_ls.setup({
-  debug = false,
-  sources = {
-    null_ls.builtins.formatting.prettier.with({
-      extra_filetypes = { "toml", "solidity" },
-      disabled_filetypes = { 'json' }
-    }),
-    null_ls.builtins.formatting.rustfmt,
-    null_ls.builtins.diagnostics.solhint.with({
-      extra_args = { "--formatter prettier", "--fix " }
-    }),
+-- Buffers (Vscode Tabs)
+require("bufferline").setup {
+  options = {
+    numbers = "none",
+    close_command = "bdelete! %d",       -- can be a string | function, see "Mouse actions"
+    right_mouse_command = "bdelete! %d", -- can be a string | function, see "Mouse actions"
+    left_mouse_command = "buffer %d",    -- can be a string | function, see "Mouse actions"
+    offsets = { { filetype = "NvimTree", text = "File Explorer", padding = 1 } },
   },
-})
+  highlights = require("catppuccin.groups.integrations.bufferline").get()
+}
 
 -- Floating Terminal
-require "user.toggleterm"
+require("toggleterm").setup {
+  open_mapping = [[<c-\>]],
+  direction = "float",
+  float_opts = {
+    border = "curved", -- 'single' | 'double' | 'shadow' | 'curved'
+  },
+}

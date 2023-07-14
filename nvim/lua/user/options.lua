@@ -1,7 +1,10 @@
-vim.o.clipboard = "unnamedplus" -- allows neovim to access the system clipboard
-vim.o.cmdheight = 0 -- more space in the neovim command line for displaying messages
+vim.o.clipboard = "unnamedplus"        -- allows neovim to access the system clipboard
 vim.o.completeopt = "menuone,noselect" -- mostly just for cmp
-vim.o.mouse = "a" -- allow the mouse to be used in neovim
+vim.o.mouse = "a"                      -- allow the mouse to be used in neovim
+
+vim.o.cmdheight = 0 -- more space in the neovim command line for displaying messages
+vim.cmd [[ autocmd RecordingEnter * set cmdheight=1 ]] -- when recording macros, set cmdheight to 1 to see "recording @..." message
+vim.cmd [[ autocmd RecordingLeave * set cmdheight=0 ]] -- when done recording the macros, set cmdheight back to 0
 
 -- case insensitive searching UNLESS /C or capital in search
 vim.o.hlsearch = false

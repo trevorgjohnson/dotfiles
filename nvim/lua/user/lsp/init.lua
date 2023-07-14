@@ -1,13 +1,8 @@
 local servers = {
   tsserver = {},
   tailwindcss = {},
-  jsonls = {},
-  --[[ sumneko_lua = {
-    Lua = {
-      workspace = { checkThirdParty = false },
-      telemetry = { enable = false },
-    },
-  }, ]]
+  rust_analyzer = {},
+  solidity_ls_nomicfoundation = {}
 }
 
 -- Setup neovim lua configuration
@@ -35,9 +30,6 @@ handler.setup()
 
 -- Turn on lsp status information
 require('fidget').setup()
-
--- Turn on function param signature help
-require("lsp_signature").setup()
 
 mason_lspconfig.setup_handlers({
   function(server_name)

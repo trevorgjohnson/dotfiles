@@ -55,11 +55,8 @@ return packer.startup(function(use)
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
 
-      -- Formatting and diagnosis
-      "jose-elias-alvarez/null-ls.nvim",
-
       -- Useful status updates for LSP
-      "j-hui/fidget.nvim",
+      { "j-hui/fidget.nvim", tag = "legacy" },
 
       -- Additional lua configuration, makes nvim stuff amazing
       "folke/neodev.nvim",
@@ -78,9 +75,6 @@ return packer.startup(function(use)
       "hrsh7th/cmp-path",
       "hrsh7th/cmp-cmdline",
       "hrsh7th/cmp-nvim-lua",
-
-      -- For parameter completion in functions
-      "ray-x/lsp_signature.nvim",
 
       -- Snippets
       "L3MON4D3/LuaSnip",
@@ -101,13 +95,13 @@ return packer.startup(function(use)
     after = "nvim-treesitter",
   }
 
-  use "catppuccin/nvim" -- Theme with nice pastel colors
-  use "nvim-lualine/lualine.nvim" -- Fancier statusline
+  use "catppuccin/nvim"                     -- Theme with nice pastel colors
+  use "nvim-lualine/lualine.nvim"           -- Fancier statusline
   use "lukas-reineke/indent-blankline.nvim" -- adds indentation guides
-  use "numToStr/Comment.nvim" -- Easily comment stuff
-  use "tpope/vim-sleuth" -- Detect tabstop and shiftwidth automatically
-  use "norcalli/nvim-colorizer.lua" -- highlights color hexcodes with the hexcode color
-  use "nvim-lua/popup.nvim" -- An implementation of the Popup API from vim in Neovim
+  use "numToStr/Comment.nvim"               -- Easily comment stuff
+  use "tpope/vim-sleuth"                    -- Detect tabstop and shiftwidth automatically
+  use "norcalli/nvim-colorizer.lua"         -- highlights color hexcodes with the hexcode color
+  use "nvim-lua/popup.nvim"                 -- An implementation of the Popup API from vim in Neovim
 
   -- Fuzzy Finder (files, lsp, etc)
   use {
@@ -124,13 +118,16 @@ return packer.startup(function(use)
     cond = vim.fn.executable "make" == 1
   }
 
+  -- Huff
+  use "wuwe1/vim-huff"
+
   -- Git
   use "tpope/vim-fugitive"
   use "tpope/vim-rhubarb"
   use "lewis6991/gitsigns.nvim"
 
   -- Nvim Tree
-  use { "kyazdani42/nvim-tree.lua", requires = { "kyazdani42/nvim-web-devicons" } }
+  use { "nvim-tree/nvim-tree.lua", requires = { "nvim-tree/nvim-web-devicons" } }
 
   -- Bufferline
   use { "akinsho/bufferline.nvim", requires = { "moll/vim-bbye" } }
