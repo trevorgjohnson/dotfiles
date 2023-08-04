@@ -1,3 +1,7 @@
+-- Remap space as leader key
+vim.g.mapleader = ' '
+vim.g.maplocalleader = ' '
+
 -- Plugins
 require "user.plugins"
 

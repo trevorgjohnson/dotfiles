@@ -36,17 +36,6 @@ mason_lspconfig.setup_handlers({
     if server_name == "rust_analyzer" then
       -- Use simrat39/rust-tools.nvim instead of rust_analyzer
       require("rust-tools").setup({
-        tools = {
-          autoSetHints = true,
-          runnables = { use_telescope = true },
-          hover_actions = { auto_focus = true },
-          inlay_hints = {
-            auto = true,
-            show_parameter_hints = true,
-            parameter_hints_prefix = "",
-            other_hints_prefix = "",
-          },
-        },
         server = {
           capabilities = handler.capabilities,
           on_attach = function(client, bufnr)

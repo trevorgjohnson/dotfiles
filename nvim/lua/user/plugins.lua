@@ -1,149 +1,114 @@
-local fn = vim.fn
-
--- Automatically install packer
-
--- uncomment below for MacOS/Linux
-local install_path = fn.stdpath "data" .. "/site/pack/packer/start/packer.nvim"
-
---uncomment below for Windows
---[[ local install_path = fn.stdpath("data") .. "\\site\\pack\\packer\\start\\packer.nvim" ]]
-
-if fn.empty(fn.glob(install_path)) > 0 then
-  PACKER_BOOTSTRAP = fn.system {
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
     "git",
     "clone",
-    "--depth",
-    "1",
-    "https://github.com/wbthomason/packer.nvim",
-    install_path,
-  }
-  print "Installing packer close and reopen Neovim..."
-  vim.cmd [[packadd packer.nvim]]
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
+    lazypath,
+  })
 end
+vim.opt.rtp:prepend(lazypath)
 
--- Autocommand that reloads neovim whenever you save the plugins.lua file
-vim.cmd [[
-  augroup packer_user_config
-    autocmd!
-    autocmd BufWritePost plugins.lua source <afile> | PackerSync
-  augroup end
-]]
+local plugins = {
+  "catppuccin/nvim",                     -- Theme with nice pastel colors
+  "nvim-lualine/lualine.nvim",           -- Fancier statusline
+  "lukas-reineke/indent-blankline.nvim", -- adds indentation guides
+  "numToStr/Comment.nvim",               -- Easily comment stuff
+  "tpope/vim-sleuth",                    -- Detect tabstop and shiftwidth automatically
+  "norcalli/nvim-colorizer.lua",         -- highlights color hexcodes with the hexcode color
+  "nvim-lua/popup.nvim",                 -- An implementation of the Popup API from vim in Neovim
+  "akinsho/toggleterm.nvim",             -- Spawns a floating terminal that can be toggled
 
--- Use a protected call so we don"t error out on first use
-local status_ok, packer = pcall(require, "packer")
-if not status_ok then
-  return
-end
+  -- Git
+  "tpope/vim-fugitive",
+  "tpope/vim-rhubarb",
+  "lewis6991/gitsigns.nvim",
 
--- Have packer use a popup window
-packer.init {
-  display = {
-    open_fn = function()
-      return require("packer.util").float { border = "rounded" }
-    end,
+  { -- Nvim Tree
+    "nvim-tree/nvim-tree.lua",
+    version = "*",
+    lazy = false,
+    dependencies = {
+      "nvim-tree/nvim-web-devicons",
+    },
   },
-}
 
-return packer.startup(function(use)
-  -- Package manager
-  use "wbthomason/packer.nvim"
+  { -- Markdown Previewer
+    "iamcco/markdown-preview.nvim",
+    build = function() vim.fn["mkdp#util#install"]() end,
+  },
 
-  use { -- LSP Configuration & Plugins
-    "neovim/nvim-lspconfig",
-    requires = {
+  -- Bufferline
+  { 'akinsho/bufferline.nvim',       version = "*",    dependencies = 'nvim-tree/nvim-web-devicons' },
+
+  {
+    -- LSP Configuration & Plugins
+    'neovim/nvim-lspconfig',
+    dependencies = {
       -- Automatically install LSPs to stdpath for neovim
-      "williamboman/mason.nvim",
-      "williamboman/mason-lspconfig.nvim",
+      { 'williamboman/mason.nvim', config = true },
+      'williamboman/mason-lspconfig.nvim',
 
       -- Useful status updates for LSP
-      { "j-hui/fidget.nvim", tag = "legacy" },
+      -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
+      { 'j-hui/fidget.nvim',       tag = 'legacy', opts = {} },
 
-      -- Additional lua configuration, makes nvim stuff amazing
-      "folke/neodev.nvim",
+      -- Additional lua configuration, makes nvim stuff amazing!
+      'folke/neodev.nvim',
 
       -- Additional tooling for rust development
       "simrat39/rust-tools.nvim",
-      "mfussenegger/nvim-dap",
     },
-  }
+  },
 
-  use { -- Autocompletion
-    "hrsh7th/nvim-cmp",
-    requires = {
+  -- Huff
+  "wuwe1/vim-huff",
+
+  {
+    -- Autocompletion
+    'hrsh7th/nvim-cmp',
+    dependencies = {
+      -- Adds additional completion capabilities
       "hrsh7th/cmp-nvim-lsp",
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-path",
       "hrsh7th/cmp-cmdline",
       "hrsh7th/cmp-nvim-lua",
 
-      -- Snippets
-      "L3MON4D3/LuaSnip",
-      "rafamadriz/friendly-snippets",
-      "saadparwaiz1/cmp_luasnip"
+      -- Adds a number of user-friendly snippets
+      'L3MON4D3/LuaSnip',
+      'saadparwaiz1/cmp_luasnip',
+      'rafamadriz/friendly-snippets',
     },
-  }
+  },
 
-  use { -- Highlight, edit, and navigate code
-    "nvim-treesitter/nvim-treesitter",
-    run = function()
-      pcall(require("nvim-treesitter.install").update { with_sync = true })
-    end,
-  }
-
-  use { -- Additional text objects via treesitter
-    "nvim-treesitter/nvim-treesitter-textobjects",
-    after = "nvim-treesitter",
-  }
-
-  use "catppuccin/nvim"                     -- Theme with nice pastel colors
-  use "nvim-lualine/lualine.nvim"           -- Fancier statusline
-  use "lukas-reineke/indent-blankline.nvim" -- adds indentation guides
-  use "numToStr/Comment.nvim"               -- Easily comment stuff
-  use "tpope/vim-sleuth"                    -- Detect tabstop and shiftwidth automatically
-  use "norcalli/nvim-colorizer.lua"         -- highlights color hexcodes with the hexcode color
-  use "nvim-lua/popup.nvim"                 -- An implementation of the Popup API from vim in Neovim
 
   -- Fuzzy Finder (files, lsp, etc)
-  use {
-    "nvim-telescope/telescope.nvim",
-    branch = "0.1.x",
-    requires = { "nvim-lua/plenary.nvim" }
-  }
+  { 'nvim-telescope/telescope.nvim', branch = '0.1.x', dependencies = { 'nvim-lua/plenary.nvim' } },
 
-  -- Fuzzy Finder Algorithm which requires local dependencies to be built
-  -- Only load if `make` is available
-  use {
-    "nvim-telescope/telescope-fzf-native.nvim",
-    run = "make",
-    cond = vim.fn.executable "make" == 1
-  }
+  -- Fuzzy Finder Algorithm which requires local dependencies to be built.
+  -- Only load if `make` is available. Make sure you have the system
+  -- requirements installed.
+  {
+    'nvim-telescope/telescope-fzf-native.nvim',
+    -- NOTE: If you are having trouble with this installation,
+    --       refer to the README for telescope-fzf-native for more instructions.
+    build = 'make',
+    cond = function()
+      return vim.fn.executable 'make' == 1
+    end,
+  },
 
-  -- Huff
-  use "wuwe1/vim-huff"
+  {
+    -- Highlight, edit, and navigate code
+    'nvim-treesitter/nvim-treesitter',
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter-textobjects',
+    },
+    build = ':TSUpdate',
+  },
+}
 
-  -- Git
-  use "tpope/vim-fugitive"
-  use "tpope/vim-rhubarb"
-  use "lewis6991/gitsigns.nvim"
-
-  -- Nvim Tree
-  use { "nvim-tree/nvim-tree.lua", requires = { "nvim-tree/nvim-web-devicons" } }
-
-  -- Bufferline
-  use { "akinsho/bufferline.nvim", requires = { "moll/vim-bbye" } }
-
-  -- Toggleterm
-  use "akinsho/toggleterm.nvim"
-
-  -- Markdown Previewer
-  use({
-    "iamcco/markdown-preview.nvim",
-    run = function() vim.fn["mkdp#util#install"]() end,
-  })
-
-  -- Automatically set up your configuration after cloning packer.nvim
-  -- Put this at the end after all plugins
-  if PACKER_BOOTSTRAP then
-    require("packer").sync()
-  end
-end)
+require("lazy").setup(plugins)

@@ -3,12 +3,8 @@ local opts = {
   silent = true
 }
 
--- Remap space as leader key
-vim.g.mapleader = " "
-vim.g.maplocalleader = " "
-vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
-
-
+-- Set leader to <Nop> to prevent an possible clashing
+vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 
 -- Better window navigation
 vim.keymap.set("n", "<C-h>", "<C-w>h", opts)
