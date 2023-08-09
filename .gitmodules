@@ -4,3 +4,6 @@
 [submodule "awesome/collision"]
 	path = awesome/collision
 	url = https://github.com/Elv13/collision.git
+[submodule "tmux/plugins/tpm"]
+	path = tmux/plugins/tpm
+	url = https://github.com/tmux-plugins/tpm
