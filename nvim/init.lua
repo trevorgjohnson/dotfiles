@@ -55,13 +55,8 @@ require("nvim-web-devicons").set_icon { huff = {
 -- Buffers (Vscode Tabs)
 require("bufferline").setup {
   options = {
-    numbers = "none",
-    close_command = "bdelete! %d",       -- can be a string | function, see "Mouse actions"
-    right_mouse_command = "bdelete! %d", -- can be a string | function, see "Mouse actions"
-    left_mouse_command = "buffer %d",    -- can be a string | function, see "Mouse actions"
     offsets = { { filetype = "NvimTree", text = "File Explorer", padding = 1 } },
   },
-  highlights = require("catppuccin.groups.integrations.bufferline").get()
 }
 
 -- Floating Terminal
@@ -69,6 +64,6 @@ require("toggleterm").setup {
   open_mapping = [[<c-\>]],
   direction = "float",
   float_opts = {
-    border = "curved", -- 'single' | 'double' | 'shadow' | 'curved'
+    border = "curved",
   },
 }

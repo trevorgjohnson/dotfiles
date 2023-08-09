@@ -21,7 +21,7 @@ vim.keymap.set("n", "<n>", "nzzzv", opts)
 vim.keymap.set("n", "<N>", "Nzzzv", opts)
 
 vim.keymap.set("n", "<leader>e", ":NvimTreeToggle<cr>", opts)
-vim.keymap.set("n", "<leader>C", ":Bdelete<cr>", opts)
+vim.keymap.set("n", "<leader>C", ":bdelete!<cr>", opts)
 -- vim.keymap.set("n", "<leader>e", ":Lex 30<cr>", opts)
 
 -- Resize with arrows
