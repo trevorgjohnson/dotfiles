@@ -12,14 +12,56 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 local plugins = {
-  "catppuccin/nvim",                     -- Theme with nice pastel colors
+  { -- Theme with nice pastel colors
+
+    "catppuccin/nvim",
+    name = "catppuccin",
+    priority = 1000,
+    config = function()
+      require("catppuccin").setup({
+        transparent_background = true,
+        flavour = "mocha",
+        term_colors = true,
+      })
+
+      vim.cmd([[colorscheme catppuccin-mocha]])
+    end
+  },
+
+  { -- highlights color hexcodes with the hexcode color
+    "norcalli/nvim-colorizer.lua",
+    config = function()
+      require("colorizer").setup()
+    end
+  },
+
   "nvim-lualine/lualine.nvim",           -- Fancier statusline
   "lukas-reineke/indent-blankline.nvim", -- adds indentation guides
   "numToStr/Comment.nvim",               -- Easily comment stuff
   "tpope/vim-sleuth",                    -- Detect tabstop and shiftwidth automatically
-  "norcalli/nvim-colorizer.lua",         -- highlights color hexcodes with the hexcode color
   "nvim-lua/popup.nvim",                 -- An implementation of the Popup API from vim in Neovim
-  "akinsho/toggleterm.nvim",             -- Spawns a floating terminal that can be toggled
+
+  {                                      -- Spawns a floating terminal that can be toggled
+    'akinsho/toggleterm.nvim',
+    version = "*",
+    config = function()
+      local mocha = require("catppuccin.palettes").get_palette "mocha"
+      require("toggleterm").setup {
+        open_mapping = [[<c-\>]],
+        direction = "float",
+        float_opts = {
+          border = "curved",
+          winblend = 0,
+        },
+        persist_mode = true,
+        highlights = {
+          FloatBorder = {
+            guifg = mocha.blue,
+          },
+        },
+      }
+    end
+  },
 
   -- Git
   "tpope/vim-fugitive",
@@ -40,11 +82,14 @@ local plugins = {
     build = function() vim.fn["mkdp#util#install"]() end,
   },
 
-  -- Bufferline
-  { 'akinsho/bufferline.nvim',       version = "*",    dependencies = 'nvim-tree/nvim-web-devicons' },
+  { -- Bufferline
+    'akinsho/bufferline.nvim',
+    version = "*",
+    dependencies =
+    'nvim-tree/nvim-web-devicons'
+  },
 
-  {
-    -- LSP Configuration & Plugins
+  { -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
     dependencies = {
       -- Automatically install LSPs to stdpath for neovim
@@ -66,8 +111,7 @@ local plugins = {
   -- Huff
   "wuwe1/vim-huff",
 
-  {
-    -- Autocompletion
+  { -- Autocompletion
     'hrsh7th/nvim-cmp',
     dependencies = {
       -- Adds additional completion capabilities
@@ -83,10 +127,7 @@ local plugins = {
       'rafamadriz/friendly-snippets',
     },
   },
-
-
-  -- Fuzzy Finder (files, lsp, etc)
-  { 'nvim-telescope/telescope.nvim', branch = '0.1.x', dependencies = { 'nvim-lua/plenary.nvim' } },
+  { 'nvim-telescope/telescope.nvim', branch = '0.1.x', dependencies = { 'nvim-lua/plenary.nvim' } }, -- Fuzzy Finder (files, lsp, etc)
 
   -- Fuzzy Finder Algorithm which requires local dependencies to be built.
   -- Only load if `make` is available. Make sure you have the system
@@ -101,8 +142,7 @@ local plugins = {
     end,
   },
 
-  {
-    -- Highlight, edit, and navigate code
+  { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     dependencies = {
       'nvim-treesitter/nvim-treesitter-textobjects',

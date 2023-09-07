@@ -11,9 +11,6 @@ require "user.options"
 -- Keymaps (:Telescope keymaps)
 require "user.keymaps"
 
--- Themes
-require "user.colorscheme"
-
 -- Statusline
 require "user.lualine"
 
@@ -56,14 +53,5 @@ require("nvim-web-devicons").set_icon { huff = {
 require("bufferline").setup {
   options = {
     offsets = { { filetype = "NvimTree", text = "File Explorer", padding = 1 } },
-  },
-}
-
--- Floating Terminal
-require("toggleterm").setup {
-  open_mapping = [[<c-\>]],
-  direction = "float",
-  float_opts = {
-    border = "curved",
   },
 }
