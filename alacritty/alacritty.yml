@@ -24,16 +24,16 @@ key_bindings:
 # Use the 'MesloLGSDZ' NF font
 # NOTE this font needs to be installed under '~/.local/share/fonts/' or using your operating system's "font book"
 font:
-  size: 11.0
+  size: 12.0
   normal:
-    family: MesloLGSDZ Nerd Font Propo
+    family: Agave Nerd Font
     style: Regular
   bold:
-    family: MesloLGSDZ Nerd Font Propo
+    family: Agave Nerd Font
     style: Bold
   italic:
-    family: MesloLGSDZ Nerd Font Propo
+    family: Agave Nerd Font
     style: Italic
   bold_italic:
-    family: MesloLGSDZ Nerd Font Propo
+    family: Agave Nerd Font
     style: Bold Italic
