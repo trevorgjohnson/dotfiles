@@ -63,6 +63,9 @@
 	# creates an interactive checkout using [fzf](https://github.com/junegunn/fzf)
 	ic = "!git checkout $(git branch -a | fzf | xargs) -q && git attach"
 
+	# returns interactive worktree directory using [fzf](https://github.com/junegunn/fzf) 
+	gwt = "!git worktree list | fzf | xargs | awk '{print $1}'"
+
 	# copy the current branch name
 	cb = "!git branch --show-current | pbcopy"
 
