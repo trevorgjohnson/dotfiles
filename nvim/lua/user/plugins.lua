@@ -24,7 +24,7 @@ local plugins = {
         term_colors = true,
       })
 
-      vim.cmd([[colorscheme catppuccin-mocha]])
+      vim.cmd.colorscheme 'catppuccin-mocha'
     end
   },
 
@@ -35,13 +35,22 @@ local plugins = {
     end
   },
 
-  "nvim-lualine/lualine.nvim",           -- Fancier statusline
-  "lukas-reineke/indent-blankline.nvim", -- adds indentation guides
-  "numToStr/Comment.nvim",               -- Easily comment stuff
-  "tpope/vim-sleuth",                    -- Detect tabstop and shiftwidth automatically
-  "nvim-lua/popup.nvim",                 -- An implementation of the Popup API from vim in Neovim
+  "nvim-lualine/lualine.nvim", -- Fancier statusline
+  "tpope/vim-sleuth",          -- Detect tabstop and shiftwidth automatically
+  "nvim-lua/popup.nvim",       -- An implementation of the Popup API from vim in Neovim
 
-  {                                      -- Spawns a floating terminal that can be toggled
+  -- Comment helpers (gcc/gb)
+  { "numToStr/Comment.nvim",         opts = {} },
+
+  { -- adds indentation guides
+    "lukas-reineke/indent-blankline.nvim",
+    opts = {
+      char = '┊',
+      show_trailing_blankline_indent = false,
+    }
+  },
+
+  { -- Spawns a floating terminal that can be toggled
     'akinsho/toggleterm.nvim',
     version = "*",
     config = function()
@@ -75,6 +84,7 @@ local plugins = {
     dependencies = {
       "nvim-tree/nvim-web-devicons",
     },
+    opts = {}
   },
 
   { -- Markdown Previewer
@@ -86,7 +96,12 @@ local plugins = {
     'akinsho/bufferline.nvim',
     version = "*",
     dependencies =
-    'nvim-tree/nvim-web-devicons'
+    'nvim-tree/nvim-web-devicons',
+    opts = {
+      options = {
+        offsets = { { filetype = "NvimTree", text = "File Explorer", padding = 1 } },
+      },
+    }
   },
 
   { -- LSP Configuration & Plugins

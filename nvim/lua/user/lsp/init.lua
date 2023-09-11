@@ -2,7 +2,14 @@ local servers = {
   tsserver = {},
   tailwindcss = {},
   rust_analyzer = {},
-  solidity_ls_nomicfoundation = {}
+  solidity_ls_nomicfoundation = {},
+  -- html = { filetypes = { 'html', 'twig', 'hbs'} },
+  lua_ls = {
+    Lua = {
+      workspace = { checkThirdParty = false },
+      telemetry = { enable = false },
+    },
+  }
 }
 
 -- Setup neovim lua configuration
@@ -51,6 +58,7 @@ mason_lspconfig.setup_handlers({
       capabilities = handler.capabilities,
       flags = handler.lsp_flags,
       settings = servers[server_name],
+      filetypes = (servers[server_name] or {}).filetypes,
     }
   end,
 })

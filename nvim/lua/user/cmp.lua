@@ -54,7 +54,6 @@ cmp.setup {
       select = true,
     },
 
-
     ['<Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
@@ -92,6 +91,7 @@ cmp.setup {
       return vim_item
     end,
   },
+
   sources = {
     { name = "nvim_lsp" },
     { name = "nvim_lua" },
