@@ -44,10 +44,8 @@ local plugins = {
 
   { -- adds indentation guides
     "lukas-reineke/indent-blankline.nvim",
-    opts = {
-      char = '┊',
-      show_trailing_blankline_indent = false,
-    }
+    main = "ibl",
+    opts = {}
   },
 
   { -- Spawns a floating terminal that can be toggled

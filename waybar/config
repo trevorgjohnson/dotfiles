@@ -1,0 +1,77 @@
+{
+    "layer": "top",
+    "position": "top",
+    "mod": "dock",
+    "exclusive": true,
+    "passthrough": false,
+    "gtk-layer-shell": true,
+    "height": 0,
+    "modules-left": [
+        "clock",
+        "hyprland/workspaces"
+    ],
+    "modules-center": ["hyprland/window"],
+    "modules-right": [
+        "backlight",
+        "network",
+        "pulseaudio",
+        "battery"
+    ],
+    "hyprland/workspaces": {
+        "disable-scroll": true,
+        "active-only": false,
+        "all-outputs": true,
+        "on-click": "activate",
+        "format": "{name}",
+        "persistent-workspaces": {
+              "*": []
+        }
+    },
+    "clock": {
+        "format": "{:  %R    %m/%d}",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+    },
+    "backlight": {
+        "device": "intel_backlight",
+        "format": "{icon} {percent}%",
+        "format-icons": ["󰃞 ", "󰃟 ", "󰃠 "],
+        "on-scroll-up": "brightnessctl -d intel_backlight s 1%+",
+        "on-scroll-down": "brightnessctl -d intel_backlight s 1%-",
+        "min-length": 6
+    },
+    "battery": {
+        "states": {
+            "full": 100,
+            "good": 99,
+            "critical": 20
+        },
+        "format": "{icon} {capacity}%",
+        "format-charging": "  {capacity}%",
+        "format-plugged": "  {capacity}%",
+        "format-alt": "{time} {icon}",
+        "format-icons": ["󰂃", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
+    },
+    "network": {
+        "format": "{ifname}",
+        "format-wifi": "{icon} {essid}",
+        "format-icons": ["󰤭 ", "󰤟 ", "󰤢 ", "󰤥 ", "󰤨 "]
+    },
+    "pulseaudio": {
+        "format": "{icon} {volume}%",
+        "tooltip": false,
+        "format-muted": " Muted",
+        "on-click": "pamixer -t",
+        "on-scroll-up": "pamixer -i 5",
+        "on-scroll-down": "pamixer -d 5",
+        "scroll-step": 5,
+        "format-icons": {
+            "headphone": " ",
+            "hands-free": " ",
+            "headset": " ",
+            "phone": " ",
+            "portable": " ",
+            "car": " ",
+            "default": [" ", " ", " "]
+        }
+    },
+}

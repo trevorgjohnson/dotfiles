@@ -2,6 +2,9 @@
 import:
   - ~/.config/alacritty/catppuccin/catppuccin-mocha.yml
 
+shell:
+  program: /bin/zsh
+
 # Make the window 85% transparent
 window:
   opacity: 0.85
