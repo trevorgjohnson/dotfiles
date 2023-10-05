@@ -54,14 +54,11 @@
 	# uses grep to find pattern (eg. git f read => 'README.md)
 	f = "!git ls-files | grep -i"
 	
-	# gets the current detached branch name
-	get-detached-branch = "!git show -s --pretty=%D HEAD | tr \", \" \"\n\" | grep \"origin/\" | sed 's/origin.//' | tr '\n' ' ' | awk '{print $NF}'"
-
-	# attaches current detached remote branch to local copy (remotes/origin/branch-name -> branch-name)
-	attach = "!git switch $(git get-detached-branch)"
-
 	# creates an interactive checkout using [fzf](https://github.com/junegunn/fzf)
-	ic = "!git checkout $(git branch -a | fzf | xargs) -q && git attach"
+	ic = "!git checkout $(git branch -a | cut -c 3- | sed 's/remotes\\/origin\\/\\(.*\\)/\\x1b[31m\\1\\x1b[0m/' | sort -ur | fzf --ansi --preview 'git lt --color=always {}' | xargs)"
+
+	# creates an interactive branch remover using [fzf](https://github.com/junegunn/fzf) (**NOTE**: to select a branch, use TAB or SHIFT+TAB. Confirm with ENTER)
+	db = "!git branch | cut -c 3- | fzf -m --preview 'git lt {}' | xargs git branch -D"
 
 	# returns interactive worktree directory using [fzf](https://github.com/junegunn/fzf) 
 	gwt = "!git worktree list | fzf | xargs | awk '{print $1}'"
