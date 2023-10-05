@@ -52,11 +52,6 @@ vim.o.expandtab = true
 vim.o.tabstop = 2
 vim.g.shiftwidth = 2
 
--- use treesitter folding
-vim.o.foldlevel = 20
-vim.o.foldmethod = "expr"
-vim.o.foldexpr = "nvim_treesitter#foldexpr()"
-
 -- Highlight briefly after yanking
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
 vim.api.nvim_create_autocmd('TextYankPost', {
