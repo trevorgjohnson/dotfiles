@@ -9,11 +9,11 @@ return {
     end,
   } },
   keys = {
-    { '<leader>?', require('telescope.builtin').oldfiles, {
+    { '<leader>?', "<cmd>Telescope oldfiles<cr>", {
       desc =
       '[?] Find recently opened files'
     }, },
-    { '<leader><space>', require('telescope.builtin').buffers, {
+    { '<leader><space>', "<cmd>Telescope buffers<cr>", {
       desc =
       '[ ] Find existing buffers'
     }, },
@@ -25,23 +25,23 @@ return {
       desc =
       '[/] Fuzzily search in current buffer]'
     }, },
-    { '<leader>ff', require('telescope.builtin').find_files, {
+    { '<leader>ff', "<cmd>Telescope find_files<cr>", {
       desc =
       '[F]ind [F]iles'
     }, },
-    { '<leader>fh', require('telescope.builtin').help_tags, {
+    { '<leader>fh', "<cmd>Telescope help_tags<cr>", {
       desc =
       '[F]ind [H]elp'
     }, },
-    { '<leader>fw', require('telescope.builtin').grep_string, {
+    { '<leader>fw', "<cmd>Telescope grep_string<cr>", {
       desc =
       '[F]ind current [W]ord'
     }, },
-    { '<leader>fg', require('telescope.builtin').live_grep, {
+    { '<leader>fg', "<cmd>Telescope live_grep<cr>", {
       desc =
       '[F]ind by [G]rep'
     }, },
-    { '<leader>fd', require('telescope.builtin').diagnostics, {
+    { '<leader>fd', "<cmd>Telescope diagnostics<cr>", {
       desc =
       '[F]ind [D]iagnostics'
     } },

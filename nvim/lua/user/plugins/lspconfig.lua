@@ -90,7 +90,6 @@ local lsp_handler = {
       print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
     end, "[W]orkspace [L]ist Folders")
   end,
-  capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 }
 
 return {
@@ -120,7 +119,7 @@ return {
           -- Use simrat39/rust-tools.nvim instead of rust_analyzer
           require("rust-tools").setup({
             server = {
-              capabilities = lsp_handler.capabilities,
+              capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities()),
               on_attach = function(client, bufnr)
                 lsp_handler.on_attach(client, bufnr)
 
