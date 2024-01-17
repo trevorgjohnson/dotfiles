@@ -39,6 +39,8 @@ vim.o.undofile = true
 vim.o.updatetime = 250
 vim.wo.signcolumn = 'yes'
 
+vim.opt.colorcolumn = '80'
+
 -- Show relative line numbers
 vim.wo.number = true
 vim.wo.relativenumber = true
