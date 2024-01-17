@@ -1,6 +1,6 @@
 [user]
+	email = tjohnson@prometheum.com
 	name = Trevor Johnson
-	email = 27569194+trevorgjohnson@users.noreply.github.com
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
@@ -59,6 +59,9 @@
 
 	# creates an interactive branch remover using [fzf](https://github.com/junegunn/fzf) (**NOTE**: to select a branch, use TAB or SHIFT+TAB. Confirm with ENTER)
 	db = "!git branch | cut -c 3- | fzf -m --preview 'git lt {}' | xargs git branch -D"
+
+	# creates an interactive branch echoer using [fzf](https://github.com/junegunn/fzf)
+	eb = "!git branch | cut -c 3- | fzf --preview 'git lt {}' | xargs echo"
 
 	# returns interactive worktree directory using [fzf](https://github.com/junegunn/fzf) 
 	gwt = "!git worktree list | fzf | xargs | awk '{print $1}'"

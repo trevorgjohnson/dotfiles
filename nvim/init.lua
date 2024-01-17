@@ -58,7 +58,7 @@ require("lazy").setup({
 
         {
                 "iamcco/markdown-preview.nvim",
-                ft = "md",
+                ft = "markdown",
                 build = function() vim.fn["mkdp#util#install"]() end,
         },
 
@@ -90,7 +90,7 @@ require("lazy").setup({
                 'akinsho/toggleterm.nvim',
                 version = "*",
                 keys = {
-                        {"<C-\\>", "<cmd>ToggleTerm<cr>", desc = "Toggles a floating terminal"}
+                        { "<C-\\>", "<cmd>ToggleTerm<cr>", desc = "Toggles a floating terminal" }
                 },
                 config = function()
                         local mocha = require("catppuccin.palettes").get_palette "mocha"
