@@ -1,6 +1,6 @@
 return {
   'nvim-telescope/telescope.nvim',
-  branch = '0.1.x',
+  tag = '0.1.5',
   dependencies = { 'nvim-lua/plenary.nvim', {
     'nvim-telescope/telescope-fzf-native.nvim',
     build = 'make',
@@ -50,7 +50,6 @@ return {
     local actions = require "telescope.actions"
     require("telescope").setup {
       defaults = {
-
         prompt_prefix = " ",
         selection_caret = " ",
         path_display = { "smart" },

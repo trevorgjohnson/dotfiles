@@ -27,10 +27,10 @@ vim.keymap.set("n", "<N>", "Nzzzv", opts)
 vim.keymap.set("n", "<leader>C", ":bdelete!<cr>", opts)
 
 -- Resize with arrows
-vim.keymap.set("n", "<A-Up>", ":resize -2<CR>", opts)
-vim.keymap.set("n", "<A-Down>", ":resize +2<CR>", opts)
-vim.keymap.set("n", "<A-Left>", ":vertical resize -2<CR>", opts)
-vim.keymap.set("n", "<A-Right>", ":vertical resize +2<CR>", opts)
+vim.keymap.set("n", "<C-S-k>", ":resize -2<CR>", opts)
+vim.keymap.set("n", "<C-S-j>", ":resize +2<CR>", opts)
+vim.keymap.set("n", "<C-S-h>", ":vertical resize -2<CR>", opts)
+vim.keymap.set("n", "<C-S-l>", ":vertical resize +2<CR>", opts)
 
 -- Navigate buffers
 vim.keymap.set("n", "<S-l>", ":bnext<CR>", opts)
