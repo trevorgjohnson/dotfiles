@@ -50,6 +50,13 @@ require("lazy").setup({
         },
 
         {
+                "folke/todo-comments.nvim",
+                dependencies = { "nvim-lua/plenary.nvim" },
+                event = { "BufReadPre", "BufNewFile" },
+                config = true
+        },
+
+        {
                 "lukas-reineke/indent-blankline.nvim",
                 event = { "BufReadPre", "BufNewFile" },
                 main = "ibl",
