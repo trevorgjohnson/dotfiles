@@ -1,7 +1,9 @@
 local servers = {
   tsserver = {},
   tailwindcss = {},
-  rust_analyzer = {},
+  rust_analyzer = {
+    rust_analyzer = { settings = { checkOnSave = { command = "clippy" } } }
+  },
   solidity_ls_nomicfoundation = {},
   lua_ls = {
     Lua = {
@@ -98,45 +100,50 @@ return {
   dependencies = {
     'folke/neodev.nvim',
     "hrsh7th/cmp-nvim-lsp",
-    "simrat39/rust-tools.nvim",
+    { "mrcjkb/rustaceanvim",                 version = "^4",                                        lazy = false, ft = "rust,toml", },
     { 'j-hui/fidget.nvim',                   tag = 'legacy',                                        opts = {} },
     { "antosha417/nvim-lsp-file-operations", config = true },
     { "williamboman/mason.nvim",             dependencies = { "williamboman/mason-lspconfig.nvim" } },
   },
   config = function()
-    require('neodev').setup() -- Setup neovim lua configuration
+    require('neodev').setup()                           -- Setup neovim lua configuration
     require('fidget').setup({ window = { blend = 0 } }) -- Turn on lsp status information
 
-    lsp_handler.setup(); -- Set up handlers for LSP
+    lsp_handler.setup();                                -- Set up handlers for LSP
 
-    require('mason').setup() -- Set up LSP installer
+    require('mason').setup()                            -- Set up LSP installer
 
     local mason_lspconfig = require("mason-lspconfig")
     mason_lspconfig.setup { ensure_installed = vim.tbl_keys(servers), }
     mason_lspconfig.setup_handlers({
       function(server_name)
         if server_name == "rust_analyzer" then
-          -- Use simrat39/rust-tools.nvim instead of rust_analyzer
-          require("rust-tools").setup({
+          ---@type RustaceanOpts
+          vim.g.rustaceanvim = {
             server = {
-              capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities()),
               on_attach = function(client, bufnr)
+                -- load default 'on_attach' capabilities
                 lsp_handler.on_attach(client, bufnr)
 
-                -- Set RT specific key maps
-                vim.keymap.set('n', '<space>ka', require("rust-tools").hover_actions.hover_actions,
-                  { buffer = bufnr, desc = "RT: Hover [A]ctions" })
-                vim.keymap.set('n', '<space>ca', require("rust-tools").code_action_group.code_action_group,
-                  { buffer = bufnr, desc = "RT: [C]ode [A]ctions" })
+                -- Use code actions through 'Rustaceanvim'
+                vim.keymap.set('n', '<space>ca', function() vim.cmd.RustLsp('codeAction') end,
+                  { silent = true, buffer = bufnr, desc = "🦀: [C]ode [A]ctions" })
 
                 -- automatically refresh codelens when entering/writing buffer
                 vim.api.nvim_create_autocmd({ "BufEnter", "BufWrite" },
                   { callback = function() vim.lsp.codelens.refresh() end })
               end,
-              settings = { ["rust-analyzer"] = { checkOnSave = { command = "clippy" } } }
+              default_settings = { servers.rust_analyzer },
+              cmd = function()
+                local mason_registry = require('mason-registry')
+                local ra_binary = mason_registry.is_installed('rust-analyzer')
+                    -- This may need to be tweaked, depending on the operating system.
+                    and mason_registry.get_package('rust-analyzer'):get_install_path() .. "/rust-analyzer"
+                    or "rust-analyzer"
+                return { ra_binary } -- You can add args to the list, such as '--log-file'
+              end
             },
-          })
-          return
+          }
         end
 
         require("lspconfig")[server_name].setup {
