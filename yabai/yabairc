@@ -21,6 +21,5 @@ yabai -m config mouse_action2 resize # opt + rightclk resizes window
 yabai -m config mouse_drop_action swap
 
 # Disable apps
-yabai -m rule --add app="^System Settings$" manage=off
-yabai -m rule --add app="^Calculator$" manage=off
-yabai -m rule --add app="^Calendar$" manage=off
+# yabai -m rule --add app="^System Settings$" manage=off
+# yabai -m rule --add app="^Calculator$" manage=off
