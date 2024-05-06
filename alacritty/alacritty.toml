@@ -1,22 +1,22 @@
 import = ["~/.config/alacritty/catppuccin/catppuccin-mocha.toml"]
 
 [font]
-size = 12.0
+size = 10.0
 
 [font.bold]
-family = "Agave Nerd Font"
+family = "RecMonoCasual Nerd Font"
 style = "Bold"
 
 [font.bold_italic]
-family = "Agave Nerd Font"
+family = "RecMonoCasual Nerd Font"
 style = "Bold Italic"
 
 [font.italic]
-family = "Agave Nerd Font"
+family = "RecMonoCasual Nerd Font"
 style = "Italic"
 
 [font.normal]
-family = "Agave Nerd Font"
+family = "RecMonoCasual Nerd Font"
 style = "Regular"
 
 [[keyboard.bindings]]
@@ -37,4 +37,5 @@ multiplier = 3
 program = "/bin/zsh"
 
 [window]
-opacity = 0.85
+opacity = 0.80
+blur = true
