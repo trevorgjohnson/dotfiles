@@ -53,7 +53,8 @@ require("lazy").setup({
                 "folke/todo-comments.nvim",
                 dependencies = { "nvim-lua/plenary.nvim" },
                 event = { "BufReadPre", "BufNewFile" },
-                config = true
+                config = true,
+                keys = { { '<leader>x', "<cmd>TodoQuickFix<cr>", { desc = '[x] Open Quickfix list looking "TODO" comments' }, } }
         },
 
         {
