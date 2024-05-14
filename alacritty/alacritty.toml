@@ -19,16 +19,6 @@ style = "Italic"
 family = "RecMonoCasual Nerd Font"
 style = "Regular"
 
-[[keyboard.bindings]]
-chars = "\u001BF"
-key = "Right"
-mods = "Alt"
-
-[[keyboard.bindings]]
-chars = "\u001BB"
-key = "Left"
-mods = "Alt"
-
 [scrolling]
 history = 10000
 multiplier = 3
@@ -39,3 +29,7 @@ program = "/bin/zsh"
 [window]
 opacity = 0.80
 blur = true
+resize_increments = true # resizes window in descrete steps
+dynamic_padding = true # spread padding evenly
+option_as_alt = "Both" # only for macOS
+decorations = "Buttonless" # hide title bar and buttons (macOS)
