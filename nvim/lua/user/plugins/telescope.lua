@@ -25,13 +25,13 @@ return {
     end,
   } },
   keys = {
-    { '<leader>?', "<cmd>Telescope oldfiles<cr>", {
+    { '<leader>?', "<cmd>Telescope keymaps<cr>", {
       desc =
-      '[?] Find recently opened files'
+      '[🔭]: find available keymaps'
     }, },
     { '<leader><space>', "<cmd>Telescope buffers<cr>", {
       desc =
-      '[ ] Find existing buffers'
+      '[🔭]: find existing buffers'
     }, },
     { '<leader>/',
       function()
@@ -39,27 +39,27 @@ return {
           .get_dropdown { previewer = false })
       end, {
       desc =
-      '[/] Fuzzily search in current buffer]'
+      '[🔭]: search in current buffer]'
     }, },
     { '<leader>ff', "<cmd>Telescope find_files<cr>", {
       desc =
-      '[F]ind [F]iles'
+      '[🔭]: [f]ind [f]iles'
     }, },
     { '<leader>fh', "<cmd>Telescope help_tags<cr>", {
       desc =
-      '[F]ind [H]elp'
+      '[🔭]: [f]ind [h]elp associated to Neovim'
     }, },
     { '<leader>fw', "<cmd>Telescope grep_string<cr>", {
       desc =
-      '[F]ind current [W]ord'
+      '[🔭]: [f]ind references of a [w]ord under the cursor'
     }, },
     { '<leader>fg', "<cmd>Telescope live_grep<cr>", {
       desc =
-      '[F]ind by [G]rep'
+      '[🔭]: [f]ind references of a word in a [g]rep-like fashion'
     }, },
     { '<leader>fd', "<cmd>Telescope diagnostics<cr>", {
       desc =
-      '[F]ind [D]iagnostics'
+      '[🔭]: [f]ind [d]iagnostics'
     } },
   },
   config = function()
@@ -109,6 +109,6 @@ return {
 
     pcall(require('telescope').load_extension, 'fzf')
 
-    vim.keymap.set('n', 'gr', require('telescope.builtin').lsp_references, { desc = "[G]oto [R]eferences" })
+    vim.keymap.set('n', 'gr', require('telescope.builtin').lsp_references, { desc = "[🔭]: [g]o to [r]eferences of a word" })
   end
 }

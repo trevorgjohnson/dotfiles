@@ -39,7 +39,8 @@ vim.o.undofile = true
 vim.o.updatetime = 250
 vim.wo.signcolumn = 'yes'
 
-vim.opt.colorcolumn = '80'
+-- sets a vertical column
+vim.o.colorcolumn = '80'
 
 -- Show relative line numbers
 vim.wo.number = true
@@ -53,6 +54,9 @@ vim.o.sidescrolloff = 8
 vim.o.expandtab = true
 vim.o.tabstop = 2
 vim.g.shiftwidth = 2
+
+-- shows all substitutions in a separate window
+vim.o.inccommand = 'split'
 
 -- Highlight briefly after yanking
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })

@@ -66,6 +66,10 @@ local lsp_handler = {
     })
   end,
   on_attach = function(_, bufnr)
+    ---Sets `keys` to `func` and include description `desc` 
+    ---@param keys string key(s) used to call `func`
+    ---@param func function function called when `keys` are pressed
+    ---@param desc string the description of the key binding
     local nmap = function(keys, func, desc)
       if desc then
         desc = 'LSP: ' .. desc
@@ -74,23 +78,17 @@ local lsp_handler = {
       vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
     end
 
-    nmap('K', vim.lsp.buf.hover, "Hover Documentation")
-    nmap('<space>sk>', vim.lsp.buf.signature_help, "[S]ignature [hover] Help")
+    nmap('K', vim.lsp.buf.hover, "[LSP]: Display documentation of a word")
+    nmap('<space>sk>', vim.lsp.buf.signature_help, "[LSP]: Displays [s]ignature help")
 
-    nmap('gd', vim.lsp.buf.definition, "[G]oto [D]efinition")
-    nmap('gD', vim.lsp.buf.declaration, "[G]oto [D]eclaration")
-    nmap('gi', vim.lsp.buf.implementation, "[G]oto [I]mplementation")
+    nmap('gd', vim.lsp.buf.definition, "[LSP]: [g]o to the [d]efinition of a word")
+    nmap('gD', vim.lsp.buf.declaration, "[LSP]: [g]o to the [D]eclaration of a word")
+    nmap('gi', vim.lsp.buf.implementation, "[LSP]: [g]o to the [i]mplementation of a word")
 
-    nmap('<space>fm', vim.lsp.buf.format, "[F]or[m]at")
-    nmap('<space>td', vim.lsp.buf.type_definition, "[T]ype [D]efinition")
-    nmap('<space>rn', vim.lsp.buf.rename, "[R]e[n]ame")
-    nmap('<space>ca', vim.lsp.buf.code_action, "[C]ode [A]ction")
-
-    nmap('<space>wa', vim.lsp.buf.add_workspace_folder, "[W]orkspace [A]dd Folder")
-    nmap('<space>wr', vim.lsp.buf.remove_workspace_folder, "[W]orkspace [R]emove Folder")
-    nmap('<space>wl', function()
-      print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-    end, "[W]orkspace [L]ist Folders")
+    nmap('<space>fm', vim.lsp.buf.format, "[LSP]: [f]or[m]at file")
+    nmap('<space>td', vim.lsp.buf.type_definition, "[LSP]: Display [t]ype [d]efinition of a word")
+    nmap('<space>rn', vim.lsp.buf.rename, "[LSP]: [r]e[n]ame all references of a word")
+    nmap('<space>ca', vim.lsp.buf.code_action, "[LSP]: Display and attempt available [c]ode [a]ctions on a word")
   end,
 }
 
@@ -127,7 +125,7 @@ return {
 
                 -- Use code actions through 'Rustaceanvim'
                 vim.keymap.set('n', '<space>ca', function() vim.cmd.RustLsp('codeAction') end,
-                  { silent = true, buffer = bufnr, desc = "🦀: [C]ode [A]ctions" })
+                  { silent = true, buffer = bufnr, desc = "[🦀-LSP]: Display and attempt available [c]ode [a]ctions on a word" })
 
                 -- automatically refresh codelens when entering/writing buffer
                 vim.api.nvim_create_autocmd({ "BufEnter", "BufWrite" },
