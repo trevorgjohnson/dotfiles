@@ -55,7 +55,14 @@ return {
     }, },
     { '<leader>fg', "<cmd>Telescope live_grep<cr>", {
       desc =
-      '[🔭]: [f]ind references of a word in a [g]rep-like fashion'
+      '[🔭]: [f]ind references of a word'
+    }, },
+    { '<leader>fc',
+      function()
+        require('telescope.builtin').find_files({ cwd = '~/.config/dotfiles', prompt_title = 'Find Files - Config' })
+      end, {
+      desc =
+      '[🔭]: [f]ind references of a word in [c]onfig'
     }, },
     { '<leader>fd', "<cmd>Telescope diagnostics<cr>", {
       desc =
@@ -68,6 +75,7 @@ return {
       defaults = {
         prompt_prefix = " ",
         selection_caret = " ",
+        multi_icon = " ",
         path_display = { "smart" },
 
         mappings = {
@@ -109,6 +117,7 @@ return {
 
     pcall(require('telescope').load_extension, 'fzf')
 
-    vim.keymap.set('n', 'gr', require('telescope.builtin').lsp_references, { desc = "[🔭]: [g]o to [r]eferences of a word" })
+    vim.keymap.set('n', 'gr', require('telescope.builtin').lsp_references,
+      { desc = "[🔭]: [g]o to [r]eferences of a word" })
   end
 }
