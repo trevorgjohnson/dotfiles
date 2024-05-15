@@ -54,7 +54,7 @@ require("lazy").setup({
                 dependencies = { "nvim-lua/plenary.nvim" },
                 event = { "BufReadPre", "BufNewFile" },
                 config = true,
-                keys = { { '<leader>x', "<cmd>TodoQuickFix<cr>", { desc = '[x] Open Quickfix list looking "TODO" comments' }, } }
+                keys = { { '<leader>x', "<cmd>TodoQuickFix<cr>", { desc = 'Open quickfix list searching for todo comments' }, } }
         },
 
         {
@@ -98,7 +98,7 @@ require("lazy").setup({
                 'akinsho/toggleterm.nvim',
                 version = "*",
                 keys = {
-                        { "<C-\\>", "<cmd>ToggleTerm<cr>", desc = "Toggles a floating terminal" }
+                        { "<C-\\>", "<cmd>ToggleTerm<cr>", desc = "Toggle floating terminal" }
                 },
                 config = function()
                         local mocha = require("catppuccin.palettes").get_palette "mocha"
