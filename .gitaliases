@@ -1,16 +1,6 @@
-[user]
-	email = tjohnson@prometheum.com
-	name = Trevor Johnson
-[filter "lfs"]
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	process = git-lfs filter-process
-	required = true
-[safe]
-	directory = /Users/trevorjohnson/neovim
-[vars]
-	master = main
-	staging = develop
+# This file should be included within your .gitconfig.
+# [include]
+#       path = .gitaliases # This path can be relative or absolute
 [alias]
 	# pull changes from remote and update/init all submodules
 	up = "!git pull --rebase --prune $@ && git submodule update --init --recursive"
