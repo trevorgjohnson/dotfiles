@@ -28,8 +28,8 @@
         }
     },
     "clock": {
-        "format": "{:  %R    %m/%d}",
-        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+        "timezone": "America/North_Dakota/Center",
+        "format": "  <span color='#aaaaaa'><span color='#ffffff'>{:%R </span> %m/%d}</span>",
     },
     "backlight": {
         "device": "intel_backlight",
@@ -53,7 +53,9 @@
     },
     "network": {
         "format": "{ifname}",
+        "on-click": "alacritty -e 'nmtui'",
         "format-wifi": "{icon} {essid}",
+        "format-ethernet": "󰈁 {essid}",
         "format-icons": ["󰤭 ", "󰤟 ", "󰤢 ", "󰤥 ", "󰤨 "]
     },
     "pulseaudio": {
@@ -61,8 +63,8 @@
         "tooltip": false,
         "format-muted": " Muted",
         "on-click": "pamixer -t",
-        "on-scroll-up": "pamixer -i 5",
-        "on-scroll-down": "pamixer -d 5",
+        "on-scroll-up": "pamixer -i 1",
+        "on-scroll-down": "pamixer -d 1",
         "scroll-step": 5,
         "format-icons": {
             "headphone": " ",
