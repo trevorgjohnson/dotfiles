@@ -16,14 +16,20 @@ end
 
 return {
   'nvim-telescope/telescope.nvim',
-  tag = '0.1.5',
+  branch = '0.1.x',
   dependencies = { 'nvim-lua/plenary.nvim', {
     'nvim-telescope/telescope-fzf-native.nvim',
     build = 'make',
     cond = function()
       return vim.fn.executable 'make' == 1
     end,
-  } },
+  },
+    -- replaces the code actions with telescope menu
+    { 'nvim-telescope/telescope-ui-select.nvim' },
+
+    -- Useful for getting pretty icons, but requires a Nerd Font.
+    { 'nvim-tree/nvim-web-devicons',            enabled = vim.g.have_nerd_font },
+  },
   keys = {
     { '<leader>?', "<cmd>Telescope keymaps<cr>", {
       desc =
@@ -35,11 +41,9 @@ return {
     }, },
     { '<leader>/',
       function()
-        require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes')
-          .get_dropdown { previewer = false })
-      end, {
-      desc =
-      '[🔭]: search in current buffer]'
+        require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
+          previewer = false })
+      end, { desc = '[🔭]: search in current buffer]'
     }, },
     { '<leader>ff', "<cmd>Telescope find_files<cr>", {
       desc =
@@ -73,11 +77,7 @@ return {
     local actions = require "telescope.actions"
     require("telescope").setup {
       defaults = {
-        prompt_prefix = " ",
-        selection_caret = " ",
-        multi_icon = " ",
         path_display = { "smart" },
-
         mappings = {
           i = {
             ["<C-j>"] = actions.move_selection_next,
@@ -92,6 +92,16 @@ return {
 
             ["<C-u>"] = actions.preview_scrolling_up,
             ["<C-d>"] = actions.preview_scrolling_down,
+
+            ["<Tab>"] = function(bufnr)
+              actions.toggle_selection(bufnr)
+              actions.move_selection_previous(bufnr)
+            end,
+
+            ["<S-Tab>"] = function(bufnr)
+              actions.toggle_selection(bufnr)
+              actions.move_selection_next(bufnr)
+            end,
           },
 
           n = {
@@ -113,9 +123,15 @@ return {
           },
         },
       },
+      extensions = { ["ui-select"] = { require("telescope.themes").get_cursor() }
+      }
     }
 
     pcall(require('telescope').load_extension, 'fzf')
+    pcall(require('telescope').load_extension, 'ui-select')
+
+    vim.keymap.set('n', 'gs', require('telescope.builtin').lsp_document_symbols,
+      { desc = "[🔭]: [g]o to document [s]ymbols" })
 
     vim.keymap.set('n', 'gr', require('telescope.builtin').lsp_references,
       { desc = "[🔭]: [g]o to [r]eferences of a word" })

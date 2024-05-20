@@ -1,6 +1,6 @@
 return {
   'hrsh7th/nvim-cmp',
-  event = 'InsertEnter', -- loads on initial insert
+  event = { "InsertEnter", "CmdlineEnter" },
   dependencies = {
     -- Adds additional completion capabilities
     "hrsh7th/cmp-nvim-lsp",
@@ -14,31 +14,31 @@ return {
     'saadparwaiz1/cmp_luasnip',
     'rafamadriz/friendly-snippets',
 
-    'onsails/lspkind.nvim', -- vs-code like pictograms
+    -- Formats the floating menu with nice nerd font icons
+    'onsails/lspkind.nvim'
   },
   config = function()
-    local cmp = require('cmp')
-    local luasnip = require('luasnip')
+    local cmp = require 'cmp'
     local lspkind = require('lspkind')
+    local luasnip = require 'luasnip'
+    luasnip.config.setup {}
 
-    require("luasnip/loaders/from_vscode").lazy_load()
-
-    cmp.setup({
-      completion = {
-        completeopt = "menu,menuone,preview,noselect",
-      },
+    cmp.setup {
       snippet = {
         expand = function(args)
           luasnip.lsp_expand(args.body)
         end,
       },
+      completion = { completeopt = 'menu,menuone,noinsert' },
+      window = {
+        completion = cmp.config.window.bordered(),
+        documentation = cmp.config.window.bordered(),
+      },
       mapping = {
         ["<Tab>"] = cmp.mapping.select_next_item(),
         ["<S-Tab>"] = cmp.mapping.select_prev_item(),
-        ["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-4)),
-        ["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(4)),
-        ["<C-Space>"] = cmp.mapping.complete(),
-        ["<C-e>"] = cmp.mapping.abort(),
+        ["<C-u>"] = cmp.mapping.scroll_docs(-4),
+        ["<C-d>"] = cmp.mapping.scroll_docs(4),
         ["<CR>"] = cmp.mapping.confirm { select = false, },
       },
       sources = {
@@ -49,11 +49,23 @@ return {
         { name = "path" },
       },
       formatting = {
+        expandable_indicator = true,
+        fields = { "kind", "abbr", "menu" },
         format = lspkind.cmp_format({
-          maxwidth = 50,
-          ellipsis_char = "...",
+          mode = 'symbol',
+          ellipsis_char = '...',
+          show_labelDetails = true,
+          before = function(_, vim_item)
+            local MAX_MENU_WIDTH = math.floor(0.4 * vim.o.columns) -- 40% of total width
+            local menu = vim_item.menu
+            local truncated_menu = vim.fn.strcharpart(menu, 0, MAX_MENU_WIDTH)
+            if truncated_menu ~= menu then
+              vim_item.menu = truncated_menu .. '…'
+            end
+            return vim_item
+          end
         })
-      },
-    })
+      }
+    }
   end
 }

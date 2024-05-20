@@ -1,17 +1,17 @@
+-- Remap space as leader key
+vim.g.mapleader = ' '
+vim.g.maplocalleader = ' '
+
 ---Returns a table of default options for a keymapping along with the description of `desc`
 ---@param desc string the description to give the keymapping
 ---@return table M list of default options along with `desc`
 local function opts_w_desc(desc)
-  local M = {}
-  M.noremap = true
-  M.silent = true
-  M.desc = desc
-  return M
+  return {
+    noremap = true,
+    silent = true,
+    desc = desc
+  }
 end
-
--- Remap space as leader key
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
 
 -- Set leader to <Nop> to prevent an possible clashing
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
