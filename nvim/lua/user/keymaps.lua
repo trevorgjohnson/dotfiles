@@ -16,6 +16,10 @@ end
 -- Set leader to <Nop> to prevent an possible clashing
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 
+-- Move up/down using display lines. Good for soft-wrapped text
+vim.keymap.set("n", "j", "gj", opts_w_desc("Move down one display line"))
+vim.keymap.set("n", "k", "gk", opts_w_desc("Move up one display line"))
+
 -- Better window navigation
 vim.keymap.set("n", "<C-h>", "<C-w>h", opts_w_desc("Move left one window"))
 vim.keymap.set("n", "<C-j>", "<C-w>j", opts_w_desc("Move down one window"))
@@ -53,7 +57,6 @@ vim.keymap.set("v", "<K>", ":m .-2<CR>==", opts_w_desc("Move the current line do
 -- Stay in indent mode
 vim.keymap.set("v", "<", "<gv", opts_w_desc("Decrease indent and remains in visual mode"))
 vim.keymap.set("v", ">", ">gv", opts_w_desc("Increase indent and stays in visual mode"))
-
 
 -- map 'p' to paste over without putting into " registery
 vim.keymap.set("v", "p", '"_dP', opts_w_desc("Paste without swapping the '\"' register"))

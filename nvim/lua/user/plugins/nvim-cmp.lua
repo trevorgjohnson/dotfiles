@@ -56,11 +56,13 @@ return {
           ellipsis_char = '...',
           show_labelDetails = true,
           before = function(_, vim_item)
-            local MAX_MENU_WIDTH = math.floor(0.4 * vim.o.columns) -- 40% of total width
             local menu = vim_item.menu
-            local truncated_menu = vim.fn.strcharpart(menu, 0, MAX_MENU_WIDTH)
-            if truncated_menu ~= menu then
-              vim_item.menu = truncated_menu .. '…'
+            if menu then
+              local MAX_MENU_WIDTH = math.floor(0.4 * vim.o.columns) -- 40% of total width
+              local truncated_menu = vim.fn.strcharpart(menu, 0, MAX_MENU_WIDTH)
+              if truncated_menu ~= menu then
+                vim_item.menu = truncated_menu .. '…'
+              end
             end
             return vim_item
           end
