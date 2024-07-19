@@ -59,7 +59,18 @@ return {
     }, },
     { '<leader>fg', "<cmd>Telescope live_grep<cr>", {
       desc =
-      '[🔭]: [f]ind references of a word'
+      '[🔭]: [f]ind [g]repped references of a word'
+    }, },
+    { '<leader>fs', "<cmd>Telescope git_status<cr>", {
+      desc =
+      '[🔭]: [f]ind the current git [s]tatus'
+    }, },
+    { '<leader>fr',
+      function()
+        require('telescope.builtin').lsp_references(require('telescope.themes').get_dropdown({ include_current_line = true, show_line = false }))
+      end, {
+      desc =
+      '[🔭]: [f]ind LSP [r]eferences of a word'
     }, },
     { '<leader>fc',
       function()

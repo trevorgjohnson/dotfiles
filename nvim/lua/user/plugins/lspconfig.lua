@@ -49,7 +49,7 @@ local servers = {
 }
 
 -- describes all of the LSP capabilities of Neovim and any defaults described by 'cmp_nvim_lsp'
----@type table|lsp.ClientCapabilities|nil
+---@type table|nil
 local capabilities;
 
 return {
@@ -106,7 +106,7 @@ return {
     },
 
     -- Lua specific LSP tooling
-    { 'folke/neodev.nvim', opts = {}, ft = "lua", },
+    { 'folke/lazydev.nvim', opts = {}, ft = "lua", },
   },
   config = function()
     vim.api.nvim_create_autocmd('LspAttach', {
@@ -118,7 +118,7 @@ return {
         end
 
         map('gd', vim.lsp.buf.definition, "[g]o to the [d]efinition of a word")
-        map('<leader>fm', vim.lsp.buf.format, "[f]or[m]at file")
+        -- map('<leader>fm', vim.lsp.buf.format, "[f]or[m]at file")
         map('<leader>td', vim.lsp.buf.type_definition, "Display [t]ype [d]efinition of a word")
         map('<leader>rn', vim.lsp.buf.rename, "[r]e[n]ame all references of a word")
         map('<leader>ca', vim.lsp.buf.code_action, "Display and attempt available [c]ode [a]ctions on a word")

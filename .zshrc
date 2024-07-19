@@ -26,3 +26,4 @@ bindkey "ç" fzf-cd-widget # For OSX, Alt-C outputs 'ç' which should use 'fzf-c
 
 # huff
 export PATH="$PATH:/Users/trevorjohnson/.huff/bin"
+. "$HOME/.cargo/env"

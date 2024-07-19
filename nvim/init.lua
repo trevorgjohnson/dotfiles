@@ -18,15 +18,28 @@ require("lazy").setup({
                 "catppuccin/nvim",
                 name = "catppuccin",
                 priority = 1000,
-                config = function()
-                        require("catppuccin").setup({
-                                transparent_background = true,
-                                flavour = "mocha",
-                                term_colors = true,
-                        })
+                opts = {
+                        default_integrations = true,
+                        transparent_background = true,
+                        flavour = "mocha",
+                        term_colors = true,
+                        ---@class CtpColors<T>: {rosewater: T, flamingo: T, pink: T, mauve: T, red: T, maroon: T, peach: T, yellow: T, green: T, teal: T, sky: T, sapphire: T, blue: T, lavender: T, text: T, subtext1: T, subtext0: T, overlay2: T, overlay1: T, overlay0: T, surface2: T, surface1: T, surface0: T, base: T, mantle: T, crust: T, none: T }
+                        ---@param colors CtpColors<string>
+                        custom_highlights = function(colors)
+                                return {
+                                        DiagnosticVirtualTextError = { bg = colors.surface0 },
+                                        CurSearch = { bg = colors.mauve }
+                                }
+                        end
+                },
+                init = function() vim.cmd.colorscheme 'catppuccin-mocha' end
+        },
 
-                        vim.cmd.colorscheme 'catppuccin-mocha'
-                end
+        {
+                "folke/tokyonight.nvim",
+                lazy = false,
+                priority = 1000,
+                opts = { style = "moon", transparent = true },
         },
 
         { "wuwe1/vim-huff",                 ft = "huff" }, -- Huff helpers
@@ -41,7 +54,7 @@ require("lazy").setup({
                 "folke/todo-comments.nvim",
                 dependencies = { "nvim-lua/plenary.nvim" },
                 event = { "BufReadPre", "BufNewFile" },
-                opts = { signs = false },
+                opts = { signs = true },
                 keys = { { '<leader>x', "<cmd>TodoQuickFix<cr>", { desc = 'Open quickfix list searching for todo comments' }, } }
         },
 
@@ -50,6 +63,26 @@ require("lazy").setup({
                 event = { "BufReadPre", "BufNewFile" },
                 main = "ibl",
                 opts = {}
+        },
+
+        {
+                "stevearc/conform.nvim",
+                event = { "BufWritePre" },
+                cmd = { "ConformInfo" },
+                keys = {
+                        { '<leader>fm',
+                                function()
+                                        require("conform").format({ async = true, lsp_fallback = true })
+                                end,
+                                { desc = '[f]or[m]at buffer' },
+                        }
+                },
+                opts = {
+                        formatters_by_ft = {
+                                typescript = { "prettier" },
+                                rust = { "rustfmt" }
+                        }
+                },
         },
 
         {
@@ -89,7 +122,6 @@ require("lazy").setup({
                         { "<C-\\>", "<cmd>ToggleTerm<cr>", desc = "Toggle floating terminal" }
                 },
                 config = function()
-                        local mocha = require("catppuccin.palettes").get_palette "mocha"
                         require("toggleterm").setup {
                                 open_mapping = [[<c-\>]],
                                 direction = "float",
@@ -98,11 +130,6 @@ require("lazy").setup({
                                         winblend = 0,
                                 },
                                 persist_mode = true,
-                                highlights = {
-                                        FloatBorder = {
-                                                guifg = mocha.blue,
-                                        },
-                                },
                         }
                 end
         },
@@ -209,6 +236,7 @@ require("lazy").setup({
         { import = 'user.plugins.lspconfig' },
 }, {
         install = { colorscheme = { 'catppuccin-mocha' } },
+        ui = { border = "rounded" },
         checker = {
                 enabled = true,
                 notify = false,
