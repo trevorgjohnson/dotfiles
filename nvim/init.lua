@@ -52,10 +52,10 @@ require("lazy").setup({
 
         {
                 "folke/todo-comments.nvim",
-                dependencies = { "nvim-lua/plenary.nvim" },
+                dependencies = { "nvim-lua/plenary.nvim", "nvim-telescope/telescope.nvim" },
                 event = { "BufReadPre", "BufNewFile" },
                 opts = { signs = true },
-                keys = { { '<leader>x', "<cmd>TodoQuickFix<cr>", { desc = 'Open quickfix list searching for todo comments' }, } }
+                keys = { { '<leader>ft', "<cmd>TodoTelescope keywords=TODO,FIX<cr>", { desc = '[🔭]: [f]ind [t]odo and fix comments' }, } }
         },
 
         {
@@ -91,18 +91,6 @@ require("lazy").setup({
                 build = function() vim.fn["mkdp#util#install"]() end,
         },
 
-
-        {
-                'akinsho/bufferline.nvim',
-                -- version = "*", -- <-- until [EC108](https://github.com/akinsho/bufferline.nvim/issues/903) is resolved
-                dependencies = { 'nvim-tree/nvim-web-devicons' },
-                opts = {
-                        options = {
-                                offsets = { { filetype = "NvimTree", text = "File Explorer", padding = 1 } },
-                        },
-                }
-        },
-
         {
                 "nvim-tree/nvim-tree.lua",
                 version = "*",
@@ -121,17 +109,12 @@ require("lazy").setup({
                 keys = {
                         { "<C-\\>", "<cmd>ToggleTerm<cr>", desc = "Toggle floating terminal" }
                 },
-                config = function()
-                        require("toggleterm").setup {
-                                open_mapping = [[<c-\>]],
-                                direction = "float",
-                                float_opts = {
-                                        border = "curved",
-                                        winblend = 0,
-                                },
-                                persist_mode = true,
-                        }
-                end
+                opts = {
+                        open_mapping = [[<c-\>]],
+                        direction = "float",
+                        float_opts = { border = "curved", winblend = 0, },
+                        persist_mode = true,
+                }
         },
 
         {
@@ -190,45 +173,44 @@ require("lazy").setup({
                 }
         },
 
-        { -- status line at the bottom
+        { -- renders markdown in editor
+                "MeanderingProgrammer/markdown.nvim",
+                main = "render-markdown",
+                ft = "markdown",
+                opts = {},
+                dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }
+        },
+
+        { -- bottom status line
                 "nvim-lualine/lualine.nvim",
                 dependencies = { "nvim-tree/nvim-web-devicons" },
-                config = function()
-                        local branch = {
-                                "branch",
+                opts = {
+                        options = {
                                 icons_enabled = true,
-                                icon = "",
-                        }
-
-                        local diff = {
-                                "diff",
-                                colored = true,
-                                symbols = { added = " ", modified = " ", removed = " " },
-                        }
-
-                        local lazy_status = {
-                                require('lazy.status').updates,
-                                cond = require('lazy.status').has_updates,
-                        }
-
-                        require("lualine").setup {
-                                options = {
-                                        icons_enabled = true,
-                                        theme = "auto",
-                                        component_separators = { left = '|', right = '|' }, -- { left = '', right = ''},
-                                        section_separators = { left = '', right = '' },
-                                        globalstatus = true,
-                                },
-                                sections = {
-                                        lualine_a = { 'mode' },
-                                        lualine_b = { branch },
-                                        lualine_c = { diff },
-                                        lualine_x = { lazy_status },
-                                        lualine_y = { 'filetype' },
-                                        lualine_z = { 'progress' }
-                                },
-                        }
-                end
+                                theme = 'catppuccin',
+                                component_separators = { left = '', right = '' }, -- { left = '', right = ''},
+                                section_separators = { left = '', right = '' },
+                                globalstatus = true,
+                        },
+                        sections = {
+                                lualine_a = { 'mode' },
+                                lualine_b = { { 'buffers', symbols = { alternate_file = '' }, use_mode_colors = true } },
+                                lualine_c = {},
+                                lualine_x = { { require('lazy.status').updates, cond = require('lazy.status').has_updates }, 'diff' },
+                                lualine_y = { 'filetype' },
+                                lualine_z = { {
+                                        'branch',
+                                        icon = "",
+                                        fmt = function(str)
+                                                local MAX_BRANCH_WIDTH = math.floor(0.08 * vim.o.columns) -- 8% of total width
+                                                if #str > MAX_BRANCH_WIDTH then
+                                                        str = vim.fn.strcharpart(str, 0, MAX_BRANCH_WIDTH) .. '…'
+                                                end
+                                                return str
+                                        end
+                                } }
+                        },
+                }
         },
 
         { import = 'user.plugins.telescope' },
