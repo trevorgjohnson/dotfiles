@@ -87,52 +87,63 @@ return {
   config = function()
     local actions = require "telescope.actions"
     require("telescope").setup {
-      defaults = {
-        path_display = { "smart" },
-        mappings = {
-          i = {
-            ["<C-j>"] = actions.move_selection_next,
-            ["<C-k>"] = actions.move_selection_previous,
+      defaults = { path_display = { "smart" }, mappings = {
+        i = {
+          ["<C-j>"] = actions.move_selection_next,
+          ["<C-k>"] = actions.move_selection_previous,
 
-            ["<C-c>"] = actions.close,
+          ["<C-c>"] = actions.close,
 
-            ["<Down>"] = actions.move_selection_next,
-            ["<Up>"] = actions.move_selection_previous,
+          ["<Down>"] = actions.move_selection_next,
+          ["<Up>"] = actions.move_selection_previous,
 
-            ["<CR>"] = select_one_or_multi,
+          ["<CR>"] = select_one_or_multi,
 
-            ["<C-u>"] = actions.preview_scrolling_up,
-            ["<C-d>"] = actions.preview_scrolling_down,
+          ["<C-u>"] = actions.preview_scrolling_up,
+          ["<C-d>"] = actions.preview_scrolling_down,
 
-            ["<Tab>"] = function(bufnr)
-              actions.toggle_selection(bufnr)
-              actions.move_selection_previous(bufnr)
-            end,
+          ["<C-v>"] = actions.select_vertical,
+          ["<C-s>"] = actions.select_horizontal,
 
-            ["<S-Tab>"] = function(bufnr)
-              actions.toggle_selection(bufnr)
-              actions.move_selection_next(bufnr)
-            end,
-          },
+          ["<C-q>"] = actions.smart_send_to_qflist + actions.open_qflist,
 
-          n = {
-            ["<esc>"] = actions.close,
-            ["<CR>"] = actions.select_default,
-
-            ["j"] = actions.move_selection_next,
-            ["k"] = actions.move_selection_previous,
-            ["<Down>"] = actions.move_selection_next,
-            ["<Up>"] = actions.move_selection_previous,
-
-            ["gg"] = actions.move_to_top,
-            ["G"] = actions.move_to_bottom,
-
-            ["<C-u>"] = actions.preview_scrolling_up,
-            ["<C-d>"] = actions.preview_scrolling_down,
-
-            ["?"] = actions.which_key,
-          },
+          ["<Tab>"] = actions.toggle_selection + actions.move_selection_previous,
+          ["<S-Tab>"] = actions.toggle_selection + actions.move_selection_next,
         },
+
+        n = {
+          ["<esc>"] = actions.close,
+          ["<CR>"] = actions.select_default,
+
+          ["j"] = actions.move_selection_next,
+          ["k"] = actions.move_selection_previous,
+          ["<Down>"] = actions.move_selection_next,
+          ["<Up>"] = actions.move_selection_previous,
+
+          ["gg"] = actions.move_to_top,
+          ["G"] = actions.move_to_bottom,
+
+          ["<C-u>"] = actions.preview_scrolling_up,
+          ["<C-d>"] = actions.preview_scrolling_down,
+
+          ["v"] = actions.select_vertical,
+          ["s"] = actions.select_horizontal,
+
+          ["q"] = actions.send_to_qflist + actions.open_qflist,
+
+          ["?"] = actions.which_key,
+        },
+      },
+      },
+      pickers = {
+        buffers = {
+          sort_lastused = true,
+          theme = "dropdown",
+          mappings = {
+            i = { ["<c-x>"] = actions.delete_buffer },
+            n = { ["x"] = actions.delete_buffer }
+          }
+        }
       },
       extensions = { ["ui-select"] = { require("telescope.themes").get_cursor() }
       }
@@ -142,9 +153,6 @@ return {
     pcall(require('telescope').load_extension, 'ui-select')
 
     vim.keymap.set('n', 'gs', require('telescope.builtin').lsp_document_symbols,
-      { desc = "[🔭]: [g]o to document [s]ymbols" })
-
-    vim.keymap.set('n', 'gr', require('telescope.builtin').lsp_references,
-      { desc = "[🔭]: [g]o to [r]eferences of a word" })
+      { desc = "[🔭]: [f]ind document [s]ymbols" })
   end
 }
