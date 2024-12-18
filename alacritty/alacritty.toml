@@ -1,5 +1,3 @@
-import = ["~/.config/alacritty/catppuccin/catppuccin-mocha.toml"]
-
 [font]
 size = 10.0
 
@@ -23,7 +21,7 @@ style = "Regular"
 history = 10000
 multiplier = 3
 
-[shell]
+[terminal.shell]
 program = "/bin/zsh"
 
 [window]
@@ -33,3 +31,8 @@ resize_increments = true # resizes window in descrete steps
 dynamic_padding = true # spread padding evenly
 option_as_alt = "Both" # only for macOS
 decorations = "Buttonless" # hide title bar and buttons (macOS)
+
+[general]
+import = ["~/.config/alacritty/catppuccin/catppuccin-mocha.toml"]
+
+[terminal]

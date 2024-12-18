@@ -1,3 +1,43 @@
+local pickers = require "telescope.pickers"
+local finders = require "telescope.finders"
+local make_entry = require "telescope.make_entry"
+local conf = require "telescope.config".values
+
+local globgrep = function(opts)
+  opts = opts or {}
+  opts.cwd = opts.cwd or vim.uv.cwd()
+  local finder = finders.new_async_job {
+    command_generator = function(prompt)
+      if not prompt or prompt == "" then
+        return nil
+      end
+      local pieces = vim.split(prompt, "  ") -- two spaces
+      local args = { "rg" }                  -- use ripgrep
+      if pieces[1] then
+        table.insert(args, "-e")
+        table.insert(args, pieces[1])
+      end
+      if pieces[2] then
+        table.insert(args, "-g")
+        table.insert(args, pieces[2])
+      end
+      ---@diagnostic disable-next-line: deprecated
+      return vim.tbl_flatten {
+        args, { "--color=never", "--no-heading", "--with-filename", "--line-number", "--column", "--smart-case" }
+      }
+    end,
+    entry_maker = make_entry.gen_from_vimgrep(opts),
+    cwd = opts.cwd
+  }
+  pickers.new(opts, {
+    debounce = 100,
+    prompt_title = "Live Glob Grep",
+    finder = finder,
+    previewer = conf.grep_previewer(opts),
+    sorter = require('telescope.sorters').empty(),
+  }):find()
+end
+
 -- Allows <cr> in telescope to select one under the cursor or multiple using <tab> (similar to fzf)
 local select_one_or_multi = function(prompt_bufnr)
   local picker = require('telescope.actions.state').get_current_picker(prompt_bufnr)
@@ -45,6 +85,16 @@ return {
           previewer = false })
       end, { desc = '[🔭]: search in current buffer]'
     }, },
+    { '<leader>fo',
+      function()
+        require('telescope.builtin').live_grep(
+          require('telescope.themes').get_dropdown({
+            grep_open_files = true,
+            prompt_title = 'Live Grep - Open Buffers',
+          })
+        )
+      end, { desc = '[🔭]: [f]ind [g]repped references of a word in open buffers'
+    }, },
     { '<leader>ff', "<cmd>Telescope find_files<cr>", {
       desc =
       '[🔭]: [f]ind [f]iles'
@@ -57,9 +107,10 @@ return {
       desc =
       '[🔭]: [f]ind references of a [w]ord under the cursor'
     }, },
-    { '<leader>fg', "<cmd>Telescope live_grep<cr>", {
-      desc =
-      '[🔭]: [f]ind [g]repped references of a word'
+    { '<leader>fg', function()
+      globgrep()
+    end, {
+      desc = '[🔭]: [f]ind [g]repped references of a word'
     }, },
     { '<leader>fs', "<cmd>Telescope git_status<cr>", {
       desc =
@@ -107,8 +158,8 @@ return {
 
           ["<C-q>"] = actions.smart_send_to_qflist + actions.open_qflist,
 
-          ["<Tab>"] = actions.toggle_selection + actions.move_selection_previous,
-          ["<S-Tab>"] = actions.toggle_selection + actions.move_selection_next,
+          ["<Tab>"] = actions.toggle_selection + actions.move_selection_next,
+          ["<S-Tab>"] = actions.toggle_selection + actions.move_selection_previous,
         },
 
         n = {

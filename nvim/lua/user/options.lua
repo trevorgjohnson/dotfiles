@@ -18,19 +18,13 @@ vim.o.smartcase = true
 
 -- set highlight on search, but clear on pressing <Esc> in normal mode
 vim.opt.hlsearch = true
-vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
-
--- disable netrw for nvim-tree
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
+vim.keymap.set('n', '<Esc>', ':nohlsearch<CR>')
 
 -- highlight current line
 vim.opt.cursorline = true
 
--- save undo history
-vim.o.breakindent = true
-
 -- display lines as one long line
+vim.o.breakindent = true
 vim.o.wrap = false
 
 -- set term gui colors (most terminals support this)
@@ -39,17 +33,8 @@ vim.o.termguicolors = true
 -- enable persistent undo
 vim.o.undofile = true
 
--- decrease update time
-vim.o.updatetime = 250
-
--- decrease mapped sequence wait time
-vim.opt.timeoutlen = 300
-
 -- keep signcolumn on by default
 vim.wo.signcolumn = 'yes'
-
--- sets a vertical column
-vim.o.colorcolumn = '80'
 
 -- Show relative line numbers
 vim.wo.number = true
@@ -83,6 +68,14 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   callback = function()
     vim.highlight.on_yank({ higroup = 'CurSearch' })
   end,
+})
+
+vim.api.nvim_create_autocmd("TermOpen", {
+  group = vim.api.nvim_create_augroup('nvim-term-open', { clear = true }),
+  callback = function()
+    vim.opt.number = false
+    vim.opt.relativenumber = false
+  end
 })
 
 -- make hover documentation have rounded bounders

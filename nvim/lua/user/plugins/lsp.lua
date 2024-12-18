@@ -11,7 +11,7 @@ local inlayHints = {
 }
 
 local servers = {
-  tsserver = {
+  ts_ls = {
     settings = {
       typescript = { inlayHints = inlayHints },
       javascript = { inlayHints = inlayHints },
@@ -48,10 +48,9 @@ local servers = {
   }
 }
 
--- describes all of the LSP capabilities of Neovim and any defaults described by 'cmp_nvim_lsp'
+-- describes all of the LSP capabilities of Neovim and any defaults described by 'blink.cmp'
 ---@type table|nil
 local capabilities;
-
 return {
   'neovim/nvim-lspconfig',
   event = { "BufReadPre", "BufNewFile" },
@@ -64,7 +63,7 @@ return {
 
     { -- Links LSP installer to lspconfig
       "williamboman/mason-lspconfig.nvim",
-      dependencies = { "hrsh7th/cmp-nvim-lsp" },
+      dependencies = { 'saghen/blink.cmp' },
       ensure_installed = vim.tbl_keys(servers or {}),
       automatic_installation = true,
       opts = {
@@ -73,7 +72,7 @@ return {
             -- grabs capabilities from local cache if not already set
             if not capabilities then
               capabilities = vim.tbl_deep_extend('force', vim.lsp.protocol.make_client_capabilities(),
-                require('cmp_nvim_lsp').default_capabilities())
+                require('blink.cmp').get_lsp_capabilities())
             end
 
             local server = servers[server_name] or {}
@@ -118,17 +117,23 @@ return {
         end
 
         map('gd', vim.lsp.buf.definition, "[g]o to the [d]efinition of a word")
-        -- map('<leader>fm', vim.lsp.buf.format, "[f]or[m]at file")
         map('<leader>td', vim.lsp.buf.type_definition, "Display [t]ype [d]efinition of a word")
         map('<leader>rn', vim.lsp.buf.rename, "[r]e[n]ame all references of a word")
         map('<leader>ca', vim.lsp.buf.code_action, "Display and attempt available [c]ode [a]ctions on a word")
 
-        -- enables inlay hints in your code if the language server supports them
-        local client = vim.lsp.get_client_by_id(event.data.client_id)
-        if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
+        local client = vim.lsp.get_client_by_id(event.data.client_id) -- get current lsp client
+        if not client then return end                                 -- return early if client not found
+
+        -- if client supports inlay hint, enable toggling using keymap
+        if client.supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
           map('<leader>th', function()
             vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled(_))
           end, '[t]oggle inlay [h]ints')
+        end
+
+        -- if client supports formatting, format on keymap
+        if client.supports_method('textDocument/formatting') then
+          map('<leader>fm', vim.lsp.buf.format, "[f]or[m]at file")
         end
       end,
     })

@@ -70,7 +70,28 @@ vim.keymap.set("", "<leader>q", ':wq<CR>', opts_w_desc("[W]rite and [Q]uit buffe
 -- write and quit all currently open buffers
 vim.keymap.set("", "<leader>Q", ':wqa<CR>', opts_w_desc("[W]rite and [Q]uit [A]ll buffers"))
 
--- See `:help vim.diagnostic.*` for documentation on any of the below functions
+-- see ':help vim.diagnostic.*' for documentation on the below
 vim.keymap.set('n', '<leader>d', vim.diagnostic.open_float, opts_w_desc("Show [D]iagnostics"))
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts_w_desc("Goto previous [D]iagnostic"))
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts_w_desc("Goto next [D]iagnostic"))
+
+-- move through qflist
+vim.keymap.set('n', '<M-n>', ':cnext<CR>')
+vim.keymap.set('n', '<M-p>', ':cprev<CR>')
+
+-- Open terminal in vertical split to the right
+vim.keymap.set("n", "<leader>tl", function()
+  vim.cmd.vnew()
+  vim.cmd.term()
+  vim.cmd.wincmd('l')
+end, opts_w_desc("Open terminal in vertical split on the right"))
+
+-- Open terminal in horizontal split on the bottom
+vim.keymap.set("n", "<leader>tj", function()
+  vim.cmd.new()
+  vim.cmd.term()
+  vim.cmd.wincmd('j')
+end, opts_w_desc("Open terminal in horizontal split on the bottom"))
+
+-- Remap 'esc' to get out of terminal mode
+vim.keymap.set("t", "<Esc>", "<C-\\><C-n>")

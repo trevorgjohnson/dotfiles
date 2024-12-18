@@ -9,17 +9,13 @@ require('user.keymaps')
 require('user.options')
 
 require("lazy").setup({
-        { -- Detect tabstop and shiftwidth automatically
-                "tpope/vim-sleuth",
-                event = { "BufReadPre", "BufNewFile" },
-        },
-
-        {
+        { -- cozy colorscheme
                 "catppuccin/nvim",
                 name = "catppuccin",
                 priority = 1000,
                 opts = {
                         default_integrations = true,
+                        integrations = { blink_cmp = true },
                         transparent_background = true,
                         flavour = "mocha",
                         term_colors = true,
@@ -35,105 +31,45 @@ require("lazy").setup({
                 init = function() vim.cmd.colorscheme 'catppuccin-mocha' end
         },
 
-        {
-                "folke/tokyonight.nvim",
-                lazy = false,
-                priority = 1000,
-                opts = { style = "moon", transparent = true },
-        },
-
-        { "wuwe1/vim-huff",                 ft = "huff" }, -- Huff helpers
-
-        {
-                "norcalli/nvim-colorizer.lua",
-                event = { "BufReadPre", "BufNewFile" },
-                opts = {},
-        },
-
-        {
+        { -- highlights todo coments
                 "folke/todo-comments.nvim",
                 dependencies = { "nvim-lua/plenary.nvim", "nvim-telescope/telescope.nvim" },
                 event = { "BufReadPre", "BufNewFile" },
                 opts = { signs = true },
-                keys = { { '<leader>ft', "<cmd>TodoTelescope keywords=TODO,FIX<cr>", { desc = '[🔭]: [f]ind [t]odo and fix comments' }, } }
         },
 
-        {
-                "lukas-reineke/indent-blankline.nvim",
-                event = { "BufReadPre", "BufNewFile" },
-                main = "ibl",
-                opts = {}
-        },
-
-        {
-                "stevearc/conform.nvim",
-                event = { "BufWritePre" },
-                cmd = { "ConformInfo" },
-                keys = {
-                        { '<leader>fm',
-                                function()
-                                        require("conform").format({ async = true, lsp_fallback = true })
-                                end,
-                                { desc = '[f]or[m]at buffer' },
-                        }
-                },
-                opts = {
-                        formatters_by_ft = {
-                                typescript = { "prettier" },
-                                rust = { "rustfmt" }
-                        }
-                },
-        },
-
-        {
+        { -- opens markdown in browser fully rendered
                 "iamcco/markdown-preview.nvim",
                 ft = "markdown",
                 build = function() vim.fn["mkdp#util#install"]() end,
         },
 
-        {
-                "nvim-tree/nvim-tree.lua",
-                version = "*",
-                dependencies = {
-                        "nvim-tree/nvim-web-devicons",
-                },
+        { -- file explorer
+                'stevearc/oil.nvim',
                 keys = {
-                        { "<leader>e", "<cmd>NvimTreeToggle<cr>", desc = "Toggle file explorer" }
-                },
-                opts = {}
-        },
-
-        {
-                'akinsho/toggleterm.nvim',
-                version = "*",
-                keys = {
-                        { "<C-\\>", "<cmd>ToggleTerm<cr>", desc = "Toggle floating terminal" }
+                        { "<leader>e", "<cmd>Oil --float<cr>", desc = "Toggle file explorer" }
                 },
                 opts = {
-                        open_mapping = [[<c-\>]],
-                        direction = "float",
-                        float_opts = { border = "curved", winblend = 0, },
-                        persist_mode = true,
-                }
+                        keymaps = {
+                                ["<C-l>"] = { "actions.select", opts = { vertical = true }, desc = "Open the entry in a vertical split" },
+                                ["<C-j>"] = { "actions.select", opts = { horizontal = true }, desc = "Open the entry in a horizontal split" },
+                                ["<C-R>"] = { "actions.refresh" },
+                                ["<leader>e"] = "actions.close",
+                        }
+                },
+                dependencies = { { "nvim-tree/nvim-web-devicons" } },
         },
 
-        {
+        { -- semantic highlighting and text object definition
                 'nvim-treesitter/nvim-treesitter',
                 event = { "BufReadPre", "BufNewFile" },
-                dependencies = {
-                        'nvim-treesitter/nvim-treesitter-textobjects',
-                },
+                dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects', },
                 build = ':TSUpdate',
                 opts = {
-                        ensure_installed = { "rust", "solidity", "lua", "typescript", "javascript" },
+                        ensure_installed = { "rust", "solidity", "lua", "typescript" },
                         auto_install = true,
                         highlight = { enable = true }
                 },
-                config = function(_, opts)
-                        require('nvim-treesitter.install').prefer_git = true
-                        ---@diagnostic disable-next-line: missing-fields
-                        require('nvim-treesitter.configs').setup(opts)
-                end,
         },
 
         { -- git decorations
@@ -173,15 +109,7 @@ require("lazy").setup({
                 }
         },
 
-        { -- renders markdown in editor
-                "MeanderingProgrammer/markdown.nvim",
-                main = "render-markdown",
-                ft = "markdown",
-                opts = {},
-                dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }
-        },
-
-        { -- bottom status line
+        { -- status and buffer line
                 "nvim-lualine/lualine.nvim",
                 dependencies = { "nvim-tree/nvim-web-devicons" },
                 opts = {
@@ -213,9 +141,40 @@ require("lazy").setup({
                 }
         },
 
+        { -- completion engine
+                'saghen/blink.cmp',
+                dependencies = 'rafamadriz/friendly-snippets',
+                version = 'v0.*',
+                opts = {
+                        keymap = {
+                                preset = 'default', -- see ':help ins-completion'
+                                ['<C-u>'] = { 'scroll_documentation_up' },
+                                ['<C-d>'] = { 'scroll_documentation_down' },
+                        },
+                        completion = {
+                                menu = {
+                                        border = 'rounded',
+                                        winhighlight =
+                                        'Normal:BlinkCmpMenu,FloatBorder:BlinkCmpMenuBorder,CursorLine:BlinkCmpMenuSelection,Search:None',
+                                },
+                                documentation = {
+                                        auto_show = true,
+                                        auto_show_delay_ms = 100,
+                                        window = { border = 'rounded', winhighlight = 'Normal:BlinkCmpDoc,FloatBorder:BlinkCmpDocBorder,CursorLine:BlinkCmpDocCursorLine,Search:None', }
+                                },
+                                ghost_text = { enabled = false, },
+                        },
+                        appearance = { nerd_font_variant = 'normal' },
+                        sources = { default = { 'lsp', 'path', 'snippets', 'buffer' }, },
+                        signature = {
+                                enabled = true,
+                                window = { border = 'rounded', winhighlight = 'Normal:BlinkCmpSignatureHelp,FloatBorder:BlinkCmpSignatureHelpBorder' }
+                        }
+                }
+        },
+
         { import = 'user.plugins.telescope' },
-        { import = 'user.plugins.nvim-cmp' },
-        { import = 'user.plugins.lspconfig' },
+        { import = 'user.plugins.lsp' },
 }, {
         install = { colorscheme = { 'catppuccin-mocha' } },
         ui = { border = "rounded" },
