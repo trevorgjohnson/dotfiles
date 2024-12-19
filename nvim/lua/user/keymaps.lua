@@ -6,11 +6,11 @@ vim.g.maplocalleader = ' '
 ---@param desc string the description to give the keymapping
 ---@return table M list of default options along with `desc`
 local function opts_w_desc(desc)
-  return {
-    noremap = true,
-    silent = true,
-    desc = desc
-  }
+        return {
+                noremap = true,
+                silent = true,
+                desc = desc
+        }
 end
 
 -- Set leader to <Nop> to prevent an possible clashing
@@ -81,17 +81,17 @@ vim.keymap.set('n', '<M-p>', ':cprev<CR>')
 
 -- Open terminal in vertical split to the right
 vim.keymap.set("n", "<leader>tl", function()
-  vim.cmd.vnew()
-  vim.cmd.term()
-  vim.cmd.wincmd('l')
+        vim.cmd.vnew()
+        vim.cmd.term()
+        vim.cmd.wincmd('l')
 end, opts_w_desc("Open terminal in vertical split on the right"))
 
 -- Open terminal in horizontal split on the bottom
 vim.keymap.set("n", "<leader>tj", function()
-  vim.cmd.new()
-  vim.cmd.term()
-  vim.cmd.wincmd('j')
+        vim.cmd.new()
+        vim.cmd.term()
+        vim.cmd.wincmd('j')
 end, opts_w_desc("Open terminal in horizontal split on the bottom"))
 
--- Remap 'esc' to get out of terminal mode
-vim.keymap.set("t", "<Esc>", "<C-\\><C-n>")
+-- Remap 2x'Esc' to get out of terminal mode
+vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>")

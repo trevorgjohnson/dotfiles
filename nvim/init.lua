@@ -31,12 +31,8 @@ require("lazy").setup({
                 init = function() vim.cmd.colorscheme 'catppuccin-mocha' end
         },
 
-        { -- highlights todo coments
-                "folke/todo-comments.nvim",
-                dependencies = { "nvim-lua/plenary.nvim", "nvim-telescope/telescope.nvim" },
-                event = { "BufReadPre", "BufNewFile" },
-                opts = { signs = true },
-        },
+        -- highlights todo coments
+        { "folke/todo-comments.nvim",       dependencies = { "nvim-lua/plenary.nvim" }, event = { "VimEnter" }, opts = { signs = true }, },
 
         { -- opens markdown in browser fully rendered
                 "iamcco/markdown-preview.nvim",
@@ -60,15 +56,16 @@ require("lazy").setup({
                 dependencies = { { "nvim-tree/nvim-web-devicons" } },
         },
 
-        { -- semantic highlighting and text object definition
+        { -- semantic highlighting
                 'nvim-treesitter/nvim-treesitter',
-                event = { "BufReadPre", "BufNewFile" },
-                dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects', },
                 build = ':TSUpdate',
+                event = { "BufReadPre", "BufNewFile" },
+                main = 'nvim-treesitter.configs',
                 opts = {
-                        ensure_installed = { "rust", "solidity", "lua", "typescript" },
+                        ensure_installed = { "rust", "solidity", "lua", "typescript", "markdown_inline", "diff" },
                         auto_install = true,
-                        highlight = { enable = true }
+                        highlight = { enable = true, },
+                        indent = { enable = true },
                 },
         },
 
@@ -144,6 +141,7 @@ require("lazy").setup({
         { -- completion engine
                 'saghen/blink.cmp',
                 dependencies = 'rafamadriz/friendly-snippets',
+                event = { "BufReadPre", "BufNewFile" },
                 version = 'v0.*',
                 opts = {
                         keymap = {

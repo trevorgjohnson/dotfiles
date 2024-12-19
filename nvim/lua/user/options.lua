@@ -1,4 +1,8 @@
-vim.o.clipboard = "unnamedplus"                        -- allows neovim to access the system clipboard
+-- scheduled to decrease startup time
+vim.schedule(function()
+        -- allows neovim to access the system clipboard
+        vim.opt.clipboard = 'unnamedplus'
+end)
 vim.o.mouse = "a"                                      -- allow the mouse to be used in neovim
 
 vim.o.cmdheight = 0                                    -- more space in the neovim command line for displaying messages
@@ -63,28 +67,28 @@ vim.o.foldexpr = "nvim_treesitter#foldexpr()"
 
 -- highlight briefly after yanking
 vim.api.nvim_create_autocmd('TextYankPost', {
-  desc = 'Highlight when yanking text',
-  group = vim.api.nvim_create_augroup('highlight-yank-group', { clear = true }),
-  callback = function()
-    vim.highlight.on_yank({ higroup = 'CurSearch' })
-  end,
+        desc = 'Highlight when yanking text',
+        group = vim.api.nvim_create_augroup('highlight-yank-group', { clear = true }),
+        callback = function()
+                vim.highlight.on_yank({ higroup = 'CurSearch' })
+        end,
 })
 
 vim.api.nvim_create_autocmd("TermOpen", {
-  group = vim.api.nvim_create_augroup('nvim-term-open', { clear = true }),
-  callback = function()
-    vim.opt.number = false
-    vim.opt.relativenumber = false
-  end
+        group = vim.api.nvim_create_augroup('nvim-term-open', { clear = true }),
+        callback = function()
+                vim.opt.number = false
+                vim.opt.relativenumber = false
+        end
 })
 
 -- make hover documentation have rounded bounders
 vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-  border = "rounded"
+        border = "rounded"
 })
 
 -- show diagnostic virtual text only on errors
 vim.diagnostic.config({
-  float = { border = "rounded", source = true, header = "" },
-  virtual_text = { severity = { min = vim.diagnostic.severity.ERROR } }
+        float = { border = "rounded", source = true, header = "" },
+        virtual_text = { severity = { min = vim.diagnostic.severity.ERROR } }
 })
