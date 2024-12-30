@@ -82,27 +82,13 @@ vim.keymap.set('n', '<M-p>', ':cprev<CR>')
 -- Remap 2x'Esc' to get out of terminal mode
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>")
 
--- FIX: doesn't share term instance and panics when creating new term after old buf was deleted
--- local term_state = { buf = -1 } -- set up local term state
+-- initialize terminal
+local terminal = require('user.terminal')
+
 -- Open terminal in vertical split to the right
--- vim.keymap.set("n", "<leader>tl", function()
---         local buf = term_state.buf
---         if buf == -1 then
---                 buf = vim.api.nvim_create_buf(false, true) -- scratch buffer
---                 vim.api.nvim_open_win(buf, true, { split = "right" })
---                 vim.cmd.term()                             -- create term instance in buffer
---                 term_state.buf = buf
---         end
---         vim.api.nvim_open_win(buf, true, { split = "right" })
--- end, opts_w_desc("Open terminal in vertical split on the right"))
--- -- Open terminal in horizontal split on the bottom
--- vim.keymap.set("n", "<leader>tj", function()
---         local buf = term_state.buf
---         if buf == -1 then
---                 buf = vim.api.nvim_create_buf(false, true) -- scratch buffer
---                 vim.api.nvim_open_win(buf, true, { split = "below" })
---                 vim.cmd.term()                             -- create term instance in buffer
---                 term_state.buf = buf
---         end
---         vim.api.nvim_open_win(buf, true, { split = "below" })
--- end, opts_w_desc("Open terminal in horizontal split on the bottom"))
+vim.keymap.set("n", "<leader>tl", function() terminal.toggle { dir = "right" } end,
+  opts_w_desc("Open terminal in vertical split on the right"))
+
+-- Open terminal in horizontal split on the bottom
+vim.keymap.set("n", "<leader>tj", function() terminal.toggle { dir = "below" } end,
+  opts_w_desc("Open terminal in horizontal split on the bottom"))

@@ -32,7 +32,7 @@ require("lazy").setup({
   },
 
   -- highlights todo coments
-  { "folke/todo-comments.nvim",       dependencies = { "nvim-lua/plenary.nvim" }, event = { "VimEnter" }, opts = { signs = true }, },
+  { "folke/todo-comments.nvim", dependencies = { "nvim-lua/plenary.nvim" }, event = { "VimEnter" }, opts = { signs = true }, },
 
   { -- opens markdown in browser fully rendered
     "iamcco/markdown-preview.nvim",
@@ -152,10 +152,12 @@ require("lazy").setup({
       completion = {
         menu = { border = 'rounded', },
         documentation = { auto_show = true, auto_show_delay_ms = 100, window = { border = 'rounded' } },
-        ghost_text = { enabled = true, },
       },
       appearance = { nerd_font_variant = 'normal' },
-      sources = { default = { 'lsp', 'path', 'snippets', 'buffer' }, },
+      sources = {
+        default = { 'lsp', 'path', 'snippets', 'buffer' },
+        cmdline = {}, -- Disable cmdline completions
+      },
       signature = { enabled = true, window = { border = 'rounded' } }
     }
   },
@@ -179,8 +181,8 @@ require("lazy").setup({
     },
   },
 
-  { import = 'user.plugins.telescope' },
-  { import = 'user.plugins.lsp' },
+  { import = 'user.telescope' },
+  { import = 'user.lsp' },
 }, {
   install = { colorscheme = { 'catppuccin-mocha' } },
   ui = { border = "rounded" },
