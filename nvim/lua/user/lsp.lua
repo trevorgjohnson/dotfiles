@@ -1,6 +1,6 @@
 -- common inlay hints used for typescript and javascript
 local inlayHints = {
-  includeInlayParameterNameHints = "all",       -- 'none' | 'literals' | 'all'
+  includeInlayParameterNameHints = "all", -- 'none' | 'literals' | 'all'
   includeInlayParameterNameHintsWhenArgumentMatchesName = true,
   includeInlayVariableTypeHints = true,
   includeInlayFunctionParameterTypeHints = true,
@@ -45,12 +45,24 @@ local servers = {
       workspace = { checkThirdParty = false },
       telemetry = { enable = false },
     },
-  }
+  },
+  nil_ls = {}
 }
 
 -- describes all of the LSP capabilities of Neovim and any defaults described by 'blink.cmp'
 ---@type table|nil
 local capabilities;
+local function attach_server(server)
+  -- grabs capabilities from local cache if not already set
+  if not capabilities then
+    capabilities = vim.tbl_deep_extend('force',
+      vim.lsp.protocol.make_client_capabilities(),
+      require('blink.cmp').get_lsp_capabilities())
+  end
+  server.capabilities = vim.tbl_deep_extend('force', server.capabilities or {}, capabilities)
+  require('lspconfig')[server.name].setup(server)
+end
+
 return {
   'neovim/nvim-lspconfig',
   event = { "BufReadPre", "BufNewFile" },
@@ -61,7 +73,7 @@ return {
     -- LSP installer
     { "williamboman/mason.nvim", opts = {} },
 
-    {             -- Links LSP installer to lspconfig
+    { -- Links LSP installer to lspconfig
       "williamboman/mason-lspconfig.nvim",
       dependencies = { 'saghen/blink.cmp' },
       ensure_installed = vim.tbl_keys(servers or {}),
@@ -69,34 +81,27 @@ return {
       opts = {
         handlers = {
           function(server_name)
-            -- grabs capabilities from local cache if not already set
-            if not capabilities then
-              capabilities = vim.tbl_deep_extend('force',
-                vim.lsp.protocol.make_client_capabilities(),
-                require('blink.cmp').get_lsp_capabilities())
+            -- attach server only if 'NIX_NEOVIM' flag isn't set
+            if not os.getenv("NIX_NEOVIM") == '1' then
+              attach_server(vim.tbl_deep_extend('force', servers[server_name] or {}, { name = server_name }))
             end
-
-            local server = servers[server_name] or {}
-            server.capabilities = vim.tbl_deep_extend('force', {}, capabilities,
-              server.capabilities or {})
-            require('lspconfig')[server_name].setup(server)
           end,
-          ['rust_analyzer'] = function() end,                               -- skip 'rust_analyzer' in favor of 'rustaceanvim'
+          ['rust_analyzer'] = function() end, -- skip 'rust_analyzer' in favor of 'rustaceanvim'
         }
-      }
+      },
     },
 
-    {             -- Rust specific LSP tooling
+    { -- Rust specific LSP tooling
       "mrcjkb/rustaceanvim",
       version = "^5",
-      lazy = false,                   -- already lazy
+      lazy = false, -- already lazy
       ft = "rust,toml",
       config = function(_, opts)
         vim.g.rustaceanvim = {
           server = {
             default_settings = { ['rust_analyzer'] = servers['rust_analyzer'] },
             cmd = function()
-              local bin_loc = 'rust-analyzer'                                           -- default to global install
+              local bin_loc = 'rust-analyzer' -- default to global install
               local mason_registry = require('mason-registry')
               if mason_registry.is_installed('rust-analyzer') then
                 local ra = mason_registry.get_package('rust-analyzer')
@@ -117,6 +122,15 @@ return {
     { 'folke/lazydev.nvim', opts = {}, ft = "lua", },
   },
   config = function()
+    -- If we're currently on nix, attempt to set up all LSPs manually under 'servers' table
+    if os.getenv("NIX_NEOVIM") == '1' then
+      for server_name, server in pairs(servers) do
+        -- skip 'rust_analyzer' in favor of 'rustaceanvim'
+        if server_name ~= 'rust_analyzer' then
+          attach_server(vim.tbl_deep_extend('force', server, { name = server_name }))
+        end
+      end
+    end
     vim.api.nvim_create_autocmd('LspAttach', {
       group = vim.api.nvim_create_augroup('lsp-attach-group', { clear = true }),
       callback = function(event)
@@ -131,8 +145,8 @@ return {
         map('<leader>ca', vim.lsp.buf.code_action,
           "Display and attempt available [c]ode [a]ctions on a word")
 
-        local client = vim.lsp.get_client_by_id(event.data.client_id)                         -- get current lsp client
-        if not client then return end                                                         -- return early if client not found
+        local client = vim.lsp.get_client_by_id(event.data.client_id) -- get current lsp client
+        if not client then return end                                 -- return early if client not found
 
         -- if client supports inlay hint, enable toggling using keymap
         if client.supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then

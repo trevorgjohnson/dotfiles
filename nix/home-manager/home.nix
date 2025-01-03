@@ -24,11 +24,18 @@ in {
       pkgs.tmux
       pkgs.zsh
       pkgs.starship
+      pkgs.yazi
       pkgs.wget
       pkgs.git
       pkgs.fzf
       pkgs.ripgrep
       pkgs.xclip
+
+      # lsps
+      pkgs.rust-analyzer
+      pkgs.typescript-language-server
+      pkgs.lua-language-server
+      pkgs.nil
 
       # language compilers
       pkgs.cargo
@@ -68,6 +75,9 @@ in {
       updatehome = "home-manager switch --flake ~/.config/nix";
     };
     initExtra = ''
+EDITOR=nvim
+NIX_NEOVIM=1 # special var to target LSP install locations
+
 # starship
 eval "$(starship init zsh)"
 
@@ -94,6 +104,17 @@ function y() {
           tag = "v0.7.1";
         };
       }
+    ];
+  };
+
+  # configure nvim (including lsp installation)
+  programs.neovim = {
+    defaultEditor = true;
+    extraPackages = [
+      # pkgs.rust-analyzer
+      # pkgs.typescript-language-server
+      # pkgs.lua-language-server
+      # pkgs.nil
     ];
   };
 }
