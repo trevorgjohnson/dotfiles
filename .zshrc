@@ -43,3 +43,6 @@ function y() {
 	fi
 	rm -f -- "$tmp"
 }
+
+# add syntax highlighting
+source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
