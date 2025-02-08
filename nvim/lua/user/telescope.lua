@@ -1,5 +1,5 @@
 ---commend Adds the glob grep picker to the global telescope pickers
----@param opts {cwd: string, pickers, finders, make_entry, conf}
+---@param opts {cwd: string; pickers: any; finders: any; make_entry: any; conf:any}
 local globgrep = function(opts)
   opts = opts or {}
   opts.cwd = opts.cwd or vim.uv.cwd()
@@ -11,8 +11,8 @@ local globgrep = function(opts)
         if not prompt or prompt == "" then
           return nil
         end
-        local pieces = vim.split(prompt, "  ")                   -- two spaces
-        local args = { "rg" }                                    -- use ripgrep
+        local pieces = vim.split(prompt, "  ") -- two spaces
+        local args = { "rg" }                  -- use ripgrep
         if pieces[1] then
           table.insert(args, "-e")
           table.insert(args, pieces[1])
@@ -105,7 +105,12 @@ return {
       '[🔭]: [f]ind references of a [w]ord under the cursor'
     }, },
     { '<leader>fg', function()
-      globgrep()
+      globgrep({
+        pickers = require("telescope.pickers"),
+        finders = require("telescope.finders"),
+        make_entry = require("telescope.make_entry"),
+        conf = require("telescope.config").values
+      })
     end, {
       desc = '[🔭]: [f]ind [g]repped references of a word'
     }, },
@@ -167,14 +172,5 @@ return {
 
     vim.keymap.set('n', 'gs', require('telescope.builtin').lsp_document_symbols,
       { desc = "[🔭]: [f]ind document [s]ymbols" })
-    vim.keymap.set('n', 'gs', function()
-      globgrep({
-        pickers = require "telescope.pickers",
-        finders = require "telescope.finders",
-        make_entry = require "telescope.make_entry",
-        conf = require "telescope.config".values
-      })
-    end,
-      { desc = "[🔭]: [f]ind [g]repped references of a word" })
   end
 }

@@ -82,7 +82,7 @@ return {
         handlers = {
           function(server_name)
             -- attach server only if 'NIX_NEOVIM' flag isn't set
-            if not os.getenv("NIX_NEOVIM") == '1' then
+            if os.getenv("NIX_NEOVIM") ~= '1' then
               attach_server(vim.tbl_deep_extend('force', servers[server_name] or {}, { name = server_name }))
             end
           end,
@@ -96,7 +96,7 @@ return {
       version = "^5",
       lazy = false, -- already lazy
       ft = "rust,toml",
-      config = function(_, opts)
+      config = function()
         vim.g.rustaceanvim = {
           server = {
             default_settings = { ['rust_analyzer'] = servers['rust_analyzer'] },
@@ -151,7 +151,7 @@ return {
         -- if client supports inlay hint, enable toggling using keymap
         if client.supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
           map('<leader>th', function()
-            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled(_))
+            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
           end, '[t]oggle inlay [h]ints')
         end
 
