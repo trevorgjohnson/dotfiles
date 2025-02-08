@@ -1,6 +1,7 @@
 # NixOS function inputs for configuration
 { config, pkgs, inputs, outputs, ... }: {
   imports = [ 
+    # NOTE: MAKE SURE TO COPY THIS FROM '/etc/nixos/hardware-configuration.nix'
     ./hardware-configuration.nix # For specifying the hardware configuration
   ];
 
