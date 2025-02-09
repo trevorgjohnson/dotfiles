@@ -13,11 +13,15 @@ in {
     stateVersion  = "24.11";
     packages = [ 
       pkgs.home-manager
+      pkgs.gnome-tweaks
+      pkgs.gnomeExtensions.blur-my-shell
 
       # applications
       pkgs.firefox
       pkgs.bitwarden
-      inputs.ghostty.packages."${pkgs.system}".default
+      pkgs.discord
+      pkgs.spotify
+      pkgs.ghostty
 
       # cli tools
       pkgs.neovim
@@ -108,13 +112,32 @@ function y() {
   };
 
   # configure nvim (including lsp installation)
-  programs.neovim = {
-    defaultEditor = true;
-    extraPackages = [
-      # pkgs.rust-analyzer
-      # pkgs.typescript-language-server
-      # pkgs.lua-language-server
-      # pkgs.nil
-    ];
+  programs.neovim = { defaultEditor = true; };
+
+  # configure gnome extentions
+  dconf = {
+    enable = true;
+    settings."org/gnome/shell" = {
+      disable-user-extensions = false;
+      enabled-extensions = with pkgs.gnomeExtensions; [
+        blur-my-shell.extensionUuid
+      ];
+      disabled-extensions = [
+        "dash-to-dock@micxgx.gmail.com"
+        "window-list@gnome-shell-extensions.gcampax.github.com"
+        "windowsNavigator@gnome-shell-extensions.gcampax.github.com"
+        "light-style@gnome-shell-extensions.gcampax.github.com"
+        "auto-move-windows@gnome-shell-extensions.gcampax.github.com"
+        "apps-menu@gnome-shell-extensions.gcampax.github.com"
+        "emoji-copy@felipeftn"
+        "native-window-placement@gnome-shell-extensions.gcampax.github.com"
+        "status-icons@gnome-shell-extensions.gcampax.github.com"
+      ];
+      # Configure individual extensions
+      # "org/gnome/shell/extensions/blur-my-shell" = {
+      #   brightness = 0.75;
+      #   noise-amount = 0;
+      # };
+    };
   };
 }

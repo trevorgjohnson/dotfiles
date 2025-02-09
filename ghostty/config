@@ -1,3 +1,4 @@
 theme = catppuccin-mocha
 background-opacity = 0.95
-background-blur-radius=20
+background-blur = 20
+window-decoration = none
