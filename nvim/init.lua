@@ -154,10 +154,8 @@ require("lazy").setup({
         documentation = { auto_show = true, auto_show_delay_ms = 100, window = { border = 'rounded' } },
       },
       appearance = { nerd_font_variant = 'normal' },
-      sources = {
-        default = { 'lsp', 'path', 'snippets', 'buffer' },
-        cmdline = {}, -- Disable cmdline completions
-      },
+      cmdline = { sources = {} }, -- Disable cmdline completions
+      sources = { default = { 'lsp', 'path', 'snippets', 'buffer' }, },
       signature = { enabled = true, window = { border = 'rounded' } }
     }
   },
