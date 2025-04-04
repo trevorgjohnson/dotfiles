@@ -16,6 +16,9 @@ end
 -- Set leader to <Nop> to prevent an possible clashing
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 
+-- Open diagnostics in a loclist
+vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+
 -- Move up/down using display lines. Good for soft-wrapped text
 vim.keymap.set("n", "j", "gj", opts_w_desc("Move down one display line"))
 vim.keymap.set("n", "k", "gk", opts_w_desc("Move up one display line"))
@@ -64,16 +67,10 @@ vim.keymap.set("v", "p", '"_dP', opts_w_desc("Paste without swapping the '\"' re
 -- map 'x' to copy deleted text into blackhole registry
 vim.keymap.set("", "x", '"_x', opts_w_desc("Delete selection to the blackhole registry"))
 
--- write and quit currently open buffer
-vim.keymap.set("", "<leader>q", ':wq<CR>', opts_w_desc("[W]rite and [Q]uit buffer"))
-
--- write and quit all currently open buffers
-vim.keymap.set("", "<leader>Q", ':wqa<CR>', opts_w_desc("[W]rite and [Q]uit [A]ll buffers"))
-
 -- see ':help vim.diagnostic.*' for documentation on the below
 vim.keymap.set('n', '<leader>d', vim.diagnostic.open_float, opts_w_desc("Show [D]iagnostics"))
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts_w_desc("Goto previous [D]iagnostic"))
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts_w_desc("Goto next [D]iagnostic"))
+vim.keymap.set('n', '[d', vim.diagnostic.get_next, opts_w_desc("Goto previous [D]iagnostic"))
+vim.keymap.set('n', ']d', vim.diagnostic.get_prev, opts_w_desc("Goto next [D]iagnostic"))
 
 -- move through qflist
 vim.keymap.set('n', '<M-n>', ':cnext<CR>')

@@ -60,6 +60,12 @@ vim.o.shiftwidth = 2
 -- shows all substitutions in a separate window
 vim.o.inccommand = 'split'
 
+--- open dialog window to confirm certain file/buffer operations
+vim.o.confirm = true
+
+-- adds rounded borders to hover docs 
+vim.o.winborder = 'rounded'
+
 -- use treesitter folding
 vim.o.foldlevel = 20
 vim.o.foldmethod = "expr"
@@ -82,13 +88,9 @@ vim.api.nvim_create_autocmd("TermOpen", {
   end
 })
 
--- make hover documentation have rounded bounders
-vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-  border = "rounded"
-})
-
--- show diagnostic virtual text only on errors
-vim.diagnostic.config({
-  float = { border = "rounded", source = true, header = "" },
+vim.diagnostic.config {
+  severity_sort = true,
+  float = { border = 'rounded', source = 'if_many' },
+  underline = { severity = vim.diagnostic.severity.ERROR },
   virtual_text = { severity = { min = vim.diagnostic.severity.ERROR } }
-})
+}

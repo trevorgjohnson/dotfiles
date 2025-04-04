@@ -149,14 +149,14 @@ return {
         if not client then return end                                 -- return early if client not found
 
         -- if client supports inlay hint, enable toggling using keymap
-        if client.supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
+        if client:supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint, event.buf) then
           map('<leader>th', function()
-            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
           end, '[t]oggle inlay [h]ints')
         end
 
         -- if client supports formatting, format on keymap
-        if client.supports_method('textDocument/formatting') then
+        if client:supports_method('textDocument/formatting', event.buf) then
           map('<leader>fm', vim.lsp.buf.format, "[f]or[m]at file")
         end
       end,
