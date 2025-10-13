@@ -101,6 +101,10 @@ return {
       desc =
       '[🔭]: [f]ind [h]elp associated to Neovim'
     }, },
+    { '<leader>fk', require('telescope.builtin').marks, { desc = '[🔭]: find mar[k] within the list of marks' }, },
+    { '<leader>fl', require('telescope.builtin').loclist, { desc = '[🔭]: find [l]oc within the loclist' }, },
+    { '<leader>fj', require('telescope.builtin').jumplist, { desc = '[🔭]: find [j]ump within the jumplist' }, },
+    { '<leader>fc', require('telescope.builtin').command_history, { desc = '[🔭]: find [c]ommand within the command history' }, },
     { '<leader>fw', "<cmd>Telescope grep_string<cr>", {
       desc =
       '[🔭]: [f]ind references of a [w]ord under the cursor'
@@ -119,13 +123,6 @@ return {
       desc =
       '[🔭]: [f]ind the current git [s]tatus'
     }, },
-    { '<leader>fr',
-      function()
-        require('telescope.builtin').lsp_references(require('telescope.themes').get_dropdown({ include_current_line = true, show_line = false }))
-      end, {
-      desc =
-      '[🔭]: [f]ind LSP [r]eferences of a word'
-    }, },
     { '<leader>fc',
       function()
         require('telescope.builtin').find_files({
@@ -141,6 +138,11 @@ return {
       desc =
       '[🔭]: [f]ind [d]iagnostics'
     } },
+    { 'grr', require('telescope.builtin').lsp_references, { desc = '[🔭]: find LSP [r]efe[r]ences of a word' }, },
+    { 'grd', require('telescope.builtin').lsp_definitions, { desc = '[🔭]: find LSP [d]efinitions of a word' }, },
+    { 'gri', require('telescope.builtin').lsp_implementations, { desc = '[🔭]: find LSP [i]mplementations of a word' }, },
+    { 'gtd', require('telescope.builtin').lsp_type_definitions, { desc = '[🔭]: find LSP [t]ype [d]efinitions of a word' }, },
+    { 'gO', require('telescope.builtin').lsp_document_symbols, { desc = '[🔭]: find LSP document symb[O]ls' }, },
   },
   config = function()
     local actions = require "telescope.actions"
@@ -170,8 +172,5 @@ return {
 
     pcall(require('telescope').load_extension, 'fzf')
     pcall(require('telescope').load_extension, 'ui-select')
-
-    vim.keymap.set('n', 'gs', require('telescope.builtin').lsp_document_symbols,
-      { desc = "[🔭]: [f]ind document [s]ymbols" })
   end
 }

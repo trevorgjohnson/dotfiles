@@ -80,14 +80,16 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+-- Set buffer options for terminal buffer
 vim.api.nvim_create_autocmd("TermOpen", {
   group = vim.api.nvim_create_augroup('nvim-term-open', { clear = true }),
   callback = function()
-    vim.opt.number = false
-    vim.opt.relativenumber = false
+    vim.wo.number = false
+    vim.wo.relativenumber = false
   end
 })
 
+-- Set diagnostic options
 vim.diagnostic.config {
   severity_sort = true,
   float = { border = 'rounded', source = 'if_many' },

@@ -16,8 +16,9 @@ eval "$(starship init zsh)"
 # nvim
 export EDITOR=nvim
 
-# zsh autocomplete
+# zsh autocomplete and syntax highlighting
 source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # fzf
 source <(fzf --zsh)
@@ -27,22 +28,10 @@ export FZF_DEFAULT_OPTS=" \
 --color=marker:#f5e0dc,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8"
 bindkey "ç" fzf-cd-widget # For OSX, Alt-C outputs 'ç' which should use 'fzf-cd-widget' instead
 
-# huff
-export PATH="$PATH:/Users/trevorjohnson/.huff/bin"
-. "$HOME/.cargo/env"
-
 # prevent C-d terminating the shell
 setopt ignore_eof 
 
-# map yazi to 'y' and enable directory hopping after closing
-function y() {
-	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
-	yazi "$@" --cwd-file="$tmp"
-	if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-		builtin cd -- "$cwd"
-	fi
-	rm -f -- "$tmp"
+# Grep (specifically ripgrep) but it automatically ignores casing, files under autogen/library folders, and searches in hidden directories (eg. .github)
+function g() {
+  rg -i --hidden -g '!node_modules/' -g '!dist/' -g '!coverage/' -g '!artifacts/' -g '!broadcast/' -g '!cache*/' -g '!lib/' -g '!out/' $@
 }
-
-# add syntax highlighting
-source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

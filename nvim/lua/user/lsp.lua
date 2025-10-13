@@ -10,6 +10,7 @@ local inlayHints = {
   includeInlayEnumMemberValueHints = true,
 }
 
+--- @type  {string: vim.lsp.Config }[]
 local servers = {
   ts_ls = {
     settings = {
@@ -17,79 +18,48 @@ local servers = {
       javascript = { inlayHints = inlayHints },
     },
   },
-  tailwindcss = {},
   rust_analyzer = {
-    cargo = {
-      allFeatures = true,
-      loadOutDirsFromCheck = true,
-      runBuildScripts = true,
-    },
-    checkOnSave = {
-      allFeatures = true,
-      command = "clippy",
-      extraArgs = { "--no-deps" },
-    },
-    procMacro = {
-      enable = true,
-      ignored = {
-        ["async-trait"] = { "async_trait" },
-        ["napi-derive"] = { "napi" },
-        ["async-recursion"] = { "async_recursion" },
+    settings = {
+      cargo = {
+        allFeatures = true,
+        loadOutDirsFromCheck = true,
+        runBuildScripts = true,
       },
-    },
+      checkOnSave = {
+        allFeatures = true,
+        command = "clippy",
+        extraArgs = { "--no-deps" },
+      },
+      procMacro = {
+        enable = true,
+        ignored = {
+          ["async-trait"] = { "async_trait" },
+          ["napi-derive"] = { "napi" },
+          ["async-recursion"] = { "async_recursion" },
+        },
+      },
+    }
   },
   solidity_ls_nomicfoundation = {},
+  typos_lsp = { init_options = { diagnosticSeverity = "Warning" } },
   lua_ls = {
-    Lua = {
-      settings = { Lua = { completion = { callSnippet = 'Replace' } } },
-      workspace = { checkThirdParty = false },
-      telemetry = { enable = false },
-    },
+    settings = {
+      Lua = {
+        completion = { callSnippet = 'Replace' },
+        workspace = { checkThirdParty = false },
+        telemetry = { enable = false },
+      },
+    }
   },
   nil_ls = {}
 }
-
--- describes all of the LSP capabilities of Neovim and any defaults described by 'blink.cmp'
----@type table|nil
-local capabilities;
-local function attach_server(server)
-  -- grabs capabilities from local cache if not already set
-  if not capabilities then
-    capabilities = vim.tbl_deep_extend('force',
-      vim.lsp.protocol.make_client_capabilities(),
-      require('blink.cmp').get_lsp_capabilities())
-  end
-  server.capabilities = vim.tbl_deep_extend('force', server.capabilities or {}, capabilities)
-  require('lspconfig')[server.name].setup(server)
-end
 
 return {
   'neovim/nvim-lspconfig',
   event = { "BufReadPre", "BufNewFile" },
   dependencies = {
     -- LSP status updates
-    { 'j-hui/fidget.nvim',       opts = { notification = { window = { winblend = 0 } } } },
-
-    -- LSP installer
-    { "williamboman/mason.nvim", opts = {} },
-
-    { -- Links LSP installer to lspconfig
-      "williamboman/mason-lspconfig.nvim",
-      dependencies = { 'saghen/blink.cmp' },
-      ensure_installed = vim.tbl_keys(servers or {}),
-      automatic_installation = true,
-      opts = {
-        handlers = {
-          function(server_name)
-            -- attach server only if 'NIX_NEOVIM' flag isn't set
-            if os.getenv("NIX_NEOVIM") ~= '1' then
-              attach_server(vim.tbl_deep_extend('force', servers[server_name] or {}, { name = server_name }))
-            end
-          end,
-          ['rust_analyzer'] = function() end, -- skip 'rust_analyzer' in favor of 'rustaceanvim'
-        }
-      },
-    },
+    { 'j-hui/fidget.nvim',  opts = { notification = { window = { winblend = 0 } } } },
 
     { -- Rust specific LSP tooling
       "mrcjkb/rustaceanvim",
@@ -119,45 +89,33 @@ return {
     },
 
     -- Lua specific LSP tooling
-    { 'folke/lazydev.nvim', opts = {}, ft = "lua", },
+    { 'folke/lazydev.nvim', opts = {},                                              ft = "lua", },
   },
   config = function()
-    -- If we're currently on nix, attempt to set up all LSPs manually under 'servers' table
-    if os.getenv("NIX_NEOVIM") == '1' then
-      for server_name, server in pairs(servers) do
-        -- skip 'rust_analyzer' in favor of 'rustaceanvim'
-        if server_name ~= 'rust_analyzer' then
-          attach_server(vim.tbl_deep_extend('force', server, { name = server_name }))
-        end
+    -- Attempt to attach
+    for s_name, s_opts in pairs(servers) do
+      -- skip 'rust_analyzer' in favor of 'rustaceanvim'
+      if s_name ~= 'rust_analyzer' then
+        -- set the configuration of the lsp
+        vim.lsp.config(s_name, s_opts or {})
+        -- enabble the server
+        vim.lsp.enable(s_name)
       end
     end
     vim.api.nvim_create_autocmd('LspAttach', {
       group = vim.api.nvim_create_augroup('lsp-attach-group', { clear = true }),
       callback = function(event)
         local map = function(keys, func, desc)
-          vim.keymap.set('n', keys, func,
-            { buffer = event.buf, desc = '[LSP]: ' .. desc })
         end
-
-        map('gd', vim.lsp.buf.definition, "[g]o to the [d]efinition of a word")
-        map('<leader>td', vim.lsp.buf.type_definition, "Display [t]ype [d]efinition of a word")
-        map('<leader>rn', vim.lsp.buf.rename, "[r]e[n]ame all references of a word")
-        map('<leader>ca', vim.lsp.buf.code_action,
-          "Display and attempt available [c]ode [a]ctions on a word")
 
         local client = vim.lsp.get_client_by_id(event.data.client_id) -- get current lsp client
         if not client then return end                                 -- return early if client not found
 
         -- if client supports inlay hint, enable toggling using keymap
         if client:supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint, event.buf) then
-          map('<leader>th', function()
-            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
-          end, '[t]oggle inlay [h]ints')
-        end
-
-        -- if client supports formatting, format on keymap
-        if client:supports_method('textDocument/formatting', event.buf) then
-          map('<leader>fm', vim.lsp.buf.format, "[f]or[m]at file")
+          vim.keymap.set('n', '<leader>th',
+            function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf }) end,
+            { buffer = event.buf, desc = '[LSP]: [t]oggle inlay [h]ints' })
         end
       end,
     })

@@ -34,7 +34,7 @@ require("lazy").setup({
     init = function() vim.cmd.colorscheme 'catppuccin-mocha' end
   },
 
-  -- highlights todo coments
+  -- highlights todo comments
   { "folke/todo-comments.nvim", dependencies = { "nvim-lua/plenary.nvim" }, event = { "VimEnter" }, opts = { signs = true }, },
 
   { -- opens markdown in browser fully rendered
@@ -64,11 +64,24 @@ require("lazy").setup({
     build = ':TSUpdate',
     event = { "BufReadPre", "BufNewFile" },
     main = 'nvim-treesitter.configs',
+    dependencies = { { "nvim-treesitter/nvim-treesitter-textobjects", } },
     opts = {
       ensure_installed = { "rust", "solidity", "lua", "typescript", "markdown_inline", "diff" },
       auto_install = true,
       highlight = { enable = true, },
       indent = { enable = true },
+
+      textobjects = {
+        lsp_interop = {
+          enable = true,
+          border = 'none',
+          floating_preview_opts = {},
+          peek_definition_code = {
+            ["<leader>k"] = "@function.outer",
+            ["<leader>K"] = "@class.outer",
+          },
+        }
+      }
     },
   },
 
