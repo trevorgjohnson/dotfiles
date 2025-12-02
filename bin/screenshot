@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Exit immediately if a command exists with a non-zero status
+set -eEo pipefail
+
+# use slurp to pick a region, grim to capture the region's image data, and wl-copy to copy it to the clipboard
+slurp | grim -g - - | wl-copy
+TMP_DIR=$(mktemp)
+wl-paste > $TMP_DIR
+notify-send -i $TMP_DIR "Screenshot taken"

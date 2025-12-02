@@ -1,0 +1,30 @@
+# add $HOME/bin to path for custom scripts
+export PATH=/home/trevo/bin:$PATH
+
+# Set some preferred terminal and editor
+export TERMINAL=ghostty
+export EDITOR=nvim
+
+# Set GTK settings
+export XCURSOR_SIZE=24
+export HYPRCURSOR_SIZE=24
+export GTK_THEME="catppuccin-mocha-mauve-standard+default"
+
+# Allow better support for screen sharing (Google Meet, Discord, etc)
+export XDG_CURRENT_DESKTOP=Hyprland
+export XDG_SESSION_DESKTOP=Hyprland
+
+# Set nvidia-related env vars
+export LIBVA_DRIVER_NAME=nvidia
+export __GLX_VENDOR_LIBRARY_NAME=nvidia
+
+# Force all apps to use Wayland
+export GDK_BACKEND=wayland,x11,*
+export QT_STYLE_OVERRIDE=kvantum
+export MOZ_ENABLE_WAYLAND=1
+export ELECTRON_OZONE_PLATFORM_HINT=wayland
+export OZONE_PLATFORM=wayland
+export XDG_SESSION_TYPE=wayland
+# throws "failed to initialize dependencies" when playing outlast trials 
+# https://www.reddit.com/r/linux_gaming/comments/19ceum5/eac_error_failed_to_initialize_dependencies_when/
+# export SDL_VIDEODRIVER=wayland

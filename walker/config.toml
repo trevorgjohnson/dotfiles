@@ -1,0 +1,37 @@
+force_keyboard_focus = true
+selection_wrap = true
+theme = "mocha"
+
+
+[keybinds]
+previous = ["Up", "ctrl p", "ctrl k"]
+next = ["Down", "ctrl n", "ctrl j"]
+quick_activate = []
+pin = []
+
+[providers]
+default = [
+  "desktopapplications",
+  "menus",
+  "websearch",
+] # providers to be queried by default
+
+[providers.actions]
+desktopapplications = [
+  { action = "pin", bind = "ctrl b", after = "AsyncReload" },
+  { action = "unpin", bind = "ctrl u", after = "AsyncReload" },
+  { action = "pinup", bind = "ctrl Up", after = "AsyncReload" },
+  { action = "pindown", bind = "ctrl Down", after = "AsyncReload" }
+]
+
+[[providers.prefixes]]
+prefix = "."
+provider = "files"
+
+[[providers.prefixes]]
+prefix = "="
+provider = "calc"
+
+[[providers.prefixes]]
+prefix = "@"
+provider = "websearch"
