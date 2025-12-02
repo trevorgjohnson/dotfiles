@@ -5,3 +5,6 @@ nvim/lazy-lock.json
 
 tmux/plugins/*
 !tmux/plugins/tpm
+
+# Ignore hyprconfig and utilize hyprconfig-template
+hypr/hyprconfig.conf
