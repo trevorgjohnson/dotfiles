@@ -34,95 +34,48 @@ menu() {
   echo -e "$options" | walker --dmenu --width 295 --minheight 1 --maxheight 600 -p "$prompt…" "${args[@]}" 2>/dev/null
 }
 
-terminal() {
-  $TERMINAL "$@"
-}
-
-present_terminal() {
-  $TERMINAL $1
-}
-
 open_in_editor() {
   notify-send "Editing config file" "$1"
   $TERMINAL -e $EDITOR "$1"
 }
 
-install() {
-  present_terminal "echo 'Installing $1...'; sudo pacman -S --noconfirm $2"
-}
-
-aur_install() {
-  present_terminal "echo 'Installing $1 from AUR...'; yay -S --noconfirm $2"
-}
-
-show_learn_menu() {
-  case $(menu "Learn" "  Keybindings\n  Hyprland\n󰣇  Arch\n󱆃  Bash") in
-  *Keybindings*) keybindings ;;
-  *Hyprland*) launch-webapp "https://wiki.hypr.land/" ;;
-  *Arch*) launch-webapp "https://wiki.archlinux.org/title/Main_page" ;;
-  *Bash*) launch-webapp "https://devhints.io/bash" ;;
-  *) show_main_menu ;;
-  esac
-}
-
-show_setup_menu() {
-  local options="  Audio\n  Wifi\n󰂯  Bluetooth\n󰍹  Monitors\n  Keybinds\n  Hyprland"
-  case $(menu "Setup" "$options") in
-  *Audio*) terminal -e wiremix ;;
-  *Wifi*)
+launch_wifi() {
     rfkill unblock wifi
-    terminal -e impala
-    ;;
-  *Bluetooth*)
+    $TERMINAL -e impala
+}
+
+launch_bluetooth() {
     rfkill unblock bluetooth
-    terminal -e bluetui
-    ;;
-  *Monitors*) open_in_editor ~/.config/hypr/monitors.conf ;;
-  *Keybinds*) open_in_editor ~/.config/hypr/keybindings.conf ;;
-  *Hyprland*) open_in_editor ~/.config/hypr/hyprland.conf ;;
-  *) show_main_menu ;;
-  esac
+    $TERMINAL -e bluetui
 }
 
-show_install_menu() {
-  case $(menu "Install" "󰣇  Package\n󰣇  AUR\n  Web App\n  TUI\n  Service") in
-  # *Package*) terminal omarchy-pkg-install ;;
-  # *AUR*) terminal omarchy-pkg-aur-install ;;
-  # *Web*) present_terminal omarchy-webapp-install ;;
-  # *TUI*) present_terminal omarchy-tui-install ;;
-  # *Service*) show_install_service_menu ;;
-  # *Style*) show_install_style_menu ;;
-  # *Development*) show_install_development_menu ;;
-  # *Editor*) show_install_editor_menu ;;
-  # *Terminal*) show_install_terminal_menu ;;
-  # *AI*) show_install_ai_menu ;;
-  # *Windows*) present_terminal "omarchy-windows-vm install" ;;
-  # *Gaming*) show_install_gaming_menu ;;
-  *) show_main_menu ;;
-  esac
-}
-
-show_system_menu() {
-  case $(menu "System" "󰤄  Suspend\n󰜉  Restart\n󰐥  Shutdown") in
-  *Suspend*) systemctl suspend ;;
-  *Restart*) systemctl reboot --no-wall ;;
-  *Shutdown*) systemctl poweroff --no-wall ;;
-  *) back_to show_main_menu ;;
-  esac
-}
-
+# current list of items:
+# 󰀻   Apps
+#    Keybinds
+#    Screenshot
+#    Hyprland
+#    Audio
+#    Wifi
+# 󰂯   Bluetooth
+# 󰤄   Suspend
+# 󰜉   Restart
+# 󰐥   Shutdown
 show_main_menu() {
-  go_to_menu "$(menu "Go" "󰀻  Apps\n󰧑  Learn\n  Setup\n󰉉  Install\n  Screenshot\n  System")"
+  go_to_menu "$(menu "Go" "󰀻   Apps\n   Keybinds\n   Screenshot\n   Hyprland\n   Audio\n   Wifi\n󰂯   Bluetooth\n󰤄   Suspend\n󰜉   Restart\n󰐥   Shutdown")"
 }
 
 go_to_menu() {
   case "${1,,}" in
   *apps*) walker -p "Launch…" ;;
-  *learn*) show_learn_menu ;;
-  *install*) show_install_menu ;;
-  *setup*) show_setup_menu ;;
+  *keybinds*) $TERMINAL -e keybindings ;;
   *screenshot*) screenshot ;;
-  *system*) show_system_menu ;;
+  *hyprland*) open_in_editor ~/.config/hypr/hyprconfig.conf ;;
+  *audio*) $TERMINAL -e wiremix ;;
+  *wifi*) launch_wifi ;;
+  *bluetooth*) launch_bluetooth ;;
+  *suspend*) systemctl suspend ;;
+  *restart*) systemctl reboot --no-wall ;;
+  *shutdown*) systemctl poweroff --no-wall ;;
   esac
 }
 

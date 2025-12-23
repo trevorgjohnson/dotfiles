@@ -57,6 +57,7 @@ bind = $mainMod, B, exec, $browser
 bind = $mainMod, Y, togglefloating,
 bind = $mainMod, Space, exec, $menu
 bind = $mainMod CONTROL, Space, exec, piggy-menu
+bind = $mainMod, code:60, exec, $menu -m symbols # Binds to 'MOD + .'
 bind = $mainMod SHIFT, S, exec, screenshot
 bind = $mainMod ALT, B, exec, shuffle_wallpaper
 
@@ -74,6 +75,11 @@ bind = $mainMod SHIFT, K, movewindow, u
 bind = $mainMod SHIFT, J, movewindow, d
 
 bind = $mainMod, R, togglesplit,
+
+bind = $mainMod CONTROL, H, movecurrentworkspacetomonitor, l
+bind = $mainMod CONTROL, L, movecurrentworkspacetomonitor, r
+bind = $mainMod CONTROL, K, movecurrentworkspacetomonitor, u
+bind = $mainMod CONTROL, J, movecurrentworkspacetomonitor, d
 
 binde = $mainMod ALT, H, resizeactive, -20 0
 binde = $mainMod ALT, L, resizeactive, 20 0
@@ -103,9 +109,14 @@ bindm = $mainMod, mouse:273, resizewindow
 bindel = ,XF86AudioRaiseVolume, exec, wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+
 bindel = ,XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
 bindel = ,XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
+# binds print_screen to mute mic
+bindel = , code:107, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
 bindel = ,XF86AudioMicMute, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
 bindel = ,XF86MonBrightnessUp, exec, brightnessctl -e4 -n2 set 5%+
 bindel = ,XF86MonBrightnessDown, exec, brightnessctl -e4 -n2 set 5%-
+bindl = , XF86AudioPlay, exec, playerctl play-pause
+bindl = , XF86AudioPrev, exec, playerctl previous
+bindl = , XF86AudioNext, exec, playerctl next
 
 ####################
 ### LOOK N' FEEL ###
