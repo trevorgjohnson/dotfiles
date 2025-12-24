@@ -13,6 +13,7 @@
     "network",
     "wireplumber",
     "cpu",
+    "battery"
   ],
   "custom/piggy": {
     "format": " ",
@@ -43,13 +44,12 @@
     }
   },
   "cpu": {
-    "interval": 5,
+    "interval": 2000, // 2 seconds
     "format": "󰍛",
     "on-click": "$TERMINAL -e btop"
   },
   "clock": {
-    "format": "{:L%A %H:%M}",
-    "format-alt": "{:L%d %B W%V %Y}",
+    "format": "{:L%H:%M   %a %D}",
     "tooltip": false,
   },
   "network": {
@@ -61,7 +61,7 @@
     "tooltip-format-wifi": "{essid} ({frequency} GHz)\n⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}",
     "tooltip-format-ethernet": "⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}",
     "tooltip-format-disconnected": "Disconnected",
-    "interval": 3,
+    "interval": 2000, // 2 seconds
     "spacing": 1,
     "on-click": "$TERMINAL -e impala"
   },
@@ -82,6 +82,9 @@
       "default": ["", "", ""]
     }
   },
+  "battery": {
+    "interval": 10000, // 10 seconds
+  },
   "group/tray-expander": {
     "orientation": "inherit",
     "drawer": {
@@ -95,17 +98,11 @@
     "tooltip": false
   },
   "custom/surfshark": {
-    "interval": 3,
+    "interval": 10000, // 10 seconds
     "format": "{}",
     "exec": "ip add show | grep -qF surfshark && echo 󱢺 || echo 󱢻",
     "on-click": "$TERMINAL -e sudo wg-quick up surfshark",
     "on-click-right": "$TERMINAL -e sudo wg-quick down surfshark"
-  },
-  "custom/screenrecording-indicator": {
-    "on-click": "screenrecord",
-    "exec": "$OMARCHY_PATH/default/waybar/indicators/screen-recording.sh",
-    "signal": 8,
-    "return-type": "json"
   },
   "tray": {
     "icon-size": 12,

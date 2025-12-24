@@ -1,0 +1,18 @@
+background-color=#1e1e2e
+text-color=#cdd6f4
+border-color=#cba6f7
+progress-color=over #313244
+
+[urgency=high]
+border-color=#fab387
+
+[urgency=critical]
+default-timeout=0
+
+anchor=top-right
+default-timeout=5000
+max-icon-size=32
+font=sans-serif 14px
+
+[app-name=Spotify]
+invisible=1
