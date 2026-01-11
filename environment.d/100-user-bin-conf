@@ -1,0 +1,2 @@
+export TERMINAL=ghostty
+PATH=/home/trevo/bin:$PATH
