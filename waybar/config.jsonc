@@ -50,7 +50,14 @@
   },
   "clock": {
     "format": "{:L%H:%M   %a %D}",
-    "tooltip": false,
+    "tooltip": true,
+    "tooltip-format": "<tt>{calendar}</tt>",
+    "calendar": {
+      "mode": "month",
+      "format": {
+        "today": "<span color='#8839ef'><b><u>{}</u></b></span>"
+      }
+    }
   },
   "network": {
     "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"],
