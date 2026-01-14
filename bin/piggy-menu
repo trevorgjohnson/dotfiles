@@ -53,6 +53,7 @@ launch_bluetooth() {
 # 󰀻   Apps
 #    Keybinds
 #    Screenshot
+# 󰸉   Wallpaper
 #    Hyprland
 #    Audio
 #    Wifi
@@ -61,7 +62,7 @@ launch_bluetooth() {
 # 󰜉   Restart
 # 󰐥   Shutdown
 show_main_menu() {
-  go_to_menu "$(menu "Go" "󰀻   Apps\n   Keybinds\n   Screenshot\n   Hyprland\n   Audio\n   Wifi\n󰂯   Bluetooth\n󰤄   Suspend\n󰜉   Restart\n󰐥   Shutdown")"
+  go_to_menu "$(menu "Go" "󰀻   Apps\n   Keybinds\n   Screenshot\n󰸉   Wallpaper\n   Hyprland\n   Audio\n   Wifi\n󰂯   Bluetooth\n󰤄   Suspend\n󰜉   Restart\n󰐥   Shutdown")"
 }
 
 go_to_menu() {
@@ -69,6 +70,7 @@ go_to_menu() {
   *apps*) walker -p "Launch…" ;;
   *keybinds*) $TERMINAL -e keybindings ;;
   *screenshot*) screenshot ;;
+  *wallpaper*) $TERMINAL -e select-wallpaper ;;
   *hyprland*) open_in_editor ~/.config/hypr/hyprconfig.conf ;;
   *audio*) $TERMINAL -e wiremix ;;
   *wifi*) launch_wifi ;;

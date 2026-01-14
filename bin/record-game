@@ -1,0 +1,21 @@
+#!/bin/bash
+
+OUTPUT_DIR="/run/media/Recordings/$(date +"Video_%Y-%m-%d_%I-%M-%p.mp4")"
+FPS=60
+VIDEO_QUALITY="high"
+AUDIO_SINK="default_output|default_input"
+RECORD_MODE="screen"
+
+# Start GPU Screen Recorder
+gpu-screen-recorder -w "$RECORD_MODE" -f "$FPS" -q "$VIDEO_QUALITY" -a "$AUDIO_SINK" -o "$OUTPUT_DIR" & RECORDER_PID=!
+
+notify-send -t 1500 'GPU Screen Recorder' "Started recording video as $OUTPUT_DIR"
+
+# Launch the game (passed via %command%)
+"$@"
+
+# Stop recording
+kill -SIGINT "$RECORDER_PID"
+wait "$RECORDER_PID"
+
+notify-send -t 1500 'GPU Screen Recorder' "Recording saved as $OUTPUT_DIR"

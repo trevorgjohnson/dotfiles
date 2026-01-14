@@ -1,0 +1,4 @@
+#!/bin/bash
+
+WALLPAPER=$(fd . /home/trevo/Pictures/wallpapers --color=always| fzf --ansi)
+hyprctl hyprpaper wallpaper ", $WALLPAPER, cover"
