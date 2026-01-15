@@ -5,7 +5,7 @@
   "spacing": 2,
   "height": 26,
   "modules-left": ["custom/piggy", "hyprland/workspaces"],
-  "modules-center": ["clock", "custom/screenrecording-indicator"],
+  "modules-center": ["clock", "custom/screen_recorder"],
   "modules-right": [
     "group/tray-expander",
     "bluetooth",
@@ -44,7 +44,7 @@
     }
   },
   "cpu": {
-    "interval": 2000, // 2 seconds
+    "interval": 2, // 2 seconds
     "format": "󰍛",
     "on-click": "$TERMINAL -e btop"
   },
@@ -59,6 +59,13 @@
       }
     }
   },
+  "custom/screen_recorder": {
+    "interval": 5, // 5 seconds
+    "format": "{}",
+    "return-type": "json",
+    "exec": "check-recording-status",
+    "on-click": "gsr-ui",
+  },
   "network": {
     "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"],
     "format": "{icon}",
@@ -68,7 +75,7 @@
     "tooltip-format-wifi": "{essid} ({frequency} GHz)\n⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}",
     "tooltip-format-ethernet": "⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}",
     "tooltip-format-disconnected": "Disconnected",
-    "interval": 2000, // 2 seconds
+    "interval": 2, // 2 seconds
     "spacing": 1,
     "on-click": "$TERMINAL -e impala"
   },
@@ -90,7 +97,7 @@
     }
   },
   "battery": {
-    "interval": 10000, // 10 seconds
+    "interval": 3, // 3 seconds
   },
   "group/tray-expander": {
     "orientation": "inherit",
@@ -105,7 +112,7 @@
     "tooltip": false
   },
   "custom/surfshark": {
-    "interval": 10000, // 10 seconds
+    "interval": 5, // 5 seconds
     "format": "{}",
     "exec": "ip add show | grep -qF surfshark && echo 󱢺 || echo 󱢻",
     "on-click": "$TERMINAL -e sudo wg-quick up surfshark",

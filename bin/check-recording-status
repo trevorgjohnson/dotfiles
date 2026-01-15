@@ -1,0 +1,11 @@
+#!/bin/bash
+
+CURRENT_MONITOR=$(hyprctl -j monitors | jq -r '.[] | select(.focused==true) | .name')
+
+# echo "$CURRENT_MONITOR"
+
+if pgrep -fa gpu-screen-recorder | grep -qi -- "$CURRENT_MONITOR"; then
+    echo '{"text":"󰑋","class":"recording","tooltip":"Recording current monitor"}'
+else
+    echo '{"text":"󰑊","class":"idle","tooltip":"Not recording"}'
+fi

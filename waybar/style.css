@@ -1,5 +1,7 @@
 @define-color foreground #cdd6f4;
 @define-color background #181824;
+@define-color accent #cba6f7;
+@define-color unavailable #45475a;
 
 * {
   background-color: @background;
@@ -76,12 +78,14 @@ tooltip {
   opacity: 0;
 }
 
-#custom-screenrecording-indicator {
-  min-width: 12px;
-  margin-left: 8.75px;
-  font-size: 10px;
+#custom-screen_recorder {
+    padding: 0 8px;
 }
 
-#custom-screenrecording-indicator.active {
-  color: #a55555;
+#custom-screen_recorder.recording {
+    color: @accent;
+}
+
+#custom-screen_recorder.idle {
+    color: @unavailable;
 }
