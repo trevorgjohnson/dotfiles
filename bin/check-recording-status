@@ -1,11 +1,14 @@
 #!/bin/bash
 
-CURRENT_MONITOR=$(hyprctl -j monitors | jq -r '.[] | select(.focused==true) | .name')
+MONITOR="$WAYBAR_OUTPUT_NAME"
 
-# echo "$CURRENT_MONITOR"
+# Fallback (in case script is run manually)
+if [ -z "$MONITOR" ]; then
+    MONITOR=$(/usr/bin/hyprctl -j monitors | /usr/bin/jq -r '.[] | select(.focused==true) | .name')
+fi
 
-if pgrep -fa gpu-screen-recorder | grep -qi -- "$CURRENT_MONITOR"; then
-    echo '{"text":"󰑋","class":"recording","tooltip":"Recording current monitor"}'
+if /usr/bin/pgrep -fa gpu-screen-recorder | /usr/bin/grep -qi -- "$MONITOR"; then
+    echo '{"text":"󰑋","class":"recording","tooltip":"Recording this monitor"}'
 else
-    echo '{"text":"󰑊","class":"idle","tooltip":"Not recording"}'
+    echo '{"text":"󰑊","class":"idle","tooltip":"Not recording this monitor"}'
 fi
