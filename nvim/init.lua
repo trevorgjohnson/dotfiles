@@ -63,25 +63,12 @@ require("lazy").setup({
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     event = { "BufReadPre", "BufNewFile" },
-    main = 'nvim-treesitter.configs',
-    dependencies = { { "nvim-treesitter/nvim-treesitter-textobjects", } },
+    main = 'nvim-treesitter.config',
     opts = {
       ensure_installed = { "rust", "solidity", "lua", "typescript", "markdown_inline", "diff" },
       auto_install = true,
       highlight = { enable = true, },
       indent = { enable = true },
-
-      textobjects = {
-        lsp_interop = {
-          enable = true,
-          border = 'none',
-          floating_preview_opts = {},
-          peek_definition_code = {
-            ["<leader>k"] = "@function.outer",
-            ["<leader>K"] = "@class.outer",
-          },
-        }
-      }
     },
   },
 

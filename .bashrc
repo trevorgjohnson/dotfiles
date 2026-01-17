@@ -17,11 +17,15 @@ export PATH="${PATH}:${HOME}/bin"
 # Add starship for ~*_pretty-ness_*~
 eval "$(starship init bash)"
 
-# alias ls and grep to exa and rg (cuz i like em more ;))
+# Add zoxide (or `z`) to a smarter cd
+eval "$(zoxide init bash)"
+
+# alias common unix cli tools with newer/modern alternatives
 alias ls='exa --color=auto'
 alias grep='rg --color=auto'
 alias find='fd --color=auto'
-# alias cat='bat --color=auto'
+alias cat='bat --color=auto'
+alias cd='z'
 
 # add fzf to shell
 eval "$(fzf --bash)"
