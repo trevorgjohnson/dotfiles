@@ -9,6 +9,7 @@ export EDITOR=nvim
 export XCURSOR_SIZE=24
 export HYPRCURSOR_SIZE=24
 export GTK_THEME="catppuccin-mocha-mauve-standard+default"
+export GDK_SCALE=1
 
 # Allow better support for screen sharing (Google Meet, Discord, etc)
 export XDG_CURRENT_DESKTOP=Hyprland
