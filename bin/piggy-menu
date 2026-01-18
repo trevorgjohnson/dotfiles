@@ -1,37 +1,13 @@
 #!/bin/sh
 
-# Set to true when going directly to a submenu, so we can exit directly
-BACK_TO_EXIT=false
-
-back_to() {
-  local parent_menu="$1"
-
-  if [[ "$BACK_TO_EXIT" == "true" ]]; then
-    exit 0
-  elif [[ -n "$parent_menu" ]]; then
-    "$parent_menu"
-  else
-    show_main_menu
-  fi
-}
-
 menu() {
   local prompt="$1"
   local options="$2"
-  local extra="$3"
-  local preselect="$4"
+  echo -e "$options" | walker --dmenu -p "$prompt…" "${args[@]}" 2>/dev/null
+}
 
-  read -r -a args <<<"$extra"
-
-  if [[ -n "$preselect" ]]; then
-    local index
-    index=$(echo -e "$options" | grep -nxF "$preselect" | cut -d: -f1)
-    if [[ -n "$index" ]]; then
-      args+=("-c" "$index")
-    fi
-  fi
-
-  echo -e "$options" | walker --dmenu --width 295 --minheight 1 --maxheight 600 -p "$prompt…" "${args[@]}" 2>/dev/null
+open_in_term() {
+  $TERMINAL -e "$1"
 }
 
 open_in_editor() {
@@ -49,41 +25,37 @@ launch_bluetooth() {
     $TERMINAL -e bluetui
 }
 
-# current list of items:
-# 󰀻   Apps
-#    Keybinds
-#    Screenshot
-# 󰸉   Wallpaper
-#    Hyprland
-#    Audio
-#    Wifi
-# 󰂯   Bluetooth
-# 󰤄   Suspend
-# 󰜉   Restart
-# 󰐥   Shutdown
-show_main_menu() {
-  go_to_menu "$(menu "Go" "󰀻   Apps\n   Keybinds\n   Screenshot\n󰸉   Wallpaper\n   Hyprland\n   Audio\n   Wifi\n󰂯   Bluetooth\n󰤄   Suspend\n󰜉   Restart\n󰐥   Shutdown")"
-}
-
 go_to_menu() {
   case "${1,,}" in
   *apps*) walker -p "Launch…" ;;
-  *keybinds*) $TERMINAL -e keybindings ;;
+  *terminal*) $TERMINAL ;;
+  *keybinds*) open_in_term keybindings ;;
   *screenshot*) screenshot ;;
-  *wallpaper*) $TERMINAL -e select-wallpaper ;;
-  *hyprland*) open_in_editor ~/.config/hypr/hyprconfig.conf ;;
-  *audio*) $TERMINAL -e wiremix ;;
+  *wallpaper*) open_in_term select-wallpaper ;;
+  *config*) open_in_editor ~/.config ;;
+  *audio*) open_in_term wiremix ;;
   *wifi*) launch_wifi ;;
   *bluetooth*) launch_bluetooth ;;
+  *vpn*) toggle-vpn ;;
   *suspend*) systemctl suspend ;;
   *restart*) systemctl reboot --no-wall ;;
   *shutdown*) systemctl poweroff --no-wall ;;
   esac
 }
 
-if [[ -n "$1" ]]; then
-  BACK_TO_EXIT=true
-  go_to_menu "$1"
-else
-  show_main_menu
-fi
+
+# current list of items:
+# 󰀻   Apps
+#    Terminal
+#    Keybinds
+#    Screenshot
+# 󰸉   Wallpaper
+#    Config
+#    Audio
+#    Wifi
+# 󰂯   Bluetooth
+# 󰴳   VPN
+# 󰤄   Suspend
+# 󰜉   Restart
+# 󰐥   Shutdown
+go_to_menu "$(menu "Go" "󰀻   Apps\n   Terminal\n   Keybinds\n   Screenshot\n󰸉   Wallpaper\n   Config\n   Audio\n   Wifi\n󰂯   Bluetooth\n󰴳   VPN\n󰤄   Suspend\n󰜉   Restart\n󰐥   Shutdown")"

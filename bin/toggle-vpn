@@ -1,0 +1,10 @@
+#!/bin/bash
+
+VPN_CONF_NAME=surfshark
+IS_VPN_CONNECTED=$(ip addr show | grep -qF $VPN_CONF_NAME && echo "1")
+
+if [[ -z $IS_VPN_CONNECTED ]]; then
+    $TERMINAL -e sudo wg-quick up surfshark
+else 
+    $TERMINAL -e sudo wg-quick down surfshark
+fi 

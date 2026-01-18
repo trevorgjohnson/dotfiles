@@ -115,8 +115,7 @@
     "interval": 5, // 5 seconds
     "format": "{}",
     "exec": "ip add show | grep -qF surfshark && echo 󱢺 || echo 󱢻",
-    "on-click": "$TERMINAL -e sudo wg-quick up surfshark",
-    "on-click-right": "$TERMINAL -e sudo wg-quick down surfshark"
+    "on-click": "$TERMINAL -e toggle-vpn",
   },
   "tray": {
     "icon-size": 12,
