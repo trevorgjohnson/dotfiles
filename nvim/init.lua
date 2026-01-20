@@ -59,6 +59,12 @@ require("lazy").setup({
     dependencies = { { "nvim-tree/nvim-web-devicons" } },
   },
 
+  {
+    "nvim-treesitter/nvim-treesitter",
+    build = ":TSUpdate",
+    opts = { highlight = { enable = true } },
+  },
+
   { -- git decorations
     "lewis6991/gitsigns.nvim",
     event = { "BufReadPre", "BufNewFile" },
