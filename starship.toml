@@ -5,8 +5,8 @@ palette = "catppuccin_mocha"
 "$schema" = 'https://starship.rs/config-schema.json'
 
 format = """
-$directory\
-$git_branch\
+$directory \
+$git_branch \
 $git_status\
 $c\
 $golang\
@@ -21,9 +21,7 @@ $character\
 add_newline = false
 
 [directory]
-format = "[ $path ](bold fg:sky)"
-truncation_length = 2
-truncation_symbol = "…/"
+format = "[$path](bold fg:sky)"
 
 # Here is how you can shorten some long paths by text replacement
 [directory.substitutions]

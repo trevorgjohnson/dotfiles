@@ -29,6 +29,9 @@
 	# unstage any files currently in staging area
 	unstage = reset HEAD
 
+  # Removes all local tags that aren't on remote
+  cleantag = "!git tag -l | xargs git tag -d && git fetch --tags"
+
 	# Uhhhh, idk lmao
 	pr = "!f() { git fetch -fu $1 refs/pull/$2/head:pr/$2; git checkout pr/$2; } ; f"
 	pr-clean = "!git for-each-ref refs/heads/pr/* --format='%(refname)' | while read ref ; do branch=${ref#refs/heads/} ; git branch -D $branch ; done"
@@ -38,11 +41,17 @@
 	# log git commits in a prettier, decorated fashion
 	lt = log --graph --decorate --pretty=oneline --abbrev-commit
 
+  # log git commits in a graphed tree using a targeted base
+  ltd = "!git log --graph --decorate --pretty=oneline --abbrev-commit HEAD...$(git eb)"
+
 	# log git commits in a short, oneline format
 	ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
 
 	# uses grep to find pattern (eg. git f read => 'README.md)
 	f = "!git ls-files | grep -i"
+
+  # TODO: file `git show` to properly show the right diff of 1 file
+  fd = "!f() { FILE=$1; git log --oneline -- $FILE | fzf --color --preview 'git show --color=always --pretty=oneline {1} -- $FILE'; }; f"
 	
 	# creates an interactive checkout using [fzf](https://github.com/junegunn/fzf)
 	ic = "!f() { BRANCH=$(git branch -a | cut -c 3- | sed 's/\\(remotes\\/[^/]*\\)\\(.*\\)/\\x1b[31m\\1 \\2\\x1b[0m/' | sed 's/remotes\\///' | sed 's/ \\// /' | sort -ur | fzf --ansi --preview 'git lt --color=always {}' | xargs) ; LOCAL_NAME=$(echo $BRANCH | awk '{print $2}') ; BRANCH=$(echo $BRANCH | sed 's/ /\\//') ; if [[ $LOCAL_NAME == '' ]]; then LOCAL_NAME=$BRANCH; fi; git switch -C $LOCAL_NAME $BRANCH; } ; f"
