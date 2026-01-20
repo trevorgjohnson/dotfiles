@@ -1,6 +1,6 @@
 theme = Catppuccin Mocha
 background-opacity = 0.80
 background-blur = 20
-window-decoration = none
+window-decoration = auto
 
-font-family = IosevkaNerdFont
+font-family = Iosevka Nerd Font Mono

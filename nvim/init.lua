@@ -59,19 +59,6 @@ require("lazy").setup({
     dependencies = { { "nvim-tree/nvim-web-devicons" } },
   },
 
-  { -- semantic highlighting
-    'nvim-treesitter/nvim-treesitter',
-    build = ':TSUpdate',
-    event = { "BufReadPre", "BufNewFile" },
-    main = 'nvim-treesitter.config',
-    opts = {
-      ensure_installed = { "rust", "solidity", "lua", "typescript", "markdown_inline", "diff" },
-      auto_install = true,
-      highlight = { enable = true, },
-      indent = { enable = true },
-    },
-  },
-
   { -- git decorations
     "lewis6991/gitsigns.nvim",
     event = { "BufReadPre", "BufNewFile" },
