@@ -20,7 +20,7 @@ local config = {
     audio_bitrate   = "",
     clip_suffix     = "-clip",
     osd_duration    = 1500,
-    show_logs       = false,
+    show_logs       = true,
     quality         = "copy",     -- default mode
     crf             = "",
     preset          = "",
@@ -111,8 +111,15 @@ local function make_clip()
     table.insert(args, out_path)
 
     if config.show_logs then msg.info("Running:", table.concat(args, " ")) end
-    mp.command_native_async({ name = "subprocess", args = args, capture_stdout = true, capture_stderr = true }, function() end)
-    mp.osd_message("Clip saved: " .. out_path, config.osd_duration)
+    mp.osd_message("Saving clip (do not close!) ...", config.osd_duration)
+    mp.command_native_async({ name = "subprocess", args = args, capture_stdout = true, capture_stderr = true }, function(success, _, err) 
+      if success then
+        mp.osd_message("Clip saved: " .. out_path, config.osd_duration)
+      else
+        if config.show_logs then msg.error(err) end
+        mp.osd_message("An error occured while saving the clip. Try running again with `-v` to see the error logs.")
+      end
+    end)
 end
 
 -- Key bindings

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+PROFILES=$(tlpctl list | awk '/^\s*[* ]\s*[a-zA-Z0-9\-]+:$/ { gsub(/^[*[:space:]]+|:$/,""); print }' | tac)
+SELECTED_PROFILE=$(printf "%s\n" "${PROFILES[@]}" | fzf)
+tlpctl set $SELECTED_PROFILE

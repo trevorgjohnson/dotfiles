@@ -13,7 +13,7 @@
     "network",
     "wireplumber",
     "cpu",
-    "battery"
+    "upower"
   ],
   "custom/piggy": {
     "format": " ",
@@ -96,8 +96,13 @@
       "default": ["", "", ""]
     }
   },
-  "battery": {
+  "upower": {
     "interval": 3, // 3 seconds
+    "on-click": "$TERMINAL -e select-tlp-profile",
+    "on-click-right": "notify-send 'Using power profile:' $(tlpctl get)",
+    "format": "{percentage}",
+    "tooltip-format": "{time}",
+    "icon-size": 10
   },
   "group/tray-expander": {
     "orientation": "inherit",

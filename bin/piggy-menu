@@ -37,6 +37,7 @@ go_to_menu() {
   *wifi*) launch_wifi ;;
   *bluetooth*) launch_bluetooth ;;
   *vpn*) toggle-vpn ;;
+  *power*) open_in_term select-tlp-profile ;;
   *suspend*) systemctl suspend ;;
   *restart*) systemctl reboot --no-wall ;;
   *shutdown*) systemctl poweroff --no-wall ;;
@@ -55,7 +56,8 @@ go_to_menu() {
 #    Wifi
 # 󰂯   Bluetooth
 # 󰴳   VPN
+# 󱐋   Power Profile
 # 󰤄   Suspend
 # 󰜉   Restart
 # 󰐥   Shutdown
-go_to_menu "$(menu "Go" "󰀻   Apps\n   Terminal\n   Keybinds\n   Screenshot\n󰸉   Wallpaper\n   Config\n   Audio\n   Wifi\n󰂯   Bluetooth\n󰴳   VPN\n󰤄   Suspend\n󰜉   Restart\n󰐥   Shutdown")"
+go_to_menu "$(menu "Go" "󰀻   Apps\n   Terminal\n   Keybinds\n   Screenshot\n󰸉   Wallpaper\n   Config\n   Audio\n   Wifi\n󰂯   Bluetooth\n󰴳   VPN\n󱐋   Power Profile\n󰤄   Suspend\n󰜉   Restart\n󰐥   Shutdown")"
