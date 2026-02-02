@@ -24,7 +24,8 @@ local config = {
     quality         = "copy",     -- default mode
     crf             = "",
     preset          = "",
-    scale           = ""          -- e.g. "1280:-1"
+    scale           = "",         -- e.g. "1280:-1"
+    make_parallel   = false       -- enables the use of experimental parallel transcoding (may cause artifacts)
 }
 
 -- Quality presets
@@ -102,6 +103,13 @@ local function make_clip()
         if p.audio_bitrate and p.audio_bitrate ~= "" then
             table.insert(args, "-b:a"); table.insert(args, p.audio_bitrate)
         end
+    end
+
+    if p.make_parallel then
+      table.insert(args, "properties"); table.insert(args, "x265-medium")
+      table.insert(args, "real_time"); table.insert(args, "-16")
+      table.insert(args, "threads"); table.insert(args, "0")
+      table.insert(args, "x265-params=crf"); table.insert(args, "33")
     end
 
     if p.scale and p.scale ~= "" then
