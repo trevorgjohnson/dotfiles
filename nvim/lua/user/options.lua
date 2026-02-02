@@ -26,6 +26,11 @@ vim.keymap.set('n', '<Esc>', ':nohlsearch<CR>')
 
 -- highlight current line
 vim.opt.cursorline = true
+-- Decrease update time
+vim.o.updatetime = 250
+
+-- Decrease mapped sequence wait time
+vim.o.timeoutlen = 300
 
 -- display lines as one long line
 vim.o.breakindent = true
@@ -94,5 +99,7 @@ vim.diagnostic.config {
   severity_sort = true,
   float = { border = 'rounded', source = 'if_many' },
   underline = { severity = vim.diagnostic.severity.ERROR },
-  virtual_text = { severity = { min = vim.diagnostic.severity.ERROR } }
+  virtual_text = { severity = { min = vim.diagnostic.severity.ERROR } },
+  -- Auto open the float, so you can easily read the errors when jumping with `[d` and `]d`
+  jump = { float = true },
 }

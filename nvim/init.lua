@@ -5,7 +5,8 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
   if vim.v.shell_error ~= 0 then
     error('Error cloning lazy.nvim:\n' .. out)
   end
-end ---@diagnostic disable-next-line: undefined-field
+end
+---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
 require('user.keymaps')
@@ -61,8 +62,15 @@ require("lazy").setup({
 
   {
     "nvim-treesitter/nvim-treesitter",
-    build = ":TSUpdate",
-    opts = { highlight = { enable = true } },
+    config = function()
+      local filetypes = { 'bash', 'solidity', 'rust', 'typescript', 'javascript', 'lua', 'markdown', 'markdown_inline' }
+      require('nvim-treesitter').install(filetypes)
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = filetypes,
+        callback = function() vim.treesitter.start() end,
+      })
+    end,
+
   },
 
   { -- git decorations
@@ -138,7 +146,7 @@ require("lazy").setup({
     'saghen/blink.cmp',
     dependencies = 'rafamadriz/friendly-snippets',
     event = { "BufReadPre", "BufNewFile" },
-    version = 'v0.*',
+    version = 'v1.*',
     opts = {
       keymap = {
         preset = 'default', -- see ':help ins-completion'
@@ -149,7 +157,7 @@ require("lazy").setup({
         menu = { border = 'rounded', },
         documentation = { auto_show = true, auto_show_delay_ms = 100, window = { border = 'rounded' } },
       },
-      appearance = { nerd_font_variant = 'normal' },
+      appearance = { nerd_font_variant = 'mono' },
       cmdline = { enabled = false },
       sources = { default = { 'lsp', 'path', 'snippets', 'buffer' }, },
       signature = { enabled = true, window = { border = 'rounded' } }
@@ -161,9 +169,7 @@ require("lazy").setup({
     cmd = { "ConformInfo" },
     keys = {
       { '<leader>fm',
-        function()
-          require("conform").format({ async = true, lsp_format = "fallback" })
-        end,
+        function() require("conform").format({ async = true, lsp_format = "fallback" }) end,
         { desc = '[f]or[m]at buffer' },
       }
     },

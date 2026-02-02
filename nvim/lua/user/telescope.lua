@@ -53,97 +53,19 @@ end
 return {
   'nvim-telescope/telescope.nvim',
   event = 'VimEnter',
-  branch = '0.1.x',
-  dependencies = { 'nvim-lua/plenary.nvim', {
-    'nvim-telescope/telescope-fzf-native.nvim',
-    build = 'make',
-    cond = function()
-      return vim.fn.executable 'make' == 1
-    end,
-  },
+  dependencies = {
+    'nvim-lua/plenary.nvim', 
+    {
+      'nvim-telescope/telescope-fzf-native.nvim',
+      build = 'make',
+      cond = function() return vim.fn.executable 'make' == 1 end,
+    },
     -- replaces the code actions with telescope menu
     { 'nvim-telescope/telescope-ui-select.nvim' },
-
     -- Useful for getting pretty icons, but requires a Nerd Font.
     { 'nvim-tree/nvim-web-devicons',            enabled = vim.g.have_nerd_font },
   },
-  keys = {
-    { '<leader>?', "<cmd>Telescope keymaps<cr>", {
-      desc =
-      '[🔭]: find available keymaps'
-    }, },
-    { '<leader><space>', "<cmd>Telescope buffers<cr>", {
-      desc =
-      '[🔭]: find existing buffers'
-    }, },
-    { '<leader>/',
-      function()
-        require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes')
-          .get_dropdown {
-            previewer = false })
-      end, { desc = '[🔭]: search in current buffer]'
-    }, },
-    { '<leader>fo',
-      function()
-        require('telescope.builtin').live_grep(
-          require('telescope.themes').get_dropdown({
-            grep_open_files = true,
-            prompt_title = 'Live Grep - Open Buffers',
-          })
-        )
-      end, { desc = '[🔭]: [f]ind [g]repped references of a word in open buffers'
-    }, },
-    { '<leader>ff', "<cmd>Telescope find_files<cr>", {
-      desc =
-      '[🔭]: [f]ind [f]iles'
-    }, },
-    { '<leader>fh', "<cmd>Telescope help_tags<cr>", {
-      desc =
-      '[🔭]: [f]ind [h]elp associated to Neovim'
-    }, },
-    { '<leader>fk', require('telescope.builtin').marks, { desc = '[🔭]: find mar[k] within the list of marks' }, },
-    { '<leader>fl', require('telescope.builtin').loclist, { desc = '[🔭]: find [l]oc within the loclist' }, },
-    { '<leader>fj', require('telescope.builtin').jumplist, { desc = '[🔭]: find [j]ump within the jumplist' }, },
-    { '<leader>fc', require('telescope.builtin').command_history, { desc = '[🔭]: find [c]ommand within the command history' }, },
-    { '<leader>fw', "<cmd>Telescope grep_string<cr>", {
-      desc =
-      '[🔭]: [f]ind references of a [w]ord under the cursor'
-    }, },
-    { '<leader>fg', function()
-      globgrep({
-        pickers = require("telescope.pickers"),
-        finders = require("telescope.finders"),
-        make_entry = require("telescope.make_entry"),
-        conf = require("telescope.config").values
-      })
-    end, {
-      desc = '[🔭]: [f]ind [g]repped references of a word'
-    }, },
-    { '<leader>fs', "<cmd>Telescope git_status<cr>", {
-      desc =
-      '[🔭]: [f]ind the current git [s]tatus'
-    }, },
-    { '<leader>fc',
-      function()
-        require('telescope.builtin').find_files({
-          cwd = '~/.config/dotfiles',
-          prompt_title =
-          'Find Files - Config'
-        })
-      end, {
-      desc =
-      '[🔭]: [f]ind references of a word in [c]onfig'
-    }, },
-    { '<leader>fd', "<cmd>Telescope diagnostics<cr>", {
-      desc =
-      '[🔭]: [f]ind [d]iagnostics'
-    } },
-    { 'grr', require('telescope.builtin').lsp_references, { desc = '[🔭]: find LSP [r]efe[r]ences of a word' }, },
-    { 'grd', require('telescope.builtin').lsp_definitions, { desc = '[🔭]: find LSP [d]efinitions of a word' }, },
-    { 'gri', require('telescope.builtin').lsp_implementations, { desc = '[🔭]: find LSP [i]mplementations of a word' }, },
-    { 'gtd', require('telescope.builtin').lsp_type_definitions, { desc = '[🔭]: find LSP [t]ype [d]efinitions of a word' }, },
-    { 'gO', require('telescope.builtin').lsp_document_symbols, { desc = '[🔭]: find LSP document symb[O]ls' }, },
-  },
+
   config = function()
     local actions = require "telescope.actions"
 
@@ -172,5 +94,33 @@ return {
 
     pcall(require('telescope').load_extension, 'fzf')
     pcall(require('telescope').load_extension, 'ui-select')
+    local builtin = require "telescope.builtin"
+
+    local nmap = function(keys, func, desc)
+      vim.keymap.set('n', keys, func,
+      { buffer = bufnr, desc = '[🔭 ]: ' .. desc })
+    end
+
+    -- set telescope keybindings
+    nmap('<leader>?', "<cmd>Telescope keymaps<cr>", '[🔭]: find available keymaps')
+    nmap('<leader><space>', "<cmd>Telescope buffers<cr>", '[🔭]: find existing buffers')
+    nmap('<leader>/', function() builtin.current_buffer_fuzzy_find(require('telescope.themes') .get_dropdown { previewer = false }) end, '[🔭]: search in current buffer]')
+    nmap('<leader>fo', function() builtin.live_grep( require('telescope.themes').get_dropdown({ grep_open_files = true, prompt_title = 'Live Grep - Open Buffers', }) ) end, '[🔭]: [f]ind [g]repped references of a word in open buffers')
+    nmap('<leader>ff', "<cmd>Telescope find_files<cr>", '[🔭]: [f]ind [f]iles')
+    nmap('<leader>fh', "<cmd>Telescope help_tags<cr>", '[🔭]: [f]ind [h]elp associated to Neovim')
+    nmap('<leader>fk', builtin.marks, '[🔭]: find mar[k] within the list of marks')
+    nmap('<leader>fl', builtin.loclist, '[🔭]: find [l]oc within the loclist')
+    nmap('<leader>fj', builtin.jumplist, '[🔭]: find [j]ump within the jumplist')
+    nmap('<leader>fc', builtin.command_history, '[🔭]: find [c]ommand within the command history')
+    nmap('<leader>fw', "<cmd>Telescope grep_string<cr>", '[🔭]: [f]ind references of a [w]ord under the cursor')
+    nmap('<leader>fg', function() globgrep({ pickers = require("telescope.pickers"), finders = require("telescope.finders"), make_entry = require("telescope.make_entry"), conf = require("telescope.config").values }) end, '[🔭]: [f]ind [g]repped references of a word')
+    nmap('<leader>fs', "<cmd>Telescope git_status<cr>", '[🔭]: [f]ind the current git [s]tatus')
+    nmap('<leader>fc', function() builtin.find_files({ cwd = vim.fn.stdpath 'config', prompt_title = 'Find Files - Config' }) end, '[🔭]: [f]ind references of a word in [c]onfig')
+    nmap('<leader>fd', "<cmd>Telescope diagnostics<cr>", '[🔭]: [f]ind [d]iagnostics')
+    nmap('grr', builtin.lsp_references, '[🔭]: find LSP [r]efe[r]ences of a word')
+    nmap('grd', builtin.lsp_definitions, '[🔭]: find LSP [d]efinitions of a word')
+    nmap('gri', builtin.lsp_implementations, '[🔭]: find LSP [i]mplementations of a word')
+    nmap('gtd', builtin.lsp_type_definitions, '[🔭]: find LSP [t]ype [d]efinitions of a word')
+    nmap('gO', builtin.lsp_document_symbols, '[🔭]: find LSP document symb[O]ls')
   end
 }

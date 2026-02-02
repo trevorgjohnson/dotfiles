@@ -88,14 +88,16 @@ return {
       end
     },
 
-    -- Lua specific LSP tooling
-    { 'folke/lazydev.nvim', opts = {},                                              ft = "lua", },
+    { 'folke/lazydev.nvim', opts = {}, ft = "lua", }, -- Lua specific LSP tooling
+    'saghen/blink.cmp', -- Allows extra capabilities provided by blink.cmp
   },
   config = function()
+    local capabilities = require('blink.cmp').get_lsp_capabilities()
     -- Attempt to attach
     for s_name, s_opts in pairs(servers) do
       -- skip 'rust_analyzer' in favor of 'rustaceanvim'
       if s_name ~= 'rust_analyzer' then
+        server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
         -- set the configuration of the lsp
         vim.lsp.config(s_name, s_opts or {})
         -- enabble the server
@@ -105,9 +107,6 @@ return {
     vim.api.nvim_create_autocmd('LspAttach', {
       group = vim.api.nvim_create_augroup('lsp-attach-group', { clear = true }),
       callback = function(event)
-        local map = function(keys, func, desc)
-        end
-
         local client = vim.lsp.get_client_by_id(event.data.client_id) -- get current lsp client
         if not client then return end                                 -- return early if client not found
 
