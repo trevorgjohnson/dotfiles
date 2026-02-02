@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Remember to update the `Exec` under the freecad
+# desktop application to launch this instead:
+# `Exec=launch-freecad - --single-instance %F`
+
+# forces x11 for freecad
+QT_QPA_PLATFORM=xcb freecad "$@"
