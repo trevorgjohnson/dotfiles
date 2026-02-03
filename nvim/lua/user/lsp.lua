@@ -97,7 +97,7 @@ return {
     for s_name, s_opts in pairs(servers) do
       -- skip 'rust_analyzer' in favor of 'rustaceanvim'
       if s_name ~= 'rust_analyzer' then
-        server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+        s_opts.capabilities = vim.tbl_deep_extend('force', {}, capabilities, s_opts.capabilities or {})
         -- set the configuration of the lsp
         vim.lsp.config(s_name, s_opts or {})
         -- enabble the server
