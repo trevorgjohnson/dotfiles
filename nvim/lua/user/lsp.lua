@@ -92,7 +92,6 @@ return {
     'saghen/blink.cmp', -- Allows extra capabilities provided by blink.cmp
   },
   config = function()
-    local capabilities = require('blink.cmp').get_lsp_capabilities()
     -- Attempt to attach
     for s_name, s_opts in pairs(servers) do
       -- skip 'rust_analyzer' in favor of 'rustaceanvim'
