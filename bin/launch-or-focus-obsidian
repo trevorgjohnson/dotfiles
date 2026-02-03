@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Launches Obsidian or focuses it if already open
+
+launch-or-focus obsidian "obsidian -disable-gpu --enable-wayland-ime"

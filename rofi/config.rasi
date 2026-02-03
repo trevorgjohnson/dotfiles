@@ -1,17 +1,26 @@
-configuration{
-    modi: "run,drun,window";
-    icon-theme: "Oranchelo";
-    show-icons: true;
-    terminal: "alacritty";
-    drun-display-format: "{icon} {name}";
-    location: 0;
-    disable-history: false;
-    hide-scrollbar: true;
-    display-drun: "   Apps ";
-    display-run: "   Run ";
-    display-window: " 﩯  Window";
-    display-Network: " 󰤨  Network";
-    sidebar-mode: true;
+configuration {
+  modes: "window,drun,ssh,combi";
+	combi-modes: "window,drun";
+	show-icons: true;
+	terminal: "ghostty";
+  window-format: "{w}  {c}  {t}";
+  drun-display-format: "{name} [<span weight='light' size='small'><i>({generic})</i></span>]";
+/*	sort: false;*/
+/*	sorting-method: "normal";*/
+/*	scroll-method: 0;*/
+/*	combi-display-format: "{mode} {text}";*/
+  timeout {
+      action: "kb-cancel";
+      delay:  0;
+  }
+  filebrowser {
+      directories-first: true;
+      sorting-method:    "name";
+  }
+  combi {
+    // Name of the prompt in combi mode
+    display-name: "Launch";
+  }
 }
 
-@theme "catppuccin-mocha"
+@theme "catppuccin"

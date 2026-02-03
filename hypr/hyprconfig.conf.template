@@ -10,10 +10,6 @@ exec-once = /usr/lib/xdg-desktop-portal-gtk
 exec-once = systemctl start --user waybar.service
 exec-once = systemctl start --user hyprpaper.service
 
-# Start elephant and a persistent walker instance in the background (within a UWSM-managed "slice") for faster startup
-exec-once = setsid uwsm-app -- elephant &
-exec-once = setsid uwsm-app -- walker --gapplication-service &
-
 ################
 ### MONITORS ###
 ################
@@ -38,7 +34,7 @@ monitor=,2560x1600@60,auto,1
 $terminal = ghostty +new-window # the +new-window allows terminals to be opened extremely quickly while the ghostty service runs in the background
 $browser = chromium --disable-features=WaylandWpColorManagerV1 --password-store=basic
 $fileManager = nautilus --new-window
-$menu = walker
+$menu = rofi -show drun
 $notes = obsidian -disable-gpu --enable-wayland-ime
 
 $mainMod = SUPER # Sets "Windows" key as main modifier

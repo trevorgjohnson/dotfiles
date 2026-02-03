@@ -3,7 +3,7 @@
 menu() {
   local prompt="$1"
   local options="$2"
-  echo -e "$options" | walker --dmenu -p "$prompt…" "${args[@]}" 2>/dev/null
+  echo -e "$options" | rofi -dmenu -i -p "$prompt…" "${args[@]}" 2>/dev/null
 }
 
 open_in_term() {
@@ -27,7 +27,7 @@ launch_bluetooth() {
 
 go_to_menu() {
   case "${1,,}" in
-  *apps*) walker -p "Launch…" ;;
+  *apps*) rofi -show combi -p "Go..." ;;
   *terminal*) $TERMINAL ;;
   *keybinds*) open_in_term keybindings ;;
   *screenshot*) screenshot ;;
