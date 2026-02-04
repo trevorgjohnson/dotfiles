@@ -27,8 +27,10 @@ require("lazy").setup({
       ---@param colors CtpColors<string>
       custom_highlights = function(colors)
         return {
+          FloatBorder = { fg = colors.mauve },
+          BlinkCmpMenuBorder = { fg = colors.mauve },
+          CurSearch = { bg = colors.mauve },
           DiagnosticVirtualTextError = { bg = colors.surface0 },
-          CurSearch = { bg = colors.mauve }
         }
       end
     },
@@ -183,7 +185,7 @@ require("lazy").setup({
     "ibhagwan/fzf-lua",
     event = "VimEnter",
     dependencies = { "nvim-tree/nvim-web-devicons" },
-    config =  function()
+    config = function()
       local fzf = require("fzf-lua")
 
       local nmap = function(keys, func, desc)

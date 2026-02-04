@@ -89,14 +89,12 @@ return {
     },
 
     { 'folke/lazydev.nvim', opts = {}, ft = "lua", }, -- Lua specific LSP tooling
-    'saghen/blink.cmp', -- Allows extra capabilities provided by blink.cmp
   },
   config = function()
     -- Attempt to attach
     for s_name, s_opts in pairs(servers) do
       -- skip 'rust_analyzer' in favor of 'rustaceanvim'
       if s_name ~= 'rust_analyzer' then
-        s_opts.capabilities = vim.tbl_deep_extend('force', {}, capabilities, s_opts.capabilities or {})
         -- set the configuration of the lsp
         vim.lsp.config(s_name, s_opts or {})
         -- enabble the server
