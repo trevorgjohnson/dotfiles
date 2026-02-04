@@ -190,13 +190,14 @@ require("lazy").setup({
         vim.keymap.set('n', keys, func, { buffer = bufnr, desc = '[󰍉]: ' .. desc })
       end
 
+      nmap('<leader>?', fzf.keymaps, 'find key mappings')
       nmap('<leader><space>', fzf.buffers, 'find open buffers')
       nmap('<leader>/', fzf.grep_curbuf, 'find in current buffer')
       nmap('<leader>ff', fzf.files, '[f]ind [f]ile')
       nmap('<leader>fw', fzf.grep_cWORD, '[f]ind [w]ord')
       nmap('<leader>fg', fzf.live_grep, '[f]ind [w]ord')
       nmap('<leader>fs', fzf.git_status, '[f]ind git [s]tatus')
-      nmap('<leader>fd', fzf.diagnostics_document, '[f]ind [d]iagnostics')
+      nmap('<leader>fd', fzf.diagnostics_workspace, '[f]ind [d]iagnostics')
       nmap('grr', fzf.lsp_references, 'find LSP [r]efe[r]ences of a word')
       nmap('grd', fzf.lsp_definitions, 'find LSP [d]efinitions of a word')
       nmap('gtd', fzf.lsp_typedefs, 'find LSP [t]ype [d]efinitions of a word')
