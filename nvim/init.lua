@@ -62,15 +62,34 @@ require("lazy").setup({
     dependencies = { { "nvim-tree/nvim-web-devicons" } },
   },
 
-  {
-    "nvim-treesitter/nvim-treesitter",
+  { -- semantic highlighting
+    'nvim-treesitter/nvim-treesitter',
+    event = { "BufReadPre", "BufNewFile" },
+    dependencies = { { "nvim-treesitter/nvim-treesitter-textobjects", } },
     config = function()
+      local filetypes = { "rust", "solidity", "lua", "typescript", "markdown_inline", "diff" }
+      require('nvim-treesitter').setup({
+        ensure_installed = filetypes,
+        auto_install = true,
+        highlight = { enable = true, },
+        indent = { enable = true },
+        textobjects = {
+          lsp_interop = {
+            enable = true,
+            border = 'none',
+            floating_preview_opts = {},
+            peek_definition_code = {
+              ["<leader>k"] = "@function.outer",
+              ["<leader>K"] = "@class.outer",
+            },
+          }
+        }
+      })
       vim.api.nvim_create_autocmd('FileType', {
-        pattern = { '<filetype>' },
+        pattern = filetypes,
         callback = function() vim.treesitter.start() end,
       })
-    end,
-
+    end
   },
 
   { -- git decorations
