@@ -68,7 +68,7 @@ vim.o.inccommand = 'split'
 --- open dialog window to confirm certain file/buffer operations
 vim.o.confirm = true
 
--- adds rounded borders to hover docs 
+-- adds rounded borders to hover docs
 vim.o.winborder = 'rounded'
 
 -- use treesitter folding

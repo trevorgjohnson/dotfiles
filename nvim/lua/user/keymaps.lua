@@ -78,14 +78,3 @@ vim.keymap.set('n', '<M-p>', ':cprev<CR>')
 
 -- Remap 2x'Esc' to get out of terminal mode
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>")
-
--- initialize terminal
-local terminal = require('user.terminal')
-
--- Open terminal in vertical split to the right
-vim.keymap.set("n", "<leader>tl", function() terminal.toggle { dir = "right" } end,
-  opts_w_desc("Open terminal in vertical split on the right"))
-
--- Open terminal in horizontal split on the bottom
-vim.keymap.set("n", "<leader>tj", function() terminal.toggle { dir = "below" } end,
-  opts_w_desc("Open terminal in horizontal split on the bottom"))

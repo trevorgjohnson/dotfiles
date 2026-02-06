@@ -11,6 +11,8 @@ vim.opt.rtp:prepend(lazypath)
 
 require('user.keymaps')
 require('user.options')
+require('user.statusline')
+require('user.terminal')
 
 require("lazy").setup({
   { -- cozy colorscheme
@@ -37,20 +39,9 @@ require("lazy").setup({
     init = function() vim.cmd.colorscheme 'catppuccin-mocha' end
   },
 
-  -- highlights todo comments
-  { "folke/todo-comments.nvim", dependencies = { "nvim-lua/plenary.nvim" }, event = { "VimEnter" }, opts = { signs = true }, },
-
-  { -- opens markdown in browser fully rendered
-    "iamcco/markdown-preview.nvim",
-    ft = "markdown",
-    build = function() vim.fn["mkdp#util#install"]() end,
-  },
-
   { -- file explorer
     'stevearc/oil.nvim',
-    keys = {
-      { "<leader>e", "<cmd>Oil --float<cr>", desc = "Toggle file explorer" }
-    },
+    keys = { { "<leader>e", "<cmd>Oil --float<cr>", desc = "Toggle file explorer" } },
     opts = {
       keymaps = {
         ["<C-l>"] = { "actions.select", opts = { vertical = true }, desc = "Open the entry in a vertical split" },
@@ -96,68 +87,19 @@ require("lazy").setup({
     "lewis6991/gitsigns.nvim",
     event = { "BufReadPre", "BufNewFile" },
     opts = {
-      current_line_blame_opts = { delay = 250 },
-      current_line_blame_formatter = " <author>, <author_time:%R> - <summary> ",
-      preview_config = { border = "rounded" },
       on_attach = function(bufnr)
-        local gs = package.loaded.gitsigns
-
         local nmap = function(keys, func, desc)
           vim.keymap.set('n', keys, func,
             { buffer = bufnr, desc = '[󰊢 ]: ' .. desc })
         end
 
-        -- Navigation
-        nmap('[h', function()
-          if vim.wo.diff then return '[c' end
-          vim.schedule(function() gs.prev_hunk() end)
-          return '<Ignore>'
-        end, "Previous [H]unk")
-
-        nmap(']h', function()
-          if vim.wo.diff then return ']c' end
-          vim.schedule(function() gs.next_hunk() end)
-          return '<Ignore>'
-        end, "Next [H]unk")
-
+        local gs = package.loaded.gitsigns
+        nmap('[h', gs.next_hunk, "previous [h]unk")
+        nmap(']h', gs.next_hunk, "next [h]unk")
         nmap('<leader>rh', gs.reset_hunk, "[r]eset [h]unk")
         nmap('<leader>ph', gs.preview_hunk, "[p]review [h]unk")
         nmap('<leader>sb', function() gs.blame_line { full = true } end, "[s]how [b]lame")
-        nmap('<leader>tb', gs.toggle_current_line_blame, "[t]oggle [b]lame")
-        nmap('<leader>sd', gs.diffthis, "[s]how [d]iff")
       end
-    }
-  },
-
-  { -- status and buffer line
-    "nvim-lualine/lualine.nvim",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
-    opts = {
-      options = {
-        icons_enabled = true,
-        theme = 'catppuccin',
-        component_separators = { left = '', right = '' }, -- { left = '', right = ''},
-        section_separators = { left = '', right = '' },
-        globalstatus = true,
-      },
-      sections = {
-        lualine_a = { 'mode' },
-        lualine_b = { { 'buffers', symbols = { alternate_file = '' }, use_mode_colors = true } },
-        lualine_c = {},
-        lualine_x = { { require('lazy.status').updates, cond = require('lazy.status').has_updates }, 'diff' },
-        lualine_y = { 'filetype' },
-        lualine_z = { {
-          'branch',
-          icon = "",
-          fmt = function(str)
-            local MAX_BRANCH_WIDTH = math.floor(0.08 * vim.o.columns) -- 8% of total width
-            if #str > MAX_BRANCH_WIDTH then
-              str = vim.fn.strcharpart(str, 0, MAX_BRANCH_WIDTH) .. '…'
-            end
-            return str
-          end
-        } }
-      },
     }
   },
 
@@ -192,12 +134,7 @@ require("lazy").setup({
         { desc = '[f]or[m]at buffer' },
       }
     },
-    opts = {
-      formatters_by_ft = {
-        typescript = { "prettier" },
-        rust = { "rustfmt" }
-      }
-    },
+    opts = { formatters_by_ft = { typescript = { "prettier" }, rust = { "rustfmt" } } },
   },
 
   {
@@ -205,12 +142,10 @@ require("lazy").setup({
     event = "VimEnter",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
-      local fzf = require("fzf-lua")
-
       local nmap = function(keys, func, desc)
         vim.keymap.set('n', keys, func, { buffer = bufnr, desc = '[󰍉]: ' .. desc })
       end
-
+      local fzf = require("fzf-lua")
       nmap('<leader>?', fzf.keymaps, 'find key mappings')
       nmap('<leader><space>', fzf.buffers, 'find open buffers')
       nmap('<leader>/', fzf.grep_curbuf, 'find in current buffer')

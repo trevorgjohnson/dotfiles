@@ -30,4 +30,12 @@ M.toggle = function(opts)
   end
 end
 
-return M -- return module
+-- Open terminal in vertical split to the right
+vim.keymap.set("n", "<leader>tl", function() M.toggle { dir = "right" } end,
+{ desc = "Open terminal in vertical split on the right" })
+
+-- Open terminal in horizontal split on the bottom
+vim.keymap.set("n", "<leader>tj", function() M.toggle { dir = "below" } end,
+{ desc = "Open terminal in horizontal split on the bottom" })
+
+return M
