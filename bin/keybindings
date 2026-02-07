@@ -75,7 +75,6 @@ parse_keycodes() {
     echo "[DEBUG] parse_keycodes elapsed: ${elapsed}s" >&2
   fi
 }
-→
 
 # Fetch dynamic keybindings from Hyprland
 #
@@ -219,4 +218,4 @@ build_keymap_cache
   sort -u |
   parse_keycodes |
   parse_bindings |
-  cat | less
+  cat

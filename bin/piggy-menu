@@ -29,10 +29,11 @@ go_to_menu() {
   case "${1,,}" in
   *apps*) rofi -show combi -p "Go..." ;;
   *terminal*) $TERMINAL ;;
-  *keybinds*) open_in_term keybindings ;;
+  *keybinds*) keybindings | rofi -dmenu ;;
+  *emoji*) dmoji ;;
   *screenshot*) screenshot ;;
   *wallpaper*) open_in_term select-wallpaper ;;
-  *config*) open_in_editor ~/.config ;;
+  *config*) open_in_term edit-config ;;
   *audio*) open_in_term wiremix ;;
   *wifi*) launch_wifi ;;
   *bluetooth*) launch_bluetooth ;;
@@ -44,11 +45,11 @@ go_to_menu() {
   esac
 }
 
-
 # current list of items:
 # 󰀻   Apps
 #    Terminal
 #    Keybinds
+# 󰞅   Emoji
 #    Screenshot
 # 󰸉   Wallpaper
 #    Config
@@ -60,4 +61,4 @@ go_to_menu() {
 # 󰤄   Suspend
 # 󰜉   Restart
 # 󰐥   Shutdown
-go_to_menu "$(menu "Go" "󰀻   Apps\n   Terminal\n   Keybinds\n   Screenshot\n󰸉   Wallpaper\n   Config\n   Audio\n   Wifi\n󰂯   Bluetooth\n󰴳   VPN\n󱐋   Power Profile\n󰤄   Suspend\n󰜉   Restart\n󰐥   Shutdown")"
+go_to_menu "$(menu "Go" "󰀻   Apps\n   Terminal\n   Keybinds\n󰞅   Emoji\n   Screenshot\n󰸉   Wallpaper\n   Config\n   Audio\n   Wifi\n󰂯   Bluetooth\n󰴳   VPN\n󱐋   Power Profile\n󰤄   Suspend\n󰜉   Restart\n󰐥   Shutdown")"
