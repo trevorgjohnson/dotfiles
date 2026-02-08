@@ -1,7 +1,18 @@
 #!/bin/sh
 # emoji list made with: `curl -s https://raw.githubusercontent.com/milesj/emojibase/master/packages/data/en/data.raw.json | jq -r '.[] | "\(.emoji)  \(.label | ascii_upcase)  \((.tags // []) | map("#" + .) | join(" "))"'`
-echo $(sed '1,/^exit/d' $0 | rofi -dmenu -p "Select (and copy) emoji..." | grep -Po '^[^ ]*')
-exit 1
+EMOJI=$(sed '1,/^exit/d' "$0" | rofi -dmenu -i -p "Emoji" | grep -Po '^[^ ]*')
+[ -z "$EMOJI" ] && exit 0
+
+# Copy to clipboard
+printf "%s" "$EMOJI" | wl-copy
+
+# Give focus time to return
+sleep 0.1
+
+# Paste
+wtype -M ctrl -k v -m ctrl
+
+exit 0
 😀  GRINNING FACE  #cheerful #cheery #face #grin #grinning #happy #laugh #nice #smile #smiling #teeth
 😃  GRINNING FACE WITH BIG EYES  #awesome #big #eyes #face #grin #grinning #happy #mouth #open #smile #smiling #teeth #yay
 😄  GRINNING FACE WITH SMILING EYES  #eye #eyes #face #grin #grinning #happy #laugh #lol #mouth #open #smile #smiling
