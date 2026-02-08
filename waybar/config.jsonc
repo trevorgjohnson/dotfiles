@@ -1,9 +1,10 @@
 {
-  "reload_style_on_change": true,
+  "name": "statusbar",
   "layer": "top",
   "position": "top",
+  "margin": "4 4 0",
   "spacing": 2,
-  "height": 26,
+
   "modules-left": ["custom/piggy", "hyprland/workspaces"],
   "modules-center": ["clock", "custom/screen_recorder"],
   "modules-right": [
@@ -17,24 +18,12 @@
   ],
   "custom/piggy": {
     "format": " ",
-    "on-click": "piggy-menu",
+    "on-click": "piggy-menu"
   },
   "hyprland/workspaces": {
     "on-click": "activate",
     "format": "{icon}",
-    "format-icons": {
-      "default": "",
-      "1": "1",
-      "2": "2",
-      "3": "3",
-      "4": "4",
-      "5": "5",
-      "6": "6",
-      "7": "7",
-      "8": "8",
-      "9": "9",
-      "active": "󱓻"
-    },
+    "format-icons": { "active": "󱓻" },
     "persistent-workspaces": {
       "1": [],
       "2": [],
@@ -100,6 +89,14 @@
     "interval": 3, // 3 seconds
     "on-click": "$TERMINAL -e select-tlp-profile",
     "on-click-right": "notify-send 'Using power profile:' $(tlpctl get)",
+    "format": "{icon}  {capacity}%",
+    "format-charging": "  {capacity}%",
+    "format-icons": ["", "", "", "", ""],
+    "interval": 30,
+    "states": {
+      "critical": 20,
+      "warning": 40
+    }
   },
   "group/tray-expander": {
     "orientation": "inherit",

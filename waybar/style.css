@@ -4,11 +4,11 @@
 @define-color unavailable #45475a;
 
 * {
-  background-color: @background;
+  background-color: transparent;
   color: @foreground;
 
   border: none;
-  border-radius: 0;
+  border-radius: 10px;
   min-height: 0;
   font-family: 'Iosevka Nerd Font';
   font-size: 12px;
@@ -16,9 +16,18 @@
 
 .modules-left {
   margin-left: 8px;
+  padding: 6px 12px;
+  background-color: @background;
+}
+
+.modules-center {
+  padding: 6px 8px;
+  background-color: @background;
 }
 
 .modules-right {
+  background-color: @background;
+  padding: 6px 12px;
   margin-right: 8px;
 }
 
@@ -64,6 +73,7 @@
 
 tooltip {
   padding: 2px;
+  background-color: @background;
 }
 
 #custom-update {
