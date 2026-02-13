@@ -71,11 +71,6 @@ vim.o.confirm = true
 -- adds rounded borders to hover docs
 vim.o.winborder = 'rounded'
 
--- use treesitter folding
-vim.o.foldlevel = 20
-vim.o.foldmethod = "expr"
-vim.o.foldexpr = "nvim_treesitter#foldexpr()"
-
 -- highlight briefly after yanking
 vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking text',

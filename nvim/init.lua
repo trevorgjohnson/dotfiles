@@ -11,20 +11,20 @@ vim.opt.rtp:prepend(lazypath)
 
 require('user.keymaps')
 require('user.options')
-require('user.statusline')
-require('user.terminal')
+
+require('user.terminal').init()
+require('user.statusline').init()
 
 require("lazy").setup({
-  { -- cozy colorscheme
+  { -- colorscheme
     "catppuccin/nvim",
     name = "catppuccin",
     priority = 1000,
     opts = {
-      default_integrations = true,
-      integrations = { blink_cmp = true },
-      transparent_background = true,
       flavour = "mocha",
       term_colors = true,
+      transparent_background = true,
+      integrations = { blink_cmp = true },
       ---@class CtpColors<T>: {rosewater: T, flamingo: T, pink: T, mauve: T, red: T, maroon: T, peach: T, yellow: T, green: T, teal: T, sky: T, sapphire: T, blue: T, lavender: T, text: T, subtext1: T, subtext0: T, overlay2: T, overlay1: T, overlay0: T, surface2: T, surface1: T, surface0: T, base: T, mantle: T, crust: T, none: T }
       ---@param colors CtpColors<string>
       custom_highlights = function(colors)
@@ -33,6 +33,13 @@ require("lazy").setup({
           BlinkCmpMenuBorder = { fg = colors.mauve },
           CurSearch = { bg = colors.mauve },
           DiagnosticVirtualTextError = { bg = colors.surface0 },
+          StatuslineFile = { fg = colors.surface1 },
+          StatuslineGit = { bg = colors.mauve, fg = colors.base },
+          StatuslineModeNormal = { bg = colors.blue, fg = colors.base },
+          StatuslineModeVisual = { bg = colors.lavender, fg = colors.base },
+          StatuslineModeInsert = { bg = colors.green, fg = colors.base },
+          StatuslineModeCommand = { bg = colors.red, fg = colors.base },
+          StatuslineModeOther = { bg = colors.yellow, fg = colors.base },
         }
       end
     },
@@ -125,7 +132,7 @@ require("lazy").setup({
     }
   },
 
-  {
+  { -- formatter
     "stevearc/conform.nvim",
     cmd = { "ConformInfo" },
     keys = {
@@ -137,7 +144,7 @@ require("lazy").setup({
     opts = { formatters_by_ft = { typescript = { "prettier" }, rust = { "rustfmt" } } },
   },
 
-  {
+  { -- generalized fuzzy finder
     "ibhagwan/fzf-lua",
     event = "VimEnter",
     dependencies = { "nvim-tree/nvim-web-devicons" },
@@ -165,10 +172,5 @@ require("lazy").setup({
 }, {
   install = { colorscheme = { 'catppuccin-mocha' } },
   ui = { border = "rounded" },
-  checker = {
-    enabled = true,
-    notify = false,
-  },
   change_detection = { notify = false }
-
 })

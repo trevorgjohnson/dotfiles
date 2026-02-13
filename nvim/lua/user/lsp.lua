@@ -59,36 +59,7 @@ return {
   event = { "BufReadPre", "BufNewFile" },
   dependencies = {
     -- LSP status updates
-    { 'j-hui/fidget.nvim',  opts = { notification = { window = { winblend = 0 } } } },
-
-    { -- Rust specific LSP tooling
-      "mrcjkb/rustaceanvim",
-      version = "^5",
-      lazy = false, -- already lazy
-      ft = "rust,toml",
-      config = function()
-        vim.g.rustaceanvim = {
-          server = {
-            default_settings = { ['rust_analyzer'] = servers['rust_analyzer'] },
-            cmd = function()
-              local bin_loc = 'rust-analyzer' -- default to global install
-              local mason_registry = require('mason-registry')
-              if mason_registry.is_installed('rust-analyzer') then
-                local ra = mason_registry.get_package('rust-analyzer')
-                local ra_filename = ra:get_receipt():get().links.bin
-                    ['rust-analyzer']
-                bin_loc = ('%s/%s'):format(ra:get_install_path(),
-                  ra_filename or 'rust-analyzer')
-              end
-              return { bin_loc }
-            end,
-
-          },
-        }
-      end
-    },
-
-    { 'folke/lazydev.nvim', opts = {}, ft = "lua", }, -- Lua specific LSP tooling
+    { 'j-hui/fidget.nvim', opts = { notification = { window = { winblend = 0 } } } },
   },
   config = function()
     -- Attempt to attach
