@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# This script concatenates and lowers the quality of a list of input clips
+# the input clips must be given by a separate text file
+#
+# Input clip example:
+# > cat vids.txt
+# file 'file-1.mp4'
+# file 'file-2.mp4'
+# file 'file-3.mp4'
+#
+# Example use:
+# concat vids.txt output.mp4
+
+# Get input params
+VID_LIST=$1
+OUTPUT_NAME=$2
+
+# exit if input list is empty or nonexistent
+if [[ -z $VID_LIST || ! -f "$VID_LIST"  ]]; then
+  echo "Must supply an input list of vids to concat!"
+  exit 1
+fi
+
+# if output is not given, default to `output.mp4`
+if [[ -z $OUTPUT_NAME ]] then
+  OUTPUT_NAME="output.mp4"
+fi
+
+# concat all of the vids listed in `vids.txt`
+ffmpeg -f concat -safe 0 -i $VID_LIST -vcodec libx265 -threads 0 -crf 28 $OUTPUT_NAME 
+echo "Saved to $OUTPUT_NAME"
