@@ -28,5 +28,5 @@ if [[ -z $OUTPUT_NAME ]] then
 fi
 
 # concat all of the vids listed in `vids.txt`
-ffmpeg -f concat -safe 0 -i $VID_LIST -vcodec libx265 -threads 0 -crf 28 $OUTPUT_NAME 
+ffmpeg -f concat -safe 0 -i $VID_LIST -vcodec libx264 -threads 0 -crf 30 $OUTPUT_NAME 
 echo "Saved to $OUTPUT_NAME"
