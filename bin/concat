@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# This script concatenates and lowers the quality of a list of input clips
+# This script concatenates and lowers the quality (by default) of a list of input clips
 # the input clips must be given by a separate text file
 #
 # Input clip example:
@@ -8,17 +8,28 @@
 # file 'file-1.mp4'
 # file 'file-2.mp4'
 # file 'file-3.mp4'
-#
-# Example use:
-# concat vids.txt output.mp4
 
 # Get input params
 VID_LIST=$1
 OUTPUT_NAME=$2
+FFMPEG_OPTS=$3
+
+set -euo pipefail
 
 # exit if input list is empty or nonexistent
-if [[ -z $VID_LIST || ! -f "$VID_LIST"  ]]; then
-  echo "Must supply an input list of vids to concat!"
+if [[ -z $VID_LIST || ! -f "$VID_LIST" || "$VID_LIST" == "-h" || "$VID_LIST" == "--help" ]]; then
+  echo "Usage: concat <input.txt> <output.mp4> <ffmpeg_opts>
+
+input.txt - This should be a file that contains a list of the videos files to concatenate (in order of concatenation).
+            Additionally, each video file should be formatted like this: \`file '<video.mp4>'\`
+
+output.mp4 - This is the name of the concatenated video. This will default to \`output.mp4\` if not specified.
+
+ffmpeg_opts - Specific ffmpeg options used to control the quality of the finalized.
+              This will default to H264 with a CRF of 30 - this should be great for an clip montage
+              Some other useful options might be:
+              - \"-c copy\" - Essentially skips encoding (which is super fast with no quality/size changes)
+"
   exit 1
 fi
 
@@ -27,6 +38,11 @@ if [[ -z $OUTPUT_NAME ]] then
   OUTPUT_NAME="output.mp4"
 fi
 
+# if no specific ffmpeg opts are given, default to some sensible clipping settings
+if [[ -z $FFMPEG_OPTS ]] then
+  FFMPEG_OPTS="-vcodec libx264 -threads 0 -crf 30"
+fi
+
 # concat all of the vids listed in `vids.txt`
-ffmpeg -f concat -safe 0 -i $VID_LIST -vcodec libx264 -threads 0 -crf 30 $OUTPUT_NAME 
+ffmpeg -f concat -safe 0 -i $VID_LIST $FFMPEG_OPTS $OUTPUT_NAME 
 echo "Saved to $OUTPUT_NAME"

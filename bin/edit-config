@@ -2,7 +2,7 @@
 
 # list of directories under '.config' that we do NOT want to show up in the fuzzy search
 # NOTE: each directory must be prefixed by "-E"
-BLACKLISTED_DIRS="-E heroic -E BambuStudio -E Pinta -E go -E spotify -E GIMP -E discord -E obs-studio -E balenaEtcher -E obsidian -E VirtualBox -E qBitTorrent -E chromium -E Bitwarden -E FreeCAD"
+BLACKLISTED_DIRS="-E heroic -E BambuStudio -E Pinta -E go -E spotify -E GIMP -E discord -E obs-studio -E balenaEtcher -E obsidian -E VirtualBox -E qBitTorrent -E chromium -E Bitwarden -E FreeCAD -E vesktop -E r2modman*"
 
 # Get the list of files to edit using `fd` and `fzf`
 FILES=$(fd $BLACKLISTED_DIRS . --follow -tf ~/.config | fzf -m --preview 'bat --color=always --style=numbers {}')

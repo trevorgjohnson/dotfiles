@@ -114,7 +114,7 @@
     "interval": 5, // 5 seconds
     "format": "{}",
     "exec": "ip add show | grep -qF surfshark && echo 󱢺 || echo 󱢻",
-    "on-click": "$TERMINAL -e toggle-vpn",
+    "on-click": "toggle-vpn"
   },
   "tray": {
     "icon-size": 12,
