@@ -23,7 +23,6 @@ eval "$(zoxide init bash)"
 # alias common unix cli tools with newer/modern alternatives
 alias ls='exa --color=auto'
 alias grep='rg --color=auto'
-alias find='fd --color=auto'
 alias cat='bat --color=auto'
 alias cd='z'
 
@@ -35,8 +34,3 @@ export FZF_DEFAULT_OPTS=" \
 --color=marker:#B4BEFE,fg+:#CDD6F4,prompt:#CBA6F7,hl+:#F38BA8 \
 --color=selected-bg:#45475A \
 --color=border:#6C7086,label:#CDD6F4"
-
-# Add alias for rsync with sensible default flags
-rcp() {
-  rsync --archive -hh --partial --info=stats1,progress2 --modify-window=1 "$@"
-} 
