@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# [R]emote [C]o[P]y is a tiny script that takes the given file/folder and copies its contents to a remote destination
+
+# Grab the input and destination locations
+INPUT=$1
+DESTINATION=$2
+
+# If no (or wrong) input was provided or if `-h`/`--help` flag is used, then echo how to use this tool
+if [[ -z "$INPUT" || ! -d "$INPUT" || "$INPUT" == "-h" || "$1" == "--help" ]]; then
+  echo "Usage: rcp <folder with contents to copy> <remote IP>:<destination to copy to>
+
+Note that either input and/or destination can be a remote location.
+All that's needed to specify a remote location, the IP must be specified before the location separated by a ':'.
+  "
+  exit 1
+fi
+
+# TODO: This assumes that $INPUT exists on the host. We will need some extra logic to disable/enhance this when copying from remote
+FILE_COUNT=$(find "$INPUT" -type f | wc -l)
+
+# Prompt to make sure that the proper amount of file will be transferred
+read -p "Are you sure you want to transfer $FILE_COUNT files? y[N]" -n 1 -r should_transfer
+echo "" # Just echoing out a new line so the next echo is on a separate line
+if [[ ! $should_transfer =~ ^[Yy]$ ]]; then
+  echo "Operation cancelled!"
+  exit 1
+fi 
+
+
+# Pipe all direct contents under `$INPUT` and pipe each of them (max of 8 at a time) into `rsync`
+/usr/bin/find "$INPUT" -mindepth 1 -maxdepth 1 -print0 \
+  | xargs -0 -I{} -P 8 rsync -a --progress "{}" "$DESTINATION"
