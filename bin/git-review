@@ -77,6 +77,34 @@ fi
 
 # Check if the user added any annotations
 if grep -q '^>> ' "$TMPFILE"; then
+  # Truncate to LLM-friendly output: new header + only hunks containing ">> " annotations.
+  # Walks the diff structure (file header -> hunk), buffers each piece, and only emits
+  # a hunk (plus its parent file header) when the hunk contains an annotation.
+  awk '
+    # Emits the buffered hunk (and its parent file header, once) if the hunk
+    # was marked as annotated. Called at every file/hunk boundary and at EOF.
+    function flush() {
+      if (hunk_annotated) {
+        if (!file_printed) { printf "%s", file_header; file_printed = 1 }
+        printf "%s", hunk
+      }
+    }
+    /^(#|$)/ && !past_header { next }                                            # skip original comment header
+    !past_header { past_header = 1 }                                             # first non-header line; begin diff parsing
+    /^diff --git / { flush(); file_header=$0"\n"; file_printed=0; hunk=""; hunk_annotated=0; next }
+    !hunk && !/^@@ / { file_header=file_header $0"\n"; next }                    # buffer file header lines (index/---/+++)
+    /^@@ /            { flush(); hunk=$0"\n"; hunk_annotated=0; next }
+    /^>> /             { hunk_annotated=1 }                                      # mark hunk as annotated
+    hunk               { hunk=hunk $0"\n"; next }                                # buffer hunk lines
+    END                { flush() }
+  ' "$TMPFILE" > "${TMPFILE}.truncated" && mv "${TMPFILE}.truncated" "$TMPFILE"
+
+  # Prepend LLM-facing instructions
+  HEADER="# Code review — annotated change requests
+# Each \">> \" line is a change request within its surrounding diff hunk.
+# Implement all requested changes.
+"
+  printf '%s\n%s' "$HEADER" "$(cat "${TMPFILE}")" > "$TMPFILE"
   TIMESTAMP=$(date +%Y%m%d-%H%M%S)
   # Sanitize branch name for filename (replace / with -)
   SAFE_BRANCH=$(echo "$BASE_BRANCH" | tr '/' '-')
