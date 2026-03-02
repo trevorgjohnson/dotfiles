@@ -114,12 +114,18 @@ if grep -q '^>> ' "$TMPFILE"; then
 
   echo "Review saved to: $OUTPUT_FILE"
 
-  # Offer clipboard copy on macOS
+  # Offer clipboard copy (macOS pbcopy or Linux Wayland wl-copy)
+  CLIP_CMD=""
   if command -v pbcopy &>/dev/null; then
+    CLIP_CMD="pbcopy"
+  elif command -v wl-copy &>/dev/null; then
+    CLIP_CMD="wl-copy"
+  fi
+  if [[ -n "$CLIP_CMD" ]]; then
     read -p "Copy to clipboard? [Y/n] " -n 1 -r COPY_ANSWER
     echo ""
     if [[ ! "$COPY_ANSWER" =~ ^[Nn]$ ]]; then
-      pbcopy < "$OUTPUT_FILE"
+      "$CLIP_CMD" < "$OUTPUT_FILE"
       echo "Copied to clipboard."
     fi
   fi
