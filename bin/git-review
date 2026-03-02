@@ -49,7 +49,7 @@ CURRENT_BRANCH=$(git branch --show-current)
 # Detached HEAD won't have a branch name
 CURRENT_BRANCH=${CURRENT_BRANCH:-"(detached HEAD)"}
 
-TMPFILE=$(mktemp "${TMPDIR:-/tmp}/git-review-XXXXXX.diff")
+TMPFILE=$(mktemp /tmp/git-review-XXXXXX.diff)
 
 # Build the review file: header + diff
 cat > "$TMPFILE" <<EOF
@@ -82,8 +82,7 @@ if grep -q '^>> ' "$TMPFILE"; then
   SAFE_BRANCH=$(echo "$BASE_BRANCH" | tr '/' '-')
   OUTPUT_FILE="$(git rev-parse --show-toplevel)/.git/review-${SAFE_BRANCH}-${TIMESTAMP}.diff"
 
-  cp "$TMPFILE" "$OUTPUT_FILE"
-  rm -f "$TMPFILE"
+  mv "$TMPFILE" "$OUTPUT_FILE"
 
   echo "Review saved to: $OUTPUT_FILE"
 
