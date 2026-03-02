@@ -1,0 +1,102 @@
+#!/bin/bash
+
+# Opens a diff between the current working state and a base branch in $EDITOR for inline annotation.
+# Annotations use the ">> " prefix which never appears in unified diff output.
+# Produces an annotated diff file ready to paste into Claude for automated change implementation.
+
+set -euo pipefail
+
+BASE_BRANCH="${1:-}"
+
+# Show usage on missing arg or help flag
+if [[ -z "$BASE_BRANCH" || "$BASE_BRANCH" == "-h" || "$BASE_BRANCH" == "--help" ]]; then
+  echo "Usage: git-review <base-branch>
+
+Generates a diff between the current working state (committed + staged + unstaged)
+and the given base branch, opens it in \$EDITOR for inline annotation, and saves
+the annotated result.
+
+Add annotations anywhere in the diff with the \">> \" prefix:
+  >> your change request here
+
+Examples:
+  git-review main
+  git review develop
+"
+  exit 1
+fi
+
+# Must be inside a git repo
+if ! git rev-parse --is-inside-work-tree &>/dev/null; then
+  echo "Error: not inside a git repository."
+  exit 1
+fi
+
+# Base branch must exist
+if ! git rev-parse --verify "$BASE_BRANCH" &>/dev/null; then
+  echo "Error: branch '$BASE_BRANCH' does not exist."
+  exit 1
+fi
+
+DIFF=$(git diff --no-color "$BASE_BRANCH")
+
+if [[ -z "$DIFF" ]]; then
+  echo "No differences between '$BASE_BRANCH' and the current working state."
+  exit 0
+fi
+
+CURRENT_BRANCH=$(git branch --show-current)
+# Detached HEAD won't have a branch name
+CURRENT_BRANCH=${CURRENT_BRANCH:-"(detached HEAD)"}
+
+TMPFILE=$(mktemp "${TMPDIR:-/tmp}/git-review-XXXXXX.diff")
+
+# Build the review file: header + diff
+cat > "$TMPFILE" <<EOF
+# ==============================
+# DIFF REVIEW: $CURRENT_BRANCH vs $BASE_BRANCH
+# Includes uncommitted staged/unstaged changes
+# ==============================
+#
+# Add annotations with ">> " on any line:
+#   >> your change request here
+#
+# Save and exit when done.
+# ==============================
+
+$DIFF
+EOF
+
+# Pick an editor — respect $EDITOR, fall back to nvim then vi
+REVIEW_EDITOR="${EDITOR:-nvim}"
+if ! command -v "$REVIEW_EDITOR" &>/dev/null; then
+  REVIEW_EDITOR="vi"
+fi
+
+"$REVIEW_EDITOR" "$TMPFILE"
+
+# Check if the user added any annotations
+if grep -q '^>> ' "$TMPFILE"; then
+  TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+  # Sanitize branch name for filename (replace / with -)
+  SAFE_BRANCH=$(echo "$BASE_BRANCH" | tr '/' '-')
+  OUTPUT_FILE="$(git rev-parse --show-toplevel)/.git/review-${SAFE_BRANCH}-${TIMESTAMP}.diff"
+
+  cp "$TMPFILE" "$OUTPUT_FILE"
+  rm -f "$TMPFILE"
+
+  echo "Review saved to: $OUTPUT_FILE"
+
+  # Offer clipboard copy on macOS
+  if command -v pbcopy &>/dev/null; then
+    read -p "Copy to clipboard? [Y/n] " -n 1 -r COPY_ANSWER
+    echo ""
+    if [[ ! "$COPY_ANSWER" =~ ^[Nn]$ ]]; then
+      pbcopy < "$OUTPUT_FILE"
+      echo "Copied to clipboard."
+    fi
+  fi
+else
+  rm -f "$TMPFILE"
+  echo "No annotations found — review discarded."
+fi

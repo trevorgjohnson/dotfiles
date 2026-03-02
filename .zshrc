@@ -10,6 +10,9 @@ export PATH="$PATH:/Users/trevorjohnson/.local/bin"
 # npm
 export PATH="$PATH:/usr/local/bin"
 
+# dotfiles
+export PATH="$PATH:$HOME/.config/dotfiles/bin"
+
 # starship
 eval "$(starship init zsh)"
 
