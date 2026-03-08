@@ -1,0 +1,73 @@
+#!/usr/bin/bash
+
+# Super simple script that uses [waifu2x-ncnn-vulkan](https://github.com/nihui/waifu2x-ncnn-vulkan)
+
+# Directory of images to be upscaled
+IMAGE_DIR=$1
+
+# Directory where all of the newly upscaled images will reside
+UPSCALED_DIR=$2
+
+# The name/path of the binary used for upscaling
+UPSCALER_BIN=$3
+
+# If '-a' is the first arg, then treat like an alias to the upscaler binary
+if [[ $1 == "-a" ]]; then
+  shift
+  $UPSCALER_BIN $@
+fi
+
+# If the first arg is empty, not valid, or is a help flag, then print out how to use this tool
+if [[ -z "$1" || ! -d "$1" || "$1" == "-h" || "$1" == "--help" ]]; then
+  echo "Usage: upscaler <input_folder> <output_folder> <upscaler_path>
+
+  TIP: If '-a' is used in place of the 1st argument, then the following arguments will just passed directly to the upscaler before exiting.
+       This essentially allows the tool to act as a holepunch/alias to the upscaler.
+       Eg. 'upscaler -- --help' will spit out the helpful information on the upscaler
+
+  TIP: If the first arg is empty, not valid, or is a help flag, then this message is printed (Eg. 'upscaler -h')
+
+input_folder: folder of images to upscale
+output_folder: [OPTIONAL] folder to dump all of the upscaled images to
+               If left empty, this will default to "~/Pictures/upscaled/"
+upscaler_path: [OPTIONAL] name/path of the upscaler binary used to upscale the images
+               If left empty, this will default to waifu2x-ncnn-vulkan unzipped under "~/Documents/"
+  "
+  exit 0
+fi
+
+# If the upscaled directory is not supplied, default to the Pictures/ directory
+if [[ -z "$UPSCALED_DIR" ]]; then
+  UPSCALED_DIR="$HOME/Pictures/upscaled/"
+fi
+
+# Create the upscaled directory if not otherwise created
+mkdir -p $UPSCALED_DIR
+
+# If a upscaler binary was supplied, then default to `waifu2x-ncnn-vulkan` under the `Documents` directory
+if [[ -z $UPSCALER_BIN ]]; then
+  UPSCALER_BIN="$HOME/Documents/waifu2x-ncnn-vulkan-20250915-linux/waifu2x-ncnn-vulkan"
+fi;
+
+# If the upscaler binary was not found at the supplied/default location, throw an error and exit
+if [[ ! -f $UPSCALER_BIN ]]; then
+  echo "Upscaler binary not found! Please that the upscaler is properly installed."
+  exit 1;
+fi;
+
+# Get a list of all of the images to upscale
+FILES=$(ls $IMAGE_DIR)
+
+# Prompt to make sure that the proper amount of images will be upscaled
+read -p "Are you sure you want to upscale ${#FILES[@]} images? y[N]" -n 1 -r should_upscale
+echo "" # Just echoing out a new line so the next echo is on a separate line
+if [[ ! $should_upscale =~ ^[Yy]$ ]]; then
+  echo "Operation cancelled!"
+  exit 1
+fi 
+
+# Upscale each individual image in the $IMAGE_DIR directory
+# The `${<dir>%/}/` is used to strip the ending `/` (if it exists) and then re-add it
+for file in $FILES; do 
+  "$UPSCALER_BIN" -i "${IMAGE_DIR%/}/$file" -o "${UPSCALED_DIR%/}/$file" -n 3 -s 4
+done
