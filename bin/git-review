@@ -6,22 +6,38 @@
 
 set -euo pipefail
 
-BASE_BRANCH="${1:-}"
+PRUNE=false
+
+# Parse flags
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -p|--prune) PRUNE=true; shift ;;
+    -h|--help) BASE_BRANCH="--help"; shift ;;
+    *) BASE_BRANCH="$1"; shift ;;
+  esac
+done
+
+BASE_BRANCH="${BASE_BRANCH:-}"
 
 # Show usage on missing arg or help flag
-if [[ -z "$BASE_BRANCH" || "$BASE_BRANCH" == "-h" || "$BASE_BRANCH" == "--help" ]]; then
-  echo "Usage: git-review <base-branch>
+if [[ -z "$BASE_BRANCH" || "$BASE_BRANCH" == "--help" ]]; then
+  echo "Usage: git-review [options] <base-branch>
 
 Generates a diff between the current working state (committed + staged + unstaged)
 and the given base branch, opens it in \$EDITOR for inline annotation, and saves
 the annotated result.
+
+Options:
+  -p, --prune    Remove all previous review files saved under .git/
+  -h, --help     Show this help message
 
 Add annotations anywhere in the diff with the \">> \" prefix:
   >> your change request here
 
 Examples:
   git-review main
-  git review develop
+  git-review develop
+  git-review --prune develop
 "
   exit 1
 fi
@@ -36,6 +52,19 @@ fi
 if ! git rev-parse --verify "$BASE_BRANCH" &>/dev/null; then
   echo "Error: branch '$BASE_BRANCH' does not exist."
   exit 1
+fi
+
+GIT_DIR=$(git rev-parse --show-toplevel)/.git
+
+# Prune previous reviews if requested
+if [[ "$PRUNE" == true ]]; then
+  REVIEW_FILES=("$GIT_DIR"/review-*.diff)
+  if [[ -e "${REVIEW_FILES[0]}" ]]; then
+    rm -f "$GIT_DIR"/review-*.diff
+    echo "Pruned ${#REVIEW_FILES[@]} previous review file(s)."
+  else
+    echo "No previous review files to prune."
+  fi
 fi
 
 DIFF=$(git diff --no-color "$BASE_BRANCH")
@@ -108,7 +137,7 @@ if grep -q '^>> ' "$TMPFILE"; then
   TIMESTAMP=$(date +%Y%m%d-%H%M%S)
   # Sanitize branch name for filename (replace / with -)
   SAFE_BRANCH=$(echo "$BASE_BRANCH" | tr '/' '-')
-  OUTPUT_FILE="$(git rev-parse --show-toplevel)/.git/review-${SAFE_BRANCH}-${TIMESTAMP}.diff"
+  OUTPUT_FILE="${GIT_DIR}/review-${SAFE_BRANCH}-${TIMESTAMP}.diff"
 
   mv "$TMPFILE" "$OUTPUT_FILE"
 

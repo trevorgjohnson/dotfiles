@@ -32,6 +32,8 @@ require("lazy").setup({
           FloatBorder = { fg = colors.mauve },
           BlinkCmpMenuBorder = { fg = colors.mauve },
           CurSearch = { bg = colors.mauve },
+          IncSearch = { bg = colors.mauve },
+          FzfLuaSearch = { bg = colors.mauve, fg = colors.base },
           DiagnosticVirtualTextError = { bg = colors.surface0 },
           StatuslineFile = { fg = colors.surface1 },
           StatuslineGit = { bg = colors.mauve, fg = colors.base },
@@ -153,6 +155,8 @@ require("lazy").setup({
         vim.keymap.set('n', keys, func, { buffer = bufnr, desc = '[󰍉]: ' .. desc })
       end
       local fzf = require("fzf-lua")
+      -- Set ctrl-q to send all search results to the qfixlist (similar to telescope)
+      fzf.setup({ keymap = { fzf = { ["ctrl-q"] = "select-all+accept", } } })
       nmap('<leader>?', fzf.keymaps, 'find key mappings')
       nmap('<leader><space>', fzf.buffers, 'find open buffers')
       nmap('<leader>/', fzf.grep_curbuf, 'find in current buffer')
