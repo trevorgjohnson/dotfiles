@@ -8,3 +8,7 @@ tmux/plugins/*
 
 # Ignore hyprconfig and utilize hyprconfig-template
 hypr/hyprconfig.conf
+
+# Ignore local Neovim runtime artifacts
+nvim/.nvimlog
+nvim/.tmp_ai_preferences/
