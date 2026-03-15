@@ -1,0 +1,101 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# Resolve the real script path so repo detection works through a symlinked ~/bin.
+script_path=$(readlink -f -- "${BASH_SOURCE[0]}")
+script_dir=$(cd -- "$(dirname -- "$script_path")" && pwd)
+
+# Root of this dotfiles repo, resolved from the script's physical location.
+repo_dir=$(cd -- "$script_dir/.." && pwd)
+
+# Prompt for how to handle an existing non-symlink target.
+# Returns 0 when the caller should proceed with linking, 1 to skip.
+prompt_overwrite() {
+  dst=$1
+
+  while true; do
+    printf 'Target exists: %s\n' "$dst"
+    printf '1) soft-overwrite (.bak)\n'
+    printf '2) hard-overwrite\n'
+    printf '3) skip\n'
+    printf 'Choose [1/2/3]: '
+    read -r choice
+
+    case "$choice" in
+      1)
+        mv -- "$dst" "$dst.bak"
+        return 0
+        ;;
+      2)
+        rm -rf -- "$dst"
+        return 0
+        ;;
+      3)
+        return 1
+        ;;
+    esac
+  done
+}
+
+# Create or refresh a symlink, prompting before replacing real files/dirs.
+link() {
+  src=$1
+  dst=$2
+  src_dir=$(dirname -- "$src")
+  dst_dir=$(dirname -- "$dst")
+  src_name=$(basename -- "$src")
+  dst_name=$(basename -- "$dst")
+
+  mkdir -p -- "$dst_dir"
+
+  src_real=$(cd -P -- "$src_dir" && pwd)/$src_name
+  dst_real=$dst
+
+  if [ -L "$dst" ] || [ -e "$dst" ]; then
+    dst_real=$(readlink -f -- "$dst" 2>/dev/null || printf '%s\n' "$dst")
+  fi
+
+  if [ "$src_real" = "$dst_real" ]; then
+    return 0
+  fi
+
+  if [ -e "$dst" ] && [ ! -L "$dst" ]; then
+    prompt_overwrite "$dst" || return 0
+  fi
+
+  ln -sfn -- "$src" "$dst"
+}
+
+# Directories to expose under ~/.config.
+config_dirs=(
+  environment.d
+  fontconfig
+  ghostty
+  gtk-3.0
+  gtk-4.0
+  hypr
+  mako
+  mpv
+  nix
+  nvim
+  rofi
+  skhd
+  tmux
+  uwsm
+  waybar
+  yabai
+)
+
+for name in "${config_dirs[@]}"; do
+  link "$repo_dir/$name" "$HOME/.config/$name"
+done
+
+link "$repo_dir/bin" "$HOME/bin"
+
+link "$repo_dir/starship.toml" "$HOME/.config/starship.toml"
+link "$repo_dir/ai/PREFERENCES.md" "$HOME/.codex/AGENTS.md"
+link "$repo_dir/ai/PREFERENCES.md" "$HOME/.claude/CLAUDE.md"
+link \
+  "$repo_dir/catppuccin-mocha-mauve-standard+default" \
+  "$HOME/.local/share/themes/catppuccin-mocha-mauve-standard+default"

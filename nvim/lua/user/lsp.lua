@@ -68,8 +68,8 @@ return {
       if s_name ~= 'rust_analyzer' then
         -- set the configuration of the lsp
         vim.lsp.config(s_name, s_opts or {})
-        -- enabble the server
-        vim.lsp.enable(s_name)
+        -- Skip servers that fail validation, such as missing executables.
+        pcall(vim.lsp.enable, s_name)
       end
     end
     vim.api.nvim_create_autocmd('LspAttach', {
