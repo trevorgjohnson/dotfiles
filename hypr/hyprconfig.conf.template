@@ -32,7 +32,7 @@ monitor=,2560x1600@60,auto,1
 ####################
 
 $terminal = ghostty +new-window # the +new-window allows terminals to be opened extremely quickly while the ghostty service runs in the background
-$browser = chromium --disable-features=WaylandWpColorManagerV1 --password-store=basic
+$browser = chromium --disable-features=WaylandWpColorManagerV1
 $fileManager = nautilus --new-window
 $menu = rofi -show drun
 $notes = obsidian -disable-gpu --enable-wayland-ime
