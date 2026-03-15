@@ -41,6 +41,7 @@ vim.o.termguicolors = true
 
 -- enable persistent undo
 vim.o.undofile = true
+vim.o.autoread = true
 
 -- keep signcolumn on by default
 vim.wo.signcolumn = 'yes'
@@ -87,6 +88,14 @@ vim.api.nvim_create_autocmd("TermOpen", {
     vim.wo.number = false
     vim.wo.relativenumber = false
   end
+})
+
+-- Reload files changed outside Neovim when returning from terminal work or refocusing.
+vim.api.nvim_create_autocmd({ "TermLeave", "BufEnter", "FocusGained" }, {
+  group = vim.api.nvim_create_augroup('nvim-checktime', { clear = true }),
+  callback = function()
+    vim.cmd('checktime')
+  end,
 })
 
 -- Set diagnostic options

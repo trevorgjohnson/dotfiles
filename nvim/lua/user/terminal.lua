@@ -1,36 +1,134 @@
-local M = {} -- initialize terminal module
+---Dedicated terminal toggles shared by split and floating presentations.
+---
+---Each terminal variant tracks its own buffer/window pair so repeated toggles
+---reuse the same shell session instead of spawning a fresh terminal every time.
+local M = {}
 
----comment Current buffer and window state of the terminal
-local term_state = { buf = -1, win = -1 }
+---@alias TerminalDirection "above" | "below" | "left" | "right"
+---@class TerminalState
+---@field buf number Buffer currently backing the terminal session, or -1 if none exists yet.
+---@field win number Window currently showing the terminal, or -1 when hidden.
 
----comment Creates new scratch buffer (if needed) and split window
----@param opts {buf: number, dir: "above" | "below" | "left" | "right"}
-local create_buf_and_win = function(opts)
-  local buf = nil
-  if vim.api.nvim_buf_is_valid(opts.buf) then
-    buf = opts.buf                             -- use saved buffer
-  else
-    buf = vim.api.nvim_create_buf(false, true) -- scratch buffer
-  end
-  local win = vim.api.nvim_open_win(buf, true, { split = opts.dir })
-  return { buf = buf, win = win }
+---Create an isolated state holder for a dedicated terminal instance.
+---@return TerminalState
+local function new_terminal_state()
+  return { buf = -1, win = -1 }
 end
 
+local split_term = new_terminal_state()
+local float_term = new_terminal_state()
 
----comment Toggles a split terminal
----@param opts {dir: "above" | "below" | "left" | "right"}
+---Check whether a buffer is still valid and already hosts a terminal job.
+---@param buf number
+---@return boolean
+local function is_terminal_buffer(buf)
+  return vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buftype == "terminal"
+end
+
+---Return a valid scratch buffer that can be attached to a window immediately.
+---
+---The scratch buffer is just a placeholder until `:terminal` replaces it with a
+---real terminal buffer in the newly opened window.
+---@param buf number
+---@return number
+local function ensure_hidden_buffer(buf)
+  if vim.api.nvim_buf_is_valid(buf) then
+    return buf
+  end
+
+  buf = vim.api.nvim_create_buf(false, true)
+  vim.bo[buf].bufhidden = "hide"
+  return buf
+end
+
+---Ensure the active window is backed by a terminal buffer and store it in state.
+---
+---`vim.cmd.terminal()` always operates on the current window, so callers must
+---open the destination window first, then invoke this helper.
+---@param state TerminalState
+---@return number
+local function ensure_terminal_buffer(state)
+  if is_terminal_buffer(state.buf) then
+    return state.buf
+  end
+
+  vim.cmd.terminal()
+  state.buf = vim.api.nvim_get_current_buf()
+  vim.bo[state.buf].bufhidden = "hide"
+  return state.buf
+end
+
+---Toggle a dedicated terminal window.
+---
+---If the terminal window is already visible, hide it. Otherwise:
+---1. Reuse or create a scratch buffer.
+---2. Open the requested window style around that buffer.
+---3. Lazily create the terminal job on first use.
+---4. Enter insert mode so the shell is immediately interactive.
+---@param state TerminalState
+---@param open_win fun(buf: number): number
+local function show_terminal(state, open_win)
+  if vim.api.nvim_win_is_valid(state.win) then
+    vim.api.nvim_win_hide(state.win)
+    return
+  end
+
+  state.buf = ensure_hidden_buffer(state.buf)
+  state.win = open_win(state.buf)
+  ensure_terminal_buffer(state)
+  vim.api.nvim_win_set_buf(state.win, state.buf)
+
+  vim.cmd.startinsert()
+end
+
+---Open the terminal in a regular split anchored in the requested direction.
+---@param dir TerminalDirection
+local function open_split(buf, dir)
+  return vim.api.nvim_open_win(buf, true, { split = dir })
+end
+
+---Open the terminal in a centered floating window sized to most of the editor.
+---@param buf number
+---@return number
+local function open_float(buf)
+  local columns = vim.o.columns
+  local statusline = vim.o.laststatus > 0 and 1 or 0
+  local tabline = 0
+  if vim.o.showtabline == 2 or (vim.o.showtabline == 1 and vim.fn.tabpagenr "$" > 1) then
+    tabline = 1
+  end
+  local lines = vim.o.lines - vim.o.cmdheight - statusline - tabline
+  local width = math.max(80, math.floor(columns * 0.8))
+  local height = math.max(20, math.floor(lines * 0.8))
+
+  local win = vim.api.nvim_open_win(buf, true, {
+    relative = "editor",
+    row = math.floor((lines - height) / 2),
+    col = math.floor((columns - width) / 2),
+    width = width,
+    height = height,
+    border = "rounded",
+    style = "minimal",
+  })
+
+  vim.wo[win].winhighlight = "Normal:Normal,NormalNC:Normal"
+  return win
+end
+
+---Toggle the shared split terminal, preserving its shell session between opens.
+---@param opts {dir: TerminalDirection}
 M.toggle = function(opts)
-  if not vim.api.nvim_win_is_valid(term_state.win) then
-    term_state = create_buf_and_win({ buf = term_state.buf, dir = opts.dir })
-    if vim.bo[term_state.buf].buftype ~= "terminal" then
-      vim.cmd.terminal()
-    end
-  else
-    vim.api.nvim_win_hide(term_state.win)
-  end
+  show_terminal(split_term, function(buf)
+    return open_split(buf, opts.dir)
+  end)
 end
 
--- Initalizes the terminal module by setting the proper keymaps
+---Toggle the shared floating terminal, preserving its shell session between opens.
+M.toggle_float = function()
+  show_terminal(float_term, open_float)
+end
+
+---Register keymaps for the dedicated split and floating terminals.
 M.init = function()
   -- Open terminal in vertical split to the right
   vim.keymap.set("n", "<leader>tl", function() M.toggle { dir = "right" } end,
@@ -39,6 +137,10 @@ M.init = function()
   -- Open terminal in horizontal split on the bottom
   vim.keymap.set("n", "<leader>tj", function() M.toggle { dir = "below" } end,
     { desc = "Open terminal in horizontal split on the bottom" })
+
+  -- Toggle dedicated floating terminal
+  vim.keymap.set({ "n", "t" }, "<C-\\>", function() M.toggle_float() end,
+    { desc = "Toggle floating terminal" })
 end
 
 return M

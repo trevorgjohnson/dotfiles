@@ -12,6 +12,7 @@ vim.opt.rtp:prepend(lazypath)
 require('user.keymaps')
 require('user.options')
 
+require('user.context').init()
 require('user.terminal').init()
 require('user.statusline').init()
 
@@ -29,7 +30,8 @@ require("lazy").setup({
       ---@param colors CtpColors<string>
       custom_highlights = function(colors)
         return {
-          FloatBorder = { fg = colors.mauve },
+          NormalFloat = { bg = colors.mantle },
+          FloatBorder = { fg = colors.mauve, bg = colors.none },
           BlinkCmpMenuBorder = { fg = colors.mauve },
           CurSearch = { bg = colors.mauve },
           IncSearch = { bg = colors.mauve },
@@ -87,7 +89,12 @@ require("lazy").setup({
       })
       vim.api.nvim_create_autocmd('FileType', {
         pattern = filetypes,
-        callback = function() vim.treesitter.start() end,
+        callback = function(args)
+          local ok = pcall(vim.treesitter.start, args.buf, vim.bo[args.buf].filetype)
+          if not ok then
+            vim.bo[args.buf].syntax = vim.bo[args.buf].filetype
+          end
+        end,
       })
     end
   },
