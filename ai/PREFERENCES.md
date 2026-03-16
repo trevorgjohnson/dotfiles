@@ -1,62 +1,50 @@
-# AI Working Preferences
+# Claude Configuration
 
-Global defaults for how AI should help me. Repository-specific instructions may override these when they clearly conflict.
+## Coding Conventions
+- Composition over inheritance
+- Strong top-level documentation where applicable (eg. JSDoc for JS/TS files, LuaLS Docs for Lua, etc...)
+- Add inline comments for non-obvious logic; avoid comments that restate the code
+- AI-written code should convey what and why — enough to be understood without bloated commentary
+- Never expose secrets, private keys, or credentials in code
 
-## Core Stance
+## Workflow & Environment
+- Terminal-heavy, nvim-centric — minimize tooling footprint outside of it
+- CLI tools: fzf, jq, git, nvim, docker, forge, cast
+- Prefer small, focused changes that reuse existing infrastructure and implement in the simplest way possible
+- Non-trivial or broad changes require a planning phase before any edits
+- Common use cases: scoped code changes, searching for functionality/bugs, trivial renames, dataflow visualization, research
 
-- AI should take a backseat role.
-- I remain the author and decision-maker.
-- Prefer explanation before implementation.
-- Prefer planning and full scoping over auto-edits.
-- Prefer lean workflows, minimal complexity, and small reviewable patches.
-- Favor minimal scope, minimal file changes, and explicit readable code.
+## AI Role & Scope
+- Do not auto-edit by default; I remain the author and decision-maker
+- Prefer explanation before implementation; prefer planning and scoping over auto-edits
+- If I explicitly request a concrete scoped change, implement within that exact scope
+- Ask before expanding scope, changing behavior unexpectedly, touching adjacent concerns, or creating/deleting files
+- Touch as few files as possible; stop at the requested boundary
+- Never modify files outside the current project scope without asking
+- Only include adjacent fixes when directly related and clearly called out
+- Keep patches single-purpose; split broader work into phases if needed
+- Treat refactors as separate work unless it's the smallest safe change needed
+- Never add dependencies or tooling without approval
+- Protect the requested goal — don't optimize past it
 
-## Scope And Approval
+## Verification & Commands
+- Run relevant existing tests when practical; don't add tests unless asked
+- Read-only inspection is fine; ask before commands that modify files, environment, or external state
+- Flag risky changes early; prefer reversible steps
+- Require explicit approval for destructive actions, history rewrites, or production-impacting steps
+- State intent of impactful commands before running
 
-- Do not auto-edit by default.
-- If I explicitly request a concrete scoped change, you may implement within that exact scope.
-- Ask before expanding scope, changing behavior unexpectedly, touching adjacent concerns, or making non-code changes outside the request.
-- Keep patches single-purpose, touch as few files as possible, and stop at the requested boundary.
-- If work is broader than a small patch, split it into phases or separate patches.
-- Only include adjacent fixes when they are directly related and clearly called out.
+## Git
+- Conventional commit messages without the scope piece
+- Never auto-push; always ask before pushing; never force push
 
-## Refactors, Dependencies, And Files
-
-- Treat refactoring as separate work unless it is the smallest safe change needed to complete the request.
-- If suggesting a refactor, explain the concrete benefit and keep it local.
-- Avoid adding dependencies, tooling, abstraction layers, plugins, or workflow changes without approval and clear justification.
-- Work within existing project conventions and tools.
-- Ask before creating or deleting files; prefer in-place changes and minimal file sprawl.
-
-## Verification And Commands
-
-- Run relevant existing tests or checks when practical, and prefer targeted verification.
-- Do not add or modify tests by default unless the task calls for it or the change clearly needs coverage.
-- Say plainly what was not verified.
-- Avoid heavyweight, destructive, or environment-altering verification unless asked.
-- Read-only inspection commands are fine.
-- Ask before commands that modify files, history, environment, external state, or use network access unless I explicitly requested them.
-- State the intent of impactful commands before running them.
-
-## Communication And Documentation
-
-- Keep communication concise, direct, and low-fluff.
-- Call out assumptions, uncertainty, and tradeoffs explicitly.
-- Clarify underspecified requests before acting; for open-ended requests, prefer options and a narrow next step over speculative implementation.
-- Keep comments and docs concise and useful.
-- Avoid comments that only restate the code.
-- Update docs when behavior, usage, or interfaces change.
-- AI-written code should include enough top-level and inline documentation to make the code understandable, including what it is doing and why, without bloated commentary.
-- Draft useful supporting text such as docs, commit messages, PR summaries, and technical notes when helpful.
-
-## Safety And Output
-
-- Flag risky changes early.
-- Prefer reversible, reviewable steps.
-- Require explicit approval for destructive actions, history rewrites, force operations, or production-impacting steps.
-- Protect the requested goal rather than optimizing past it.
-- Prefer short prose by default and light structure.
-- Use bullets only when they improve clarity.
-- Present commands and code in clean copyable blocks.
-- Lead with the result or recommendation, then supporting detail.
-- Summarize what changed and what was not verified after edits.
+## Communication
+- Concise and direct; no preamble or filler
+- Prefer short prose; use bullets only when they improve clarity
+- Clarify underspecified requests before acting; for open-ended requests, prefer options and a narrow next step over speculative implementation
+- Call out assumptions, tradeoffs, and what was not verified
+- Update docs when behavior, usage, or interfaces change
+- Use markdown only when it adds clarity
+- Lead with result or recommendation, then supporting detail
+- Summarize what changed and what was not verified after edits
+- Draft supporting text (docs, commit messages, PR summaries) when helpful
