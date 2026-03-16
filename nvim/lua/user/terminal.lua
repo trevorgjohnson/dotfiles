@@ -123,13 +123,8 @@ end
 ---@return number
 local function open_float(buf)
   local columns = vim.o.columns
-  local statusline = vim.o.laststatus > 0 and 1 or 0
-  local tabline = 0
-  if vim.o.showtabline == 2 or (vim.o.showtabline == 1 and vim.fn.tabpagenr "$" > 1) then
-    tabline = 1
-  end
-  local lines = vim.o.lines - vim.o.cmdheight - statusline - tabline
-  local width = math.max(80, math.floor(columns * 0.8))
+  local lines = vim.o.lines - vim.o.cmdheight
+  local width = math.max(80, math.floor(columns * 0.9))
   local height = math.max(20, math.floor(lines * 0.8))
 
   local win = vim.api.nvim_open_win(buf, true, {

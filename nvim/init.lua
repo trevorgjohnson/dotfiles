@@ -34,6 +34,7 @@ require("lazy").setup({
           FloatBorder = { fg = colors.mauve, bg = colors.none },
           BlinkCmpMenuBorder = { fg = colors.mauve },
           CurSearch = { bg = colors.mauve },
+          ContextYank = { bg = colors.blue, fg = colors.base },
           IncSearch = { bg = colors.mauve },
           FzfLuaSearch = { bg = colors.mauve, fg = colors.base },
           DiagnosticVirtualTextError = { bg = colors.surface0 },
