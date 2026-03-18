@@ -12,9 +12,9 @@ vim.opt.rtp:prepend(lazypath)
 require('user.keymaps')
 require('user.options')
 
-require('user.context').init()
 require('user.terminal').init()
 require('user.statusline').init()
+local ai_spec = require('user.ai').setup()
 
 require("lazy").setup({
   { -- colorscheme
@@ -35,6 +35,7 @@ require("lazy").setup({
           BlinkCmpMenuBorder = { fg = colors.mauve },
           CurSearch = { bg = colors.mauve },
           ContextYank = { bg = colors.blue, fg = colors.base },
+          OpencodeAskPending = { bg = colors.peach, fg = colors.base },
           IncSearch = { bg = colors.mauve },
           FzfLuaSearch = { bg = colors.mauve, fg = colors.base },
           DiagnosticVirtualTextError = { bg = colors.surface0 },
@@ -165,6 +166,27 @@ require("lazy").setup({
       local fzf = require("fzf-lua")
       -- Set ctrl-q to send all search results to the qfixlist (similar to telescope)
       fzf.setup({ keymap = { fzf = { ["ctrl-q"] = "select-all+accept", } } })
+      -- hijack's vim.ui.select so fzflua (minimal float near cursor) is always used instead
+      fzf.register_ui_select(function(ui_opts, items)
+        local fmt = (ui_opts and ui_opts.format_item) or tostring
+        -- fzf prepends a "<N>. " numeric index to each entry; account for its width
+        local num_w = #tostring(#items) + 2 -- e.g. "1. " or "10. "
+        local max_w = 0
+        for _, item in ipairs(items) do
+          local w = vim.fn.strdisplaywidth(fmt(item)) + num_w
+          if w > max_w then max_w = w end
+        end
+        return {
+          winopts = {
+            relative = "cursor",
+            row      = 1,
+            col      = 0,
+            width    = math.max(max_w + 4, math.floor(vim.o.columns * 0.20)), -- +4 for fzf padding/borders; min 25% of screen
+            height   = math.max(math.min(#items + 2, 12), math.floor(vim.o.lines * 0.20)),
+            preview  = { hidden = "hidden" },
+          },
+        }
+      end)
       nmap('<leader>?', fzf.keymaps, 'find key mappings')
       nmap('<leader><space>', fzf.buffers, 'find open buffers')
       nmap('<leader>/', fzf.grep_curbuf, 'find in current buffer')
@@ -180,6 +202,7 @@ require("lazy").setup({
     end
   },
 
+  ai_spec,
   { import = 'user.lsp' },
 }, {
   install = { colorscheme = { 'catppuccin-mocha' } },
