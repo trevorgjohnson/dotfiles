@@ -12,6 +12,7 @@ vim.opt.rtp:prepend(lazypath)
 require('user.keymaps')
 require('user.options')
 
+require('user.ai_edit').setup()
 require('user.context').init()
 require('user.terminal').init()
 require('user.statusline').init()
