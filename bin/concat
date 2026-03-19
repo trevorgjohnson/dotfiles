@@ -37,17 +37,28 @@ if [[ -z $FFMPEG_OPTS ]] then
   FFMPEG_OPTS="-vcodec libx264 -threads 0 -crf 30"
 fi
 
+# If the output file already exists, append "new" until we find a free path.
+if [[ -e "$OUTPUT_NAME" ]]; then
+  output_dir=$(dirname -- "$OUTPUT_NAME")
+  output_file=$(basename -- "$OUTPUT_NAME")
+  output_stem=${output_file%.*}
+  output_ext=
+
+  if [[ $output_file == *.* && $output_file != .* ]]; then
+    output_ext=.${output_file##*.}
+  fi
+
+  output_candidate="$output_stem"
+  while [[ -e "$output_dir/$output_candidate$output_ext" ]]; do
+    output_candidate="${output_candidate}new"
+  done
+
+  OUTPUT_NAME="$output_dir/$output_candidate$output_ext"
+fi
+
 # Get a list of all of the images to upscale
 CLIPS=$(ls $CLIP_LOC)
 
-# Prompt to make sure that the proper amount of clips will be concatenated
-# read -p "Are you sure you want to concatenate ${#CLIPS[@]} clips? y[N]" -n 1 -r should_concatenate
-# echo "" # Just echoing out a new line so the next echo is on a separate line
-# if [[ ! $should_concatenate =~ ^[Yy]$ ]]; then
-#   echo "Operation cancelled!"
-#   exit 1
-# fi 
-
 # Concat all of the clips under the input clip location
-ffmpeg -f concat -safe 0 -i <(for f in $CLIPS; do echo "file '$CLIP_LOC/$f'"; done) $FFMPEG_OPTS $OUTPUT_NAME
+ffmpeg -f concat -safe 0 -i <(for f in $CLIPS; do echo "file '$CLIP_LOC/$f'"; done) $FFMPEG_OPTS "$OUTPUT_NAME"
 echo "Saved to $OUTPUT_NAME"
