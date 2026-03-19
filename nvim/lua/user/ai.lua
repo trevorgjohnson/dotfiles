@@ -1,8 +1,8 @@
---- AI tooling: opencode.nvim integration + context-yank helpers.
+--- AI tooling: claudecode.nvim / opencode.nvim integration + context-yank helpers.
 ---
---- When opencode is installed, loads the opencode.nvim plugin with full
---- structured ask/operator/select support. Otherwise, falls back to
---- yank-based keymaps that pair with a plain Claude Code terminal float.
+--- Priority: claude (claudecode.nvim) > opencode (opencode.nvim) > fallback.
+--- When neither is installed, falls back to yank-based keymaps that pair with
+--- a plain Claude Code terminal float toggled via <C-\>.
 local M = {}
 
 -- ---------------------------------------------------------------------------
@@ -62,40 +62,69 @@ local function yank_visual_range()
   end)
 end
 
--- ---------------------------------------------------------------------------
--- Opencode pending-highlight helpers
--- ---------------------------------------------------------------------------
-
-local pending_ns      = vim.api.nvim_create_namespace("opencode_ask_pending")
----@type integer? extmark id of the current pending highlight
-local pending_mark_id = nil
----@type integer? buffer the pending mark lives in
-local pending_buf     = nil
-
----Remove the pending highlight, if any.
-local function clear_pending()
-  if pending_buf and pending_mark_id then
-    pcall(vim.api.nvim_buf_del_extmark, pending_buf, pending_ns, pending_mark_id)
-  end
-  pending_buf     = nil
-  pending_mark_id = nil
+---Register the context-yank keymaps shared by claudecode and the bare fallback.
+local function register_yank_keymaps()
+  vim.keymap.set("n", "ayy", yank_current_line,
+    { desc = "[]: [Y]ank line context for AI" })
+  vim.keymap.set({ "v", "x" }, "<leader>ay", yank_visual_range,
+    { desc = "[]: [Y]ank range context for AI" })
 end
 
----Highlight [start_row, end_row] (0-indexed, inclusive) in `buf` with
----OpencodeAskPending to signal that opencode is processing the selection.
----@param buf integer
----@param start_row integer 0-indexed
----@param end_row integer 0-indexed, inclusive
-local function mark_pending(buf, start_row, end_row)
-  clear_pending()
-  pending_buf     = buf
-  pending_mark_id = vim.api.nvim_buf_set_extmark(buf, pending_ns, start_row, 0, {
-    end_row  = end_row + 1, -- extmark end is exclusive
-    end_col  = 0,
-    hl_group = "OpencodeAskPending",
-    hl_eol   = true, -- extend highlight to end of each line
-    priority = 200,
-  })
+-- ---------------------------------------------------------------------------
+-- claudecode.nvim custom terminal provider (backed by user.terminal float)
+-- ---------------------------------------------------------------------------
+
+---Build a custom terminal provider that delegates to the shared float terminal
+---so claudecode.nvim reuses the same <C-\> session instead of its own split.
+---@param term table user.terminal module
+---@return table provider
+local function make_claude_provider(term)
+  ---Set process-level env vars so the next jobstart inherits them.
+  ---@param env table<string, string>
+  local function apply_env(env)
+    for k, v in pairs(env) do
+      vim.env[k] = v
+    end
+  end
+
+  return {
+    setup = function() end,
+
+    open = function(cmd, env, _, focus)
+      apply_env(env)
+      if not term.float:is_visible() then
+        term.float:toggle({ cmd = cmd })
+      elseif focus ~= false then
+        -- Already visible — just make sure it's focused.
+        term.float:toggle({ cmd = cmd }) -- toggles to hide
+        term.float:toggle({ cmd = cmd }) -- toggles back to show (focused)
+      end
+    end,
+
+    close = function()
+      if term.float:is_visible() then
+        term.float:toggle()
+      end
+    end,
+
+    simple_toggle = function(cmd, env)
+      apply_env(env)
+      term.float:toggle({ cmd = cmd })
+    end,
+
+    focus_toggle = function(cmd, env)
+      apply_env(env)
+      term.float:toggle({ cmd = cmd })
+    end,
+
+    get_active_bufnr = function()
+      return term.float:bufnr()
+    end,
+
+    is_available = function()
+      return true
+    end,
+  }
 end
 
 ---Setup callback passed to terminal helpers so opencode's keymaps and
@@ -109,80 +138,68 @@ end
 -- Module setup
 -- ---------------------------------------------------------------------------
 
----Register AI keymaps and return the lazy plugin spec (empty when opencode
----is not installed, so the caller can always splice the result into lazy's
----spec list).
+---Register AI keymaps and return the lazy plugin spec.
+---
+---Returns claudecode.nvim spec when `claude` is installed, opencode.nvim spec
+---when `opencode` is installed, or an empty table with bare yank keymaps as
+---a fallback.
 ---@return table lazy plugin spec
 function M.setup()
   local term = require("user.terminal")
 
-  if vim.fn.executable("opencode") ~= 1 then
-    vim.keymap.set("n", "ayy", yank_current_line,
-      { desc = "[]: [Y]ank line context for AI" })
-    vim.keymap.set({ "v", "x" }, "<leader>ay", yank_visual_range,
-      { desc = "[]: [Y]ank range context for AI" })
-    vim.keymap.set({ "v", "x" }, "<leader>ap", function()
-      yank_visual_range()
-      vim.schedule(function() term.toggle_float() end)
-    end, { desc = "[]: [P]rompt AI — yank context + open claude float" })
-    vim.keymap.set({ "n", "v", "x" }, "<leader>ao", function() term.toggle_float() end,
-      { desc = "[]: Toggle Claude Code float" })
-    return {}
+  -- ----- claudecode.nvim (highest priority) --------------------------------
+  if vim.fn.executable("claude") == 1 then
+    register_yank_keymaps()
+    return {
+      "coder/claudecode.nvim",
+      keys = {
+        {
+          "<leader>ap",
+          "<cmd>ClaudeCodeSend<cr>",
+          mode = { "v", "x" },
+          desc = "[]: [P]rompt Claude on selection"
+        },
+      },
+      opts = {
+        terminal = {
+          provider = make_claude_provider(term),
+        },
+      },
+    }
   end
 
-  return {
-    "nickjvandyke/opencode.nvim",
-    version = "*", -- Latest stable release
-    event = "VimEnter",
-    config = function()
-      ---@type opencode.Opts
-      -- FIX: enable when "safe" -> lsp = { enabled = true }
-      vim.g.opencode_opts = {}
+  -- ----- opencode.nvim -----------------------------------------------------
+  if vim.fn.executable("opencode") == 1 then
+    return {
+      "nickjvandyke/opencode.nvim",
+      version = "*", -- Latest stable release
+      keys = {
+        { "<leader>ap", function() require("opencode").ask("@this: ", { submit = true }) end,
+          mode = { "v", "x" }, desc = "[]: [P]rompt Opencode on selection" },
+        { "<leader>ay", function() return require("opencode").operator("@this ") end,
+          mode = { "v", "x" }, desc = "[]: [Y]ank range context and send to AI", expr = true },
+        { "ayy", function() return require("opencode").operator("@this ") .. "_" end,
+          mode = "n", desc = "[]: [Y]ank line context and send to AI", expr = true },
+      },
+      config = function()
+        -- Configure the opencode's server callbacks to use the float term under user.terminal
+        require("opencode.config").opts.server = {
+          start  = function() term.float:start_hidden("opencode --port", opencode_terminal_setup) end,
+          stop   = function() term.float:stop() end,
+          toggle = function() term.float:toggle({ cmd = "opencode --port", on_create = opencode_terminal_setup }) end,
+        }
+      end,
+    }
+  end
 
-      -- vim.g doesn't support function values; set server hooks directly on the
-      -- config module so opencode uses our float terminal instead of its own split.
-      require("opencode.config").opts.server = {
-        start  = function() term.start_float_hidden("opencode --port", opencode_terminal_setup) end,
-        stop   = function() term.stop_float() end,
-        toggle = function() term.toggle_float("opencode --port", opencode_terminal_setup) end,
-      }
+  -- ----- Bare fallback (no AI CLI installed) --------------------------------
+  register_yank_keymaps()
+  vim.keymap.set({ "v", "x" }, "<leader>ap", function()
+    yank_visual_range()
+    vim.schedule(function() term.float:toggle() end)
+  end, { desc = "[]: [P]rompt AI — yank context + open terminal float" })
 
-      local oc = require("opencode")
-      vim.keymap.set({ "v", "x" }, "<leader>ap", function()
-        local buf       = vim.api.nvim_get_current_buf()
-        -- '<  / '> are set when leaving visual mode; still valid here.
-        local start_row = vim.fn.line("'<") - 1 -- convert to 0-indexed
-        local end_row   = vim.fn.line("'>") - 1
-        mark_pending(buf, start_row, end_row)
-
-        -- Open the float once the server starts processing the submitted prompt.
-        vim.api.nvim_create_autocmd("User", {
-          pattern  = "OpencodeEvent:session.busy",
-          once     = true,
-          callback = function() term.toggle_float("opencode --port", opencode_terminal_setup) end,
-        })
-
-        -- Clear pending highlight when opencode goes idle.
-        vim.api.nvim_create_autocmd("User", {
-          pattern  = "OpencodeEvent:session.idle",
-          once     = true,
-          callback = function() clear_pending() end,
-        })
-
-        oc.ask("@this: ", { submit = true })
-      end, { desc = "[]: [P]rompt AI on selection" })
-      vim.keymap.set({ "n", "v", "x" }, "<leader>ao", function() oc.select() end,
-        { desc = "[]: Select from available AI [O]ptions" })
-      vim.keymap.set({ "v", "x" }, "<leader>ay", function() return oc.operator("@this ") end,
-        { desc = "[]: [Y]ank range context and send to AI", expr = true })
-      vim.keymap.set("n", "ayy", function() return oc.operator("@this ") .. "_" end,
-        { desc = "[]: [Y]ank line context and send to AI", expr = true })
-      vim.keymap.set("n", "<C-a>u", function() oc.command("session.half.page.up") end,
-        { desc = "Scroll opencode up" })
-      vim.keymap.set("n", "<C-a>d", function() oc.command("session.half.page.down") end,
-        { desc = "Scroll opencode down" })
-    end,
-  }
+  return {}
 end
 
 return M
