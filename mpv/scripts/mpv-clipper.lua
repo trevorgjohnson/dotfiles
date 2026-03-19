@@ -54,6 +54,15 @@ local function load_config()
 end
 load_config()
 
+local function file_exists(path)
+    local file = io.open(path, "r")
+    if file then
+        file:close()
+        return true
+    end
+    return false
+end
+
 -- Merge preset with config overrides
 local function get_active_preset()
     local preset = quality_presets[config.quality] or {}
@@ -83,7 +92,13 @@ local function make_clip()
     local dir, name = utils.split_path(file)
     local out_dir = (config.output_dir ~= "" and config.output_dir) or dir
     local ext = (config.container == "auto") and file:match("^.+(%..+)$") or ("."..config.container)
-    local out_path = utils.join_path(out_dir, name:gsub("%..+$", "") .. config.clip_suffix .. ext)
+    local base_name = name:gsub("%..+$", "")
+    local out_name = base_name .. config.clip_suffix
+    local out_path = utils.join_path(out_dir, out_name .. ext)
+    while file_exists(out_path) do
+        out_name = out_name .. config.clip_suffix
+        out_path = utils.join_path(out_dir, out_name .. ext)
+    end
 
     local p = get_active_preset()
     local args = { "ffmpeg", "-y", "-ss", tostring(start_time), "-i", file, "-t", tostring(duration) }

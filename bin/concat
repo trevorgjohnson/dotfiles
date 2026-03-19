@@ -27,13 +27,17 @@ ffmpeg_opts - Specific ffmpeg options used to control the quality of the finaliz
   exit 1
 fi
 
+# Resolve the clip directory so ffmpeg gets absolute paths even when a
+# relative directory like ./ or Videos/ is passed in.
+CLIP_LOC=$(realpath -- "$CLIP_LOC")
+
 # If output is not given, default to `output.mp4`
-if [[ -z $OUTPUT_NAME ]] then
+if [[ -z $OUTPUT_NAME ]]; then
   OUTPUT_NAME="output.mp4"
 fi
 
 # If no specific ffmpeg opts are given, default to some sensible clipping settings
-if [[ -z $FFMPEG_OPTS ]] then
+if [[ -z $FFMPEG_OPTS ]]; then
   FFMPEG_OPTS="-vcodec libx264 -threads 0 -crf 30"
 fi
 
@@ -56,9 +60,15 @@ if [[ -e "$OUTPUT_NAME" ]]; then
   OUTPUT_NAME="$output_dir/$output_candidate$output_ext"
 fi
 
-# Get a list of all of the images to upscale
-CLIPS=$(ls $CLIP_LOC)
+# Build the clip list without using ls so filenames with spaces keep working.
+shopt -s nullglob
+CLIPS=("$CLIP_LOC"/*)
+
+if (( ${#CLIPS[@]} == 0 )); then
+  echo "No clips found in $CLIP_LOC"
+  exit 1
+fi
 
 # Concat all of the clips under the input clip location
-ffmpeg -f concat -safe 0 -i <(for f in $CLIPS; do echo "file '$CLIP_LOC/$f'"; done) $FFMPEG_OPTS "$OUTPUT_NAME"
+ffmpeg -f concat -safe 0 -i <(for f in "${CLIPS[@]}"; do printf "file '%s'\n" "$f"; done) $FFMPEG_OPTS "$OUTPUT_NAME"
 echo "Saved to $OUTPUT_NAME"
