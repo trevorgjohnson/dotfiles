@@ -21,7 +21,9 @@ Terminal.__index = Terminal
 ---@return Terminal
 function Terminal.new(default_layout, default_open_win)
   return setmetatable({
-    buf = -1, win = -1, layout = nil,
+    buf = -1,
+    win = -1,
+    layout = nil,
     _default_layout = default_layout,
     _default_open_win = default_open_win,
   }, Terminal)
@@ -183,9 +185,13 @@ function Terminal:start_hidden(cmd, on_create)
   self.buf = ensure_hidden_buffer(self.buf)
 
   local tmp_win = vim.api.nvim_open_win(self.buf, false, {
-    relative = "editor", row = 0, col = 0,
-    width = 1, height = 1,
-    style = "minimal", noautocmd = true,
+    relative = "editor",
+    row = 0,
+    col = 0,
+    width = 1,
+    height = 1,
+    style = "minimal",
+    noautocmd = true,
   })
   local saved_win = vim.api.nvim_get_current_win()
   vim.api.nvim_set_current_win(tmp_win)
@@ -239,7 +245,7 @@ M.init = function()
     M.split:toggle({ layout = "below", open_win = function(buf) return open_split(buf, "below") end })
   end, { desc = "Open terminal in horizontal split on the bottom" })
 
-  vim.keymap.set({ "n", "t" }, "<C-\\>", function()
+  vim.keymap.set({ "n", "t", "x", "v" }, "<C-\\>", function()
     M.float:toggle()
   end, { desc = "Toggle floating terminal" })
 end

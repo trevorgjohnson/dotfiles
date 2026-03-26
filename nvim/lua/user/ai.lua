@@ -41,7 +41,7 @@ end
 
 ---Copy `@file:line` to the clipboard and flash the line.
 local function yank_current_line()
-  copy_to_clipboard(string.format("%s:%d", current_file_path(), vim.fn.line(".")))
+  copy_to_clipboard(string.format("%s#L%d", current_file_path(), vim.fn.line(".")))
   flash_line_range(vim.fn.line("."), vim.fn.line("."))
 end
 
@@ -52,7 +52,7 @@ local function yank_visual_range()
   if start_line > end_line then
     start_line, end_line = end_line, start_line
   end
-  copy_to_clipboard(string.format("%s:%d-%d", current_file_path(), start_line, end_line))
+  copy_to_clipboard(string.format("%s#L%d-%d", current_file_path(), start_line, end_line))
 
   -- Clear the active visual selection first so the timed range highlight is visible.
   local esc = vim.api.nvim_replace_termcodes("<Esc>", true, false, true)

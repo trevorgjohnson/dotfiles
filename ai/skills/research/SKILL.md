@@ -1,0 +1,186 @@
+---
+name: research
+version: 2.0.0
+description: >-
+  Research a topic and produce structured docs (diagrams, LaTeX, citations, pseudocode).
+  2-stage: preliminary sweep + agent planning, then execution. Also reformats existing content.
+---
+
+# Research
+
+Dual-mode documentation skill. Detect which mode applies from the input:
+
+- **Generator mode** — a topic, concept, or question is given → produce a structured explanation
+- **Formatter mode** — existing markdown content is pasted or referenced → reformat it to spec
+
+---
+
+## Mode: Generator
+
+### Step 0 — Topic Scoping (in-band, before any research)
+
+If the topic is **broad, ambiguous, or undefined**, do not proceed to research. Instead, run a
+short in-band interview to scope it:
+
+1. Ask what angle or subtopics the user cares most about (e.g. "theory, implementation, tradeoffs,
+   history?")
+2. Ask what depth they want — overview, working knowledge, or deep dive?
+3. Ask if there are adjacent concepts to include or explicitly exclude
+4. Ask about intended audience / prior knowledge assumptions
+
+Collect answers before moving to Step 1. For well-scoped topics, skip straight to Step 1.
+
+---
+
+### Step 1 — Preliminary Research + Planning
+
+Run a **quick, broad sweep** before committing to a research plan. Goal: discover the topic
+surface, not understand it deeply.
+
+- Use lightweight tools (WebSearch, WebFetch on overview pages, skim abstracts)
+- Identify the key subtopics, terminology clusters, and open questions
+- Note which areas are sparse, contested, or require primary sources
+- Time-box this phase — it should feel like a scout, not a study session
+
+After the sweep, **present a research plan to the user** before executing it:
+
+```
+Topics identified:
+  1. [topic A] — [why it matters, what needs verifying]
+  2. [topic B] — ...
+  ...
+
+Proposed agents:
+  - Agent 1: [role/focus] → covers topics [X, Y]
+  - Agent 2: [role/focus] → covers topics [Z]
+  - ...
+
+Parallelizable: [yes/no and why]
+Estimated depth per agent: [skim / standard / deep dive]
+```
+
+**Ask the user to confirm or adjust** the plan before proceeding. Prompt them on:
+- Whether to add, remove, or merge agents
+- Whether any topic needs more or less depth
+- Whether agents should run in parallel (breadth-first) or sequentially (each informs the next)
+
+Only proceed to Step 2 after explicit confirmation.
+
+---
+
+### Step 2 — Research Execution
+
+Execute the confirmed plan. Launch agents per the approved configuration.
+
+**Agent orchestration rules:**
+- Parallel agents: use when topics are independent — each agent gets a focused scope and returns
+  a structured summary
+- Sequential agents: use when understanding topic A is prerequisite to scoping topic B — chain
+  them and pass output forward
+- Specialist agents preferred over generalist sweeps — give each agent a tight mandate
+- Each agent should return: key facts, notable sources (URLs or paper titles), open questions,
+  and confidence level on contested claims
+
+Synthesize agent outputs before writing the final document. Do not copy-paste raw agent output —
+integrate, deduplicate, and resolve conflicts.
+
+---
+
+### Step 3 — Write the Document
+
+Produce a structured explanation of the given topic. Use this output structure (include a section
+only if the topic warrants it — don't add empty or padding sections):
+
+1. **Summary** — one plain-English paragraph, no jargon, explains what and why
+2. **Diagram** — see diagram rules below
+3. **Core explanation** — section(s) walking through the concept in depth
+4. **Math** — if the topic is math-heavy; see LaTeX rules below
+5. **Pseudocode** — if the topic involves an algorithm, process, or implementation; see rules below
+6. **Gotchas / key takeaways** — non-obvious behavior, common mistakes, edge cases
+7. **References** — footnotes at the bottom; see citation rules below
+
+---
+
+## Mode: Formatter
+
+Given existing markdown content, restructure it to match the generator output structure and apply
+all formatting rules below. Do not invent content — only reorganize and enrich what's present.
+If a section has no corresponding content, omit it.
+
+---
+
+## Formatting Rules
+
+### Diagrams
+
+Use a diagram when it genuinely reduces cognitive load — not as decoration.
+
+**Use for:** architecture, dataflow, state machines, sequences, decision trees, hierarchy,
+before/after comparisons.
+
+**Skip for:** simple lists, single-concept definitions, short how-tos with fewer than 3 steps.
+
+**Format:** Prefer Mermaid (renders in Obsidian). Use ASCII art when the content will be read in
+a terminal or nvim without a renderer. When in doubt, use Mermaid and note it requires a renderer.
+
+```mermaid
+%% Example: prefer this format
+flowchart LR
+  A[Input] --> B{Branch?}
+  B -->|yes| C[Path A]
+  B -->|no| D[Path B]
+```
+
+### LaTeX Math
+
+Use Obsidian MathJax notation. Inline: `$expression$`. Block: `$$\nexpression\n$$`.
+
+Rules:
+- Define every variable before or immediately after introducing it
+- Follow every math expression — inline or block — with a plain-English sentence or paragraph
+  that explains what it means intuitively, not just symbolically
+- Target reader: smart person with no math background. Prioritize intuition over rigor.
+- Never use LaTeX for things that aren't actually mathematical expressions
+
+Example pattern:
+
+> The probability of an event is given by $P(A) = \frac{|A|}{|S|}$, where $|A|$ is the number
+> of outcomes in event $A$ and $|S|$ is the total number of possible outcomes.
+>
+> In plain terms: divide the number of ways your thing can happen by the total number of things
+> that could happen.
+
+### Pseudo-JS Pseudocode
+
+Use when the topic involves an algorithm, multi-step process, math implementation, or protocol.
+
+Style: JS-shaped but loose. Skip boilerplate (no `require`, no `module.exports`, no type
+annotations). Use plain English inside function bodies where internal logic is complex or
+conceptual. The goal is clarity, not correctness.
+
+Always label with `// pseudocode` at the top of the block so it's not mistaken for runnable code.
+
+```js
+// pseudocode
+function exampleAlgorithm(input):
+  result = []
+  for each item in input:
+    if item meets condition → process and push to result
+    else → skip
+  return result
+```
+
+Prefer named functions with clear parameter names over anonymous logic.
+
+### Citations and Footnotes
+
+Source every external fact, formula, named concept, or claim. Use Obsidian footnote syntax:
+
+- Inline marker: `[^1]` placed immediately after the claim
+- Definition at the bottom of the document: `[^1]: https://example.com — Brief description`
+
+Rules:
+- If a source is uncertain or unverifiable from memory, say so explicitly — never fabricate a URL
+- Ask the user before launching sub-agents to verify citations
+- Group all footnote definitions at the very end of the document under a `## References` header
+- Number footnotes sequentially from `[^1]`

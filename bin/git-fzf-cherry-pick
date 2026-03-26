@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# Interactively cherry-pick commits using fzf.
+# Selection order = apply order — pick oldest first if commits depend on each other.
+# On conflict: resolve, git add, then git cherry-pick --continue (or --abort to cancel).
+#
+# Usage: git fzf-cherry-pick [<git log args>]
+
+set -euo pipefail
+
+SELECTED=$(git log --oneline "$@" | \
+  fzf --multi \
+    --header 'ctrl-s: view selection order  |  ctrl-d: view diff  |  apply order = selection order' \
+    --preview 'git show {1}' \
+    --preview-label ' git show ' \
+    --bind 'ctrl-s:change-preview(echo {+})+change-preview-label( selection order )' \
+    --bind 'ctrl-d:change-preview(git show {1})+change-preview-label( git show )')
+
+[[ -z "$SELECTED" ]] && { echo "No commits selected."; exit 0; }
+
+HASHES=$(echo "$SELECTED" | awk '{print $1}')
+COUNT=$(echo "$HASHES" | awk 'END{print NR}')
+
+echo ""
+echo "Checking for conflicts..."
+while IFS= read -r hash; do
+  parent=$(git rev-parse "$hash^")
+  conflicts=$(git merge-tree "$parent" HEAD "$hash" | grep -c '^<<<<<<<' || true)
+  if [[ "$conflicts" -gt 0 ]]; then
+    echo "  ⚠ $(git log -1 --oneline "$hash") — $conflicts conflict(s)"
+  else
+    echo "  ✓ $(git log -1 --oneline "$hash")"
+  fi
+done <<< "$HASHES"
+
+echo ""
+echo "Will cherry-pick $COUNT commit(s) in this order:"
+echo "$SELECTED" | nl -ba
+echo ""
+
+read -r -p "Proceed? [y/N] " ANSWER
+[[ ! "$ANSWER" =~ ^[Yy]$ ]] && { echo "Aborted."; exit 0; }
+
+# shellcheck disable=SC2046 — word splitting is intentional; hashes have no spaces
+git cherry-pick $(echo "$HASHES")

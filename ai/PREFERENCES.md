@@ -9,7 +9,8 @@
 
 ## Workflow & Environment
 - Terminal-heavy, nvim-centric — minimize tooling footprint outside of it
-- CLI tools: fzf, rg, jq, git, nvim, docker, forge, cast
+- CLI tools: fzf, rg, jq, git, nvim, docker, forge, cast, cargo, nvm
+- Primary stacks: TypeScript (npm), Solidity (Foundry), Lua, Rust
 - Prefer small, focused changes that reuse existing infrastructure and implement in the simplest way possible
 - Non-trivial or broad changes require a planning phase before any edits
 - Common use cases: scoped code changes, searching for functionality/bugs, trivial renames, dataflow visualization, research
