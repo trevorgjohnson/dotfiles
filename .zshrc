@@ -13,6 +13,9 @@ export PATH="$PATH:/usr/local/bin"
 # dotfiles
 export PATH="$PATH:$HOME/.config/dotfiles/bin"
 
+# work scripts
+export PATH="$PATH:$HOME/work_bin"
+
 # starship
 eval "$(starship init zsh)"
 
