@@ -73,4 +73,4 @@ After comparing, give your own recommendation: which design you think is stronge
 
 ### 7. Write the RFC file
 
-Write the RFC to `~/.prds/<project-name>/rfcs/<slug>.md`. Use the template in [REFERENCE.md](REFERENCE.md). Do NOT ask the user to review before writing — just write it and share the file path.
+Write the RFC to `~/.claude/prds/<project-name>/rfcs/<slug>.md`. Use the template in [REFERENCE.md](REFERENCE.md). Do NOT ask the user to review before writing — just write it and share the file path.

@@ -19,7 +19,7 @@ This skill will be invoked when the user wants to create a refactor request. You
 
 7. Break the implementation into a plan of tiny commits. Remember Martin Fowler's advice to "make each refactoring step as small as possible, so that you can always see the program working."
 
-8. Write the refactor plan to `~/.prds/<project-name>/refactor-plans/<slug>.md`. If you don't have a project name from context, derive a short slug from the refactor description. Use the following template:
+8. Write the refactor plan to `~/.claude/prds/<project-name>/refactor-plans/<slug>.md`. If you don't have a project name from context, derive a short slug from the refactor description. Use the following template:
 
 <refactor-plan-template>
 

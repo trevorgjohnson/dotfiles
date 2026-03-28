@@ -17,7 +17,7 @@ A deep module (as opposed to a shallow module) is one which encapsulates a lot o
 
 Check with the user that these modules match their expectations. Check with the user which modules they want tests written for.
 
-5. Once you have a complete understanding of the problem and solution, use the template below to write the PRD. Ask the user for a short feature name (used as the directory name), then save the PRD to `~/.prds/<feature-name>/prd.md`. Print the file path when done.
+5. Once you have a complete understanding of the problem and solution, use the template below to write the PRD. Ask the user for a short feature name (used as the directory name), then save the PRD to `~/.claude/prds/<feature-name>/prd.md`. Print the file path when done.
 
 <prd-template>
 

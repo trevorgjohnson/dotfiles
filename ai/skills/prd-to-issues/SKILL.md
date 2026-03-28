@@ -13,7 +13,7 @@ Break a PRD into independently-grabbable markdown files using vertical slices (t
 
 Ask the user for the PRD file path, or check if it's already in context.
 
-If the PRD is not already in your context window, read it from `~/.prds/<feature-name>/prd.md`.
+If the PRD is not already in your context window, read it from `~/.claude/prds/<feature-name>/prd.md`.
 
 ### 2. Explore the codebase (optional)
 
@@ -51,7 +51,7 @@ Iterate until the user approves the breakdown.
 
 ### 5. Write the issue files
 
-For each approved slice, write a markdown file to `~/.prds/<feature-name>/issues/<nn>-<slug>.md`. Use the template below.
+For each approved slice, write a markdown file to `~/.claude/prds/<feature-name>/issues/<nn>-<slug>.md`. Use the template below.
 
 Write files in dependency order (blockers first) so you can reference real filenames in the "Blocked by" field.
 

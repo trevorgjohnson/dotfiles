@@ -56,7 +56,7 @@ Rules:
 
 ### 5. Write the triage file
 
-Write the triage file to `~/.prds/<project-name>/triage/<slug>.md` using the template below. If you don't have a project name from context, derive a short slug from the bug description. Do NOT ask the user to review before writing — just write it and show the file path.
+Write the triage file to `~/.claude/prds/<project-name>/triage/<slug>.md` using the template below. If you don't have a project name from context, derive a short slug from the bug description. Do NOT ask the user to review before writing — just write it and show the file path.
 
 <issue-template>
 
