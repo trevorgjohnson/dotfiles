@@ -1,6 +1,6 @@
 vim.opt.wrap = true
 vim.opt.linebreak = true
 
--- use treesitter folding
-vim.o.foldmethod = "expr"
-vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+-- nvim 0.12 built-in treesitter for markdown causes a `range` nil crash in the highlighter
+vim.treesitter.stop()
+vim.o.foldmethod = "manual"

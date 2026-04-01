@@ -57,10 +57,7 @@ local servers = {
 return {
   'neovim/nvim-lspconfig',
   event = { "BufReadPre", "BufNewFile" },
-  dependencies = {
-    -- LSP status updates
-    { 'j-hui/fidget.nvim', opts = { notification = { window = { winblend = 0 } } } },
-  },
+  dependencies = {},
   config = function()
     -- Attempt to attach
     for s_name, s_opts in pairs(servers) do
@@ -83,6 +80,15 @@ return {
           vim.keymap.set('n', '<leader>th',
             function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf }) end,
             { buffer = event.buf, desc = '[LSP]: [t]oggle inlay [h]ints' })
+        end
+
+        -- if client supports codelens, auto-refresh on enter and save
+        if client:supports_method(vim.lsp.protocol.Methods.textDocument_codeLens, event.buf) then
+          vim.lsp.codelens.refresh()
+          vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWritePost' }, {
+            buffer = event.buf,
+            callback = vim.lsp.codelens.refresh,
+          })
         end
       end,
     })

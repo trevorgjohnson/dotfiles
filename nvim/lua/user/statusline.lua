@@ -45,6 +45,8 @@ function M.render()
   return table.concat {
     M.filename(),
     '%#StatusLine#%=',
+    vim.diagnostic.status(), ' ',
+    vim.ui.progress_status(),
     M.mode_component(), M.git_component(),
   }
 end

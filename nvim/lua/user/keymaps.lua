@@ -69,8 +69,7 @@ vim.keymap.set("", "x", '"_x', opts_w_desc("Delete selection to the blackhole re
 
 -- see ':help vim.diagnostic.*' for documentation on the below
 vim.keymap.set('n', '<leader>d', vim.diagnostic.open_float, opts_w_desc("Show [D]iagnostics"))
-vim.keymap.set('n', '[d', vim.diagnostic.get_next, opts_w_desc("Goto previous [D]iagnostic"))
-vim.keymap.set('n', ']d', vim.diagnostic.get_prev, opts_w_desc("Goto next [D]iagnostic"))
+-- [d / ]d are default mappings since 0.10; they respect `jump = { float = true }` from diagnostic.config()
 
 -- move through qflist
 vim.keymap.set('n', '<M-n>', ':cnext<CR>')

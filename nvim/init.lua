@@ -1,5 +1,5 @@
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
-if not (vim.uv or vim.loop).fs_stat(lazypath) then
+if not vim.uv.fs_stat(lazypath) then
   local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
   local out = vim.fn.system { 'git', 'clone', '--filter=blob:none', '--branch=stable', lazyrepo, lazypath }
   if vim.v.shell_error ~= 0 then
@@ -71,7 +71,7 @@ require("lazy").setup({
     event = { "BufReadPre", "BufNewFile" },
     dependencies = { { "nvim-treesitter/nvim-treesitter-textobjects", } },
     config = function()
-      local filetypes = { "rust", "solidity", "lua", "typescript", "markdown_inline", "diff" }
+      local filetypes = { "rust", "solidity", "lua", "typescript", "markdown", "markdown_inline", "diff" }
       require('nvim-treesitter').setup({
         ensure_installed = filetypes,
         auto_install = true,
@@ -89,15 +89,6 @@ require("lazy").setup({
           }
         }
       })
-      vim.api.nvim_create_autocmd('FileType', {
-        pattern = filetypes,
-        callback = function(args)
-          local ok = pcall(vim.treesitter.start, args.buf, vim.bo[args.buf].filetype)
-          if not ok then
-            vim.bo[args.buf].syntax = vim.bo[args.buf].filetype
-          end
-        end,
-      })
     end
   },
 
@@ -112,7 +103,7 @@ require("lazy").setup({
         end
 
         local gs = package.loaded.gitsigns
-        nmap('[h', gs.next_hunk, "previous [h]unk")
+        nmap('[h', gs.prev_hunk, "previous [h]unk")
         nmap(']h', gs.next_hunk, "next [h]unk")
         nmap('<leader>rh', gs.reset_hunk, "[r]eset [h]unk")
         nmap('<leader>ph', gs.preview_hunk, "[p]review [h]unk")
@@ -161,7 +152,7 @@ require("lazy").setup({
     dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
       local nmap = function(keys, func, desc)
-        vim.keymap.set('n', keys, func, { buffer = bufnr, desc = '[󰍉]: ' .. desc })
+        vim.keymap.set('n', keys, func, { desc = '[󰍉]: ' .. desc })
       end
       local fzf = require("fzf-lua")
       -- Set ctrl-q to send all search results to the qfixlist (similar to telescope)
