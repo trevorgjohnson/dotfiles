@@ -57,7 +57,6 @@ local servers = {
 return {
   'neovim/nvim-lspconfig',
   event = { "BufReadPre", "BufNewFile" },
-  dependencies = {},
   config = function()
     -- Attempt to attach
     for s_name, s_opts in pairs(servers) do

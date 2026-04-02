@@ -3,11 +3,12 @@ vim.schedule(function()
   -- allows neovim to access the system clipboard
   vim.opt.clipboard = 'unnamedplus'
 end)
-vim.o.mouse = "a"                                      -- allow the mouse to be used in neovim
+vim.o.mouse = "a"   -- allow the mouse to be used in neovim
 
-vim.o.cmdheight = 0                                    -- more space in the neovim command line for displaying messages
-vim.cmd [[ autocmd RecordingEnter * set cmdheight=1 ]] -- when recording macros, set cmdheight to 1 to see "recording @..." message
-vim.cmd [[ autocmd RecordingLeave * set cmdheight=0 ]] -- when done recording the macros, set cmdheight back to 0
+vim.o.cmdheight = 0 -- more space in the neovim command line for displaying messages
+local macro_augroup = vim.api.nvim_create_augroup('cmdheight-macro', { clear = true })
+vim.api.nvim_create_autocmd('RecordingEnter', { group = macro_augroup, callback = function() vim.o.cmdheight = 1 end })
+vim.api.nvim_create_autocmd('RecordingLeave', { group = macro_augroup, callback = function() vim.o.cmdheight = 0 end })
 
 -- force nvim to use nerd font
 vim.g.have_nerd_font = true
@@ -93,9 +94,7 @@ vim.api.nvim_create_autocmd("TermOpen", {
 -- Reload files changed outside Neovim when returning from terminal work or refocusing.
 vim.api.nvim_create_autocmd({ "TermLeave", "BufEnter", "FocusGained" }, {
   group = vim.api.nvim_create_augroup('nvim-checktime', { clear = true }),
-  callback = function()
-    vim.cmd('checktime')
-  end,
+  callback = function() vim.cmd('checktime') end,
 })
 
 -- Set diagnostic options
@@ -104,6 +103,5 @@ vim.diagnostic.config {
   float = { border = 'rounded', source = 'if_many' },
   underline = { severity = vim.diagnostic.severity.ERROR },
   virtual_text = { severity = { min = vim.diagnostic.severity.ERROR } },
-  -- Auto open the float, so you can easily read the errors when jumping with `[d` and `]d`
-  jump = { float = true },
+  jump = { float = true }, -- Auto open the float, so you can easily read the errors when jumping with `[d` and `]d`
 }

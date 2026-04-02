@@ -2,16 +2,13 @@ local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not vim.uv.fs_stat(lazypath) then
   local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
   local out = vim.fn.system { 'git', 'clone', '--filter=blob:none', '--branch=stable', lazyrepo, lazypath }
-  if vim.v.shell_error ~= 0 then
-    error('Error cloning lazy.nvim:\n' .. out)
-  end
+  if vim.v.shell_error ~= 0 then error('Error cloning lazy.nvim:\n' .. out) end
 end
 ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
 require('user.keymaps')
 require('user.options')
-
 require('user.terminal').init()
 require('user.statusline').init()
 local ai_spec = require('user.ai').setup()
@@ -66,28 +63,24 @@ require("lazy").setup({
     dependencies = { { "nvim-tree/nvim-web-devicons" } },
   },
 
-  { -- semantic highlighting
+  { -- treesitter parser installer
     'nvim-treesitter/nvim-treesitter',
     event = { "BufReadPre", "BufNewFile" },
-    dependencies = { { "nvim-treesitter/nvim-treesitter-textobjects", } },
     config = function()
-      local filetypes = { "rust", "solidity", "lua", "typescript", "markdown", "markdown_inline", "diff" }
-      require('nvim-treesitter').setup({
-        ensure_installed = filetypes,
-        auto_install = true,
-        highlight = { enable = true, },
-        indent = { enable = true },
-        textobjects = {
-          lsp_interop = {
-            enable = true,
-            border = 'none',
-            floating_preview_opts = {},
-            peek_definition_code = {
-              ["<leader>k"] = "@function.outer",
-              ["<leader>K"] = "@class.outer",
-            },
-          }
-        }
+      local ts = require('nvim-treesitter')
+      ts.install({ 'solidity', 'rush', 'typescript', 'markdown', 'markdown_inline' })
+      vim.api.nvim_create_autocmd('FileType', {
+        callback = function(args)
+          local language = vim.treesitter.language.get_lang(args.match)
+          if not language then return end
+          -- if a parser is available but not installed, install it
+          if not vim.tbl_contains(ts.get_installed('parsers'), language) then
+            -- ts.install(language):await(function() treesitter_try_attach(args.buf, language) end)
+            if vim.tbl_contains(ts.get_available(), language) then ts.install(language) end
+          end
+          -- If the language parser was added properly, start it up on the attached buffer
+          if vim.treesitter.language.add(language) then vim.treesitter.start(args.buf, language) end
+        end,
       })
     end
   },
@@ -114,7 +107,6 @@ require("lazy").setup({
 
   { -- completion engine
     'saghen/blink.cmp',
-    dependencies = 'rafamadriz/friendly-snippets',
     event = { "BufReadPre", "BufNewFile" },
     version = 'v1.*',
     opts = {
@@ -123,14 +115,12 @@ require("lazy").setup({
         ['<C-u>'] = { 'scroll_documentation_up' },
         ['<C-d>'] = { 'scroll_documentation_down' },
       },
-      completion = {
-        menu = { border = 'rounded', },
-        documentation = { auto_show = true, auto_show_delay_ms = 100, window = { border = 'rounded' } },
-      },
+      completion = { documentation = { auto_show = true, auto_show_delay_ms = 100 } },
+      fuzzy = { implementation = 'prefer_rust_with_warning' }, -- use experimental fuzzy matcher
       appearance = { nerd_font_variant = 'mono' },
       cmdline = { enabled = false },
       sources = { default = { 'lsp', 'path', 'snippets', 'buffer' }, },
-      signature = { enabled = true, window = { border = 'rounded' } }
+      signature = { enabled = true },
     }
   },
 
