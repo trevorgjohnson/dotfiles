@@ -4,9 +4,6 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 # foundry
 export PATH="$PATH:/Users/trevorjohnson/.foundry/bin"
 
-# pipx
-export PATH="$PATH:/Users/trevorjohnson/.local/bin"
-
 # npm
 export PATH="$PATH:/usr/local/bin"
 
