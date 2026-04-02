@@ -11,6 +11,9 @@ PS1='[\u@\h \W]\$ '
 # Set default `TERMINAL` to `ghostty`
 export TERMINAL="ghostty"
 
+# Set the location of the obsidian vault
+export VAULT=/home/Documents/eighth-ring-of-hell/
+
 # Add ~/bin to the list of binary paths under $PATH
 export PATH="${PATH}:${HOME}/bin"
 

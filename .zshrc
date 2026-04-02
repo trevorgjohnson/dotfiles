@@ -19,6 +19,9 @@ eval "$(starship init zsh)"
 # nvim
 export EDITOR=nvim
 
+# location of the obsidian vault
+export VAULT=/Users/trevorjohnson/Documents/eighth-ring-of-hell/
+
 # zsh autocomplete and syntax highlighting
 source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
