@@ -103,5 +103,4 @@ vim.diagnostic.config {
   float = { border = 'rounded', source = 'if_many' },
   underline = { severity = vim.diagnostic.severity.ERROR },
   virtual_text = { severity = { min = vim.diagnostic.severity.ERROR } },
-  jump = { float = true }, -- Auto open the float, so you can easily read the errors when jumping with `[d` and `]d`
 }
