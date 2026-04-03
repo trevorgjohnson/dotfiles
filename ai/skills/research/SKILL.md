@@ -107,6 +107,47 @@ Given existing markdown content, restructure it to match the generator output st
 all formatting rules below. Do not invent content — only reorganize and enrich what's present.
 If a section has no corresponding content, omit it.
 
+### Formatter Guardrails
+
+Formatter mode is a **lossless transformation**, not a summarization step.
+
+Required invariants:
+
+- Preserve **all substantive findings, claims, caveats, recommendations, comparisons, and named
+  entities** from the source
+- Preserve **all examples, enumerated lists, tables, and source references** unless the user
+  explicitly asks to trim them
+- Preserve the original document's stance and confidence. Do not soften, narrow, or generalize
+  claims during cleanup
+- It is acceptable to split, merge, or rename sections for readability, but not to drop material
+  that carried meaning in the original
+
+Before rewriting, build a compact mental checklist of source content:
+
+1. Main findings / conclusions
+2. Comparisons and tradeoffs
+3. Security warnings, risks, and edge cases
+4. Implementation details, parameters, and examples
+5. Reference inventory (papers, specs, repos, blog posts, tables)
+
+After rewriting, run a parity pass against that checklist:
+
+- Verify every original finding still appears in the output
+- Verify every item in a source table/list is still present unless intentionally merged without loss
+- Verify references were not silently dropped when converting inline links to footnotes
+- If information cannot be placed naturally in the new structure, keep it in a dedicated section
+  rather than omitting it
+
+When the user says the formatted output should be "the same file", "same findings", "same
+content", or similar, treat that as a hard requirement for **near-identity of substance**. In that
+case:
+
+- Prefer over-inclusion to omission
+- Keep long reference sections intact, even if they are not stylistically ideal
+- Keep repository comparison tables and appendix material unless the user explicitly approves
+  removing them
+- If a formatting improvement would require compressing content, do not make that change
+
 ---
 
 ## Formatting Rules
@@ -184,3 +225,7 @@ Rules:
 - Ask the user before launching sub-agents to verify citations
 - Group all footnote definitions at the very end of the document under a `## References` header
 - Number footnotes sequentially from `[^1]`
+- In formatter mode, citations are a **representation change only**. Converting links/sections to
+  footnotes must not reduce the source inventory from the original document
+- If the source document contains a dedicated reading list, bibliography, repo table, or appendix
+  of references, preserve it as content in addition to footnotes when needed for parity
