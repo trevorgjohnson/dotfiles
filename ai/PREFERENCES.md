@@ -1,19 +1,47 @@
 # Claude Configuration
 
+## Skills-First Workflow
+
+Before gathering context on any non-trivial request:
+1. Check whether a relevant skill exists
+2. Load it before exploring the codebase
+3. Let skill instructions guide context gathering
+
+## Routing & Delegation
+
+```
+Request
+├── Trivial — single file, obvious fix, bounded scope
+│   └── Execute directly
+├── Moderate — clear solution path, bounded scope
+│   └── Brief planning → execute directly
+├── Complex — architectural impact, multi-phase, or specialized domain
+│   └── Delegate to sub-agent; synthesize results in main session
+└── Ambiguous — unclear requirements, cross-cutting concerns
+    └── Clarify first → re-route
+```
+
+Delegation required when: multiple independent workstreams can parallelize,
+specialized expertise is needed, or broad exploration would consume main context.
+
+## Context Management
+
+- Delegate file exploration, search, and broad reads to sub-agents (Haiku for simple tasks)
+- Reserve main context for coordination, synthesis, and decisions
+- Don't run wide searches or load large files directly when a sub-agent can do it
+
+## Coordination Protocols
+
+Parallel (independent work): fan out tool calls and sub-agents in a single message.
+Sequential (dependent work): research → planning → implementation; never fan out when
+step N requires step N−1's output.
+
 ## Coding Conventions
 - Composition over inheritance
 - Strong top-level documentation where applicable (eg. JSDoc for JS/TS files, LuaLS Docs for Lua, etc...)
 - Add inline comments for non-obvious logic; avoid comments that restate the code
 - AI-written code should convey what and why — enough to be understood without bloated commentary
 - Never expose secrets, private keys, or credentials in code
-
-## Workflow & Environment
-- Terminal-heavy, nvim-centric — minimize tooling footprint outside of it
-- CLI tools: fzf, rg, jq, git, nvim, docker, forge, cast, cargo, nvm
-- Primary stacks: TypeScript (npm), Solidity (Foundry), Lua, Rust
-- Prefer small, focused changes that reuse existing infrastructure and implement in the simplest way possible
-- Non-trivial or broad changes require a planning phase before any edits
-- Common use cases: scoped code changes, searching for functionality/bugs, trivial renames, dataflow visualization, research
 
 ## AI Role & Scope
 - Do not auto-edit by default; I remain the author and decision-maker
@@ -49,3 +77,16 @@
 - Lead with result or recommendation, then supporting detail
 - Summarize what changed and what was not verified after edits
 - Draft supporting text (docs, commit messages, PR summaries) when helpful
+
+## Self-Improvement
+
+After solving a domain-specific problem, ask: "Should I create or update a skill for this?"
+
+Update an existing skill when:
+- A workaround was needed for something it should have covered
+- A library version changed established patterns
+- A better approach was found
+
+Create a new skill when:
+- The same domain context was needed across 2+ sessions
+- A reusable pattern emerged that isn't project-specific

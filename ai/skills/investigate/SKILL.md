@@ -5,7 +5,8 @@ description: >-
   to specialized subagents (Datadog logs, PostgreSQL DB reads, on-chain state via cast,
   and code exploration) and synthesizes findings. Use when the user reports a bug,
   discrepancy, or unexpected behavior that may span frontend, backend, blockchain, or
-  database layers.
+  database layers. Add "triage" or "fix plan" to the request to also produce a TDD-based
+  fix plan saved to ~/.claude/prds/.
 argument-hint: '<free-form description of the issue>'
 ---
 
@@ -13,6 +14,9 @@ argument-hint: '<free-form description of the issue>'
 
 You are a Sonnet orchestrator. Your job is to decompose an investigation, dispatch
 the minimal set of subagents needed, and synthesize a clear root-cause summary.
+
+If the user says "triage", "fix plan", or "create a fix plan" in their request,
+run the optional **Triage step** after synthesis.
 
 ## Step 1 — Scope the investigation
 
@@ -100,6 +104,71 @@ Once all subagents return, produce a structured summary:
 - [ ] ...
 ```
 
+## Step 5 — Triage (optional)
+
+Run this step only when the user requests a triage or fix plan.
+
+Based on the root cause hypothesis from Step 4, produce a TDD-based fix plan and save it.
+
+### Fix plan structure
+
+Create a concrete, ordered list of RED-GREEN cycles. Each cycle is one vertical slice:
+
+- **RED**: Describe a specific test that captures the broken/missing behavior
+- **GREEN**: Describe the minimal code change to make that test pass
+
+Rules:
+- Tests verify behavior through public interfaces, not implementation details
+- One test at a time, vertical slices — NOT all tests first, then all code
+- Describe behaviors and contracts, not internal structure
+- Tests assert on observable outcomes (API responses, on-chain state, user-visible effects)
+- A good test reads like a spec; a bad one reads like a diff
+
+### Save the fix plan
+
+Write to `~/.claude/prds/<project-name>/triage/<slug>.md` where `project-name` is
+derived from the affected repo and `slug` is a short kebab-case description of the bug.
+
+Use this template:
+
+```markdown
+## Problem
+
+A clear description of the bug or issue, including:
+- What happens (actual behavior)
+- What should happen (expected behavior)
+- How to reproduce (if applicable)
+
+## Root Cause Analysis
+
+Describe what was found during investigation:
+- The code path involved
+- Why the current code fails
+- Any contributing factors
+
+Do NOT include specific file paths, line numbers, or implementation details that
+couple to current code layout. Describe modules, behaviors, and contracts instead.
+
+## TDD Fix Plan
+
+1. **RED**: Write a test that [describes expected behavior]
+   **GREEN**: [Minimal change to make it pass]
+
+2. **RED**: Write a test that [describes next behavior]
+   **GREEN**: [Minimal change to make it pass]
+
+**REFACTOR**: [Any cleanup needed after all tests pass]
+
+## Acceptance Criteria
+
+- [ ] Criterion 1
+- [ ] Criterion 2
+- [ ] All new tests pass
+- [ ] Existing tests still pass
+```
+
+After writing the file, print the file path and a one-line summary of the root cause.
+
 ## Model selection for subagents
 
 | Task                              | Model  |
@@ -115,5 +184,5 @@ Once all subagents return, produce a structured summary:
 
 - Do not fan out to all four repos by default — only what the issue implicates
 - Do not widen time ranges or run extra queries unless initial results are empty
-- Do not suggest fixes — that is outside investigation scope unless explicitly asked
+- Do not suggest fixes unless in triage mode or explicitly asked
 - Do not write to any DB (all DB access is read-only via `db-query` skill)
