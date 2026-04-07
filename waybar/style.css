@@ -42,42 +42,22 @@
   opacity: 0.5;
 }
 
+#custom-expand-icon,
+#tray,
+#bluetooth,
+#custom-surfshark,
+#network,
+#wireplumber,
 #cpu,
 #battery,
-#pulseaudio,
-#custom-screenrecording-indicator,
-#custom-update {
+#custom-screenrecording-indicator {
   min-width: 12px;
-  margin: 0 7.5px;
-}
-
-#tray {
-  margin-right: 16px;
-}
-
-#bluetooth {
-  margin-right: 17px;
-}
-
-#custom-surfshark {
-  margin-right: 13px;
-}
-
-#network {
-  margin-right: 13px;
-}
-
-#custom-expand-icon {
-  margin-right: 20px;
+  margin-right: 5px;
 }
 
 tooltip {
   padding: 2px;
   background-color: @background;
-}
-
-#custom-update {
-  font-size: 10px;
 }
 
 #clock {

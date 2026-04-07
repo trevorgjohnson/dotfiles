@@ -12,7 +12,8 @@
     "bluetooth",
     "custom/surfshark",
     "network",
-    "wireplumber",
+    "wireplumber#sink",
+    "wireplumber#source",
     "cpu",
     "battery"
   ],
@@ -75,15 +76,22 @@
     "tooltip-format": "Devices connected: {num_connections}",
     "on-click": "$TERMINAL -e bluetui"
   },
-  "wireplumber": {
+  "wireplumber#sink": {
     "format": "{icon}",
     "on-click": "$TERMINAL --class=Wiremix -e wiremix",
-    "tooltip-format": "Playing at {volume}%",
+    "tooltip-format": "Output: {volume}%",
     "scroll-step": 5,
     "format-muted": "",
     "format-icons": {
       "default": ["", "", ""]
     }
+  },
+  "wireplumber#source": {
+    "node-type": "Audio/Source",
+    "format": "",
+    "format-muted": "",
+    "on-click": "$TERMINAL --class=Wiremix -e wiremix",
+    "tooltip-format": "Mic: {volume}%"
   },
   "battery": {
     "interval": 3, // 3 seconds
