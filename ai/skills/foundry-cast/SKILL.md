@@ -100,8 +100,23 @@ export ETH_RPC_URL="https://rpc.eth-sepolia.blockchain.o1o01lllo1io.com"
 **Read operations are safe to run freely** — they don't modify chain state.
 
 **Never run `cast send` or `cast publish` without explicit user confirmation.** These submit
-transactions on-chain and cost real ETH. Always show the user what will be sent (to, value,
-calldata) and get a clear "yes" before executing — review first, then act.
+transactions on-chain and cost real ETH.
+
+Before executing, use `AskUserQuestion` with a structured confirmation prompt:
+
+```
+Transaction: cast send 0x<to> "<sig>" <args>
+Network: Sepolia / Mainnet
+Value: X ETH
+Calldata: 0x...
+
+How would you like to proceed?
+1. Confirm — execute the transaction
+2. Cancel — abort
+3. Show full calldata first
+```
+
+Never proceed past option 3 without the user explicitly choosing "Confirm".
 
 ## Common Operations
 

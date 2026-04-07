@@ -7,16 +7,17 @@ description: Create new agent skills with proper structure, progressive disclosu
 
 ## Process
 
-1. **Gather requirements** - ask user about:
-   - What task/domain does the skill cover?
-   - What specific use cases should it handle?
-   - Does it need executable scripts or just instructions?
-   - Any reference materials to include?
+1. **Gather requirements** — use `AskUserQuestion` with a structured prompt covering:
+   - Domain / task the skill addresses
+   - Specific use cases it must handle (ask for 2–3 concrete examples)
+   - Whether it needs executable scripts or just instructions (Scripts / Instructions only / Both)
+   - Reference materials to include (docs URLs, existing files, none)
 
-2. **Draft the skill** - create:
-   - SKILL.md with concise instructions
-   - Additional reference files if content exceeds 500 lines
-   - Utility scripts if deterministic operations needed
+2. **Draft the skill** — enter `EnterPlanMode` before presenting the proposed file structure and SKILL.md outline. Show:
+   - Proposed file layout (`SKILL.md` + any supplementary files)
+   - Section headings and 1-line description of each
+   - Whether scripts will be included and their purpose
+   Call `ExitPlanMode` after the user approves the outline, then write the files.
 
 3. **Review with user** - present draft and ask:
    - Does this cover your use cases?
@@ -87,6 +88,20 @@ Helps with documents.
 
 The bad example gives your agent no way to distinguish this from other document skills.
 
+## Built-in Tool Patterns
+
+Every skill should use built-in tools where they add structure or safety. Apply these patterns during authoring:
+
+| Pattern | Tool | When to use |
+|---|---|---|
+| Structured intake | `AskUserQuestion` | Any time the user needs to pick from a finite set of options (mode, type, environment, priority). Replace open-ended "ask the user" prose with a numbered multiple-choice prompt. |
+| Approval gate | `EnterPlanMode` / `ExitPlanMode` | Wrap any "present a design or plan, then execute" step. Enter before showing the proposal; exit after the user approves. |
+| Progress tracking | `TaskCreate` / `TaskUpdate` / `TaskList` | Multi-step workflows with 3+ discrete work items. Create tasks at the start of the phase; mark completed as each finishes. |
+| Destructive confirmation | `AskUserQuestion` | Before any operation that overwrites, deletes, or can't be trivially undone. Offer: Confirm / Cancel / Preview first. |
+| Auto-fetch on error | `WebFetch` | When a command fails and official docs exist — fetch them automatically rather than telling the user to check manually. |
+
+When writing or reviewing a skill, ask for each workflow step: *could a built-in tool make this more structured, safer, or more visible to the user?*
+
 ## When to Add Scripts
 
 Add utility scripts when:
@@ -115,3 +130,8 @@ After drafting, verify:
 - [ ] Consistent terminology
 - [ ] Concrete examples included
 - [ ] References one level deep
+- [ ] Finite-choice decisions use `AskUserQuestion` (not open-ended prose)
+- [ ] Approval gates use `EnterPlanMode` / `ExitPlanMode`
+- [ ] Multi-step workflows track progress with `TaskCreate` / `TaskUpdate`
+- [ ] Destructive operations have a `AskUserQuestion` confirmation gate
+- [ ] Error recovery fetches docs with `WebFetch` rather than deferring to the user

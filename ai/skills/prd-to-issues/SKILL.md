@@ -21,6 +21,8 @@ If you have not already explored the codebase, do so to understand the current s
 
 ### 3. Draft vertical slices
 
+Call `EnterPlanMode` before presenting the slice breakdown — you're proposing a plan, not writing files yet.
+
 Break the PRD into **tracer bullet** issues. Each issue is a thin vertical slice that cuts through ALL integration layers end-to-end, NOT a horizontal slice of one layer.
 
 Slices may be 'HITL' or 'AFK'. HITL slices require human interaction, such as an architectural decision or a design review. AFK slices can be implemented and merged without human interaction. Prefer AFK over HITL where possible.
@@ -40,16 +42,17 @@ Present the proposed breakdown as a numbered list. For each slice, show:
 - **Blocked by**: which other slices (if any) must complete first
 - **User stories covered**: which user stories from the PRD this addresses
 
-Ask the user:
+Use `AskUserQuestion` for each binary feedback question separately:
 
-- Does the granularity feel right? (too coarse / too fine)
-- Are the dependency relationships correct?
-- Should any slices be merged or split further?
-- Are the correct slices marked as HITL and AFK?
+1. "Does the granularity feel right? Too coarse / About right / Too fine"
+2. "Are the dependency relationships correct? Yes / No — describe what's wrong"
+3. "Are all HITL/AFK designations correct? Yes / No — describe what's wrong"
 
-Iterate until the user approves the breakdown.
+Iterate (adjusting and re-presenting) until all three get affirmative answers. Call `ExitPlanMode` once the breakdown is approved.
 
 ### 5. Write the issue files
+
+Before writing, call `TaskCreate` for each approved issue (e.g. "Write issue: 01-scaffold-auth"). As each file is written, call `TaskUpdate` to `completed`. This provides a live progress indicator when many files are being created.
 
 For each approved slice, write a markdown file to `~/.claude/prds/<feature-name>/issues/<nn>-<slug>.md`. Use the template below.
 

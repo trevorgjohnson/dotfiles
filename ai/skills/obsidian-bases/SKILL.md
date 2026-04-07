@@ -7,12 +7,35 @@ description: Create and edit Obsidian Bases (.base files) with views, filters, f
 
 ## Workflow
 
-1. **Create the file**: Create a `.base` file in the vault with valid YAML content
-2. **Define scope**: Add `filters` to select which notes appear (by tag, folder, property, or date)
-3. **Add formulas** (optional): Define computed properties in the `formulas` section
-4. **Configure views**: Add one or more views (`table`, `cards`, `list`, or `map`) with `order` specifying which properties to display
-5. **Validate**: Verify the file is valid YAML with no syntax errors. Check that all referenced properties and formulas exist. Common issues: unquoted strings containing special YAML characters, mismatched quotes in formula expressions, referencing `formula.X` without defining `X` in `formulas`
-6. **Test in Obsidian**: Open the `.base` file in Obsidian to confirm the view renders correctly. If it shows a YAML error, check quoting rules below
+1. **Gather intent** — when creating a new base, use `AskUserQuestion` before writing any files:
+
+   ```
+   Let me set up your base. A few quick questions:
+
+   Scope — what notes should this base include?
+   1. Notes with a specific tag
+   2. Notes in a specific folder
+   3. Notes matching a property value
+   4. Something else (describe)
+
+   View type?
+   1. Table — rows and columns, sortable
+   2. Cards — visual gallery layout
+   3. List — minimal, name-focused
+
+   Which properties do you want displayed? (e.g. status, due, author — or "figure it out from context")
+   ```
+
+   Skip this question if all three answers are already clear from context.
+
+2. **Create the file**: Create a `.base` file in the vault with valid YAML content
+3. **Define scope**: Add `filters` to select which notes appear (by tag, folder, property, or date)
+4. **Add formulas** (optional): Define computed properties in the `formulas` section
+5. **Configure views**: Add one or more views (`table`, `cards`, `list`, or `map`) with `order` specifying which properties to display
+6. **Validate**: Verify the file is valid YAML with no syntax errors. Check that all referenced properties and formulas exist. Common issues: unquoted strings containing special YAML characters, mismatched quotes in formula expressions, referencing `formula.X` without defining `X` in `formulas`
+7. **Test in Obsidian**: Open the `.base` file in Obsidian to confirm the view renders correctly. If it shows a YAML error, check quoting rules below
+
+   **On novel formula or filter questions** — if the correct syntax is unclear, use `WebFetch` to fetch `https://help.obsidian.md/bases/syntax` before guessing. This avoids stale training-data answers.
 
 ## Schema
 

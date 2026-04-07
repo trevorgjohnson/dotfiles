@@ -17,8 +17,15 @@ Two modes depending on context:
 
 Detect the mode automatically:
 - If a PR already exists for the current branch AND the body looks like an unfilled template → **Flesh out**
-- Otherwise → **Draft**
+- If no PR exists for the current branch → **Draft**
 - If `$ARGUMENTS` contains a Jira ticket key (e.g. `BLOC-937`), force **Flesh out** mode with that ticket
+- **Ambiguous case**: if a PR exists but the body is non-empty and doesn't clearly match a template (no placeholder sections, no `[//]: #` comment tags, no empty checkbox lists) — use `AskUserQuestion` before proceeding:
+
+  ```
+  A PR already exists for this branch. What would you like to do?
+  1. Draft fresh — generate a new title and body from the diff
+  2. Fill existing — flesh out the current PR body using the Jira ticket
+  ```
 
 ---
 

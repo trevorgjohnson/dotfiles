@@ -31,6 +31,8 @@ These go in the plan header so every phase can reference them.
 
 ### 4. Draft vertical slices
 
+Call `EnterPlanMode` before presenting the phase breakdown — you're proposing a plan, not implementing one yet.
+
 Break the PRD into **tracer bullet** phases. Each phase is a thin vertical slice that cuts through ALL integration layers end-to-end, NOT a horizontal slice of one layer.
 
 <vertical-slice-rules>
@@ -48,16 +50,20 @@ Present the proposed breakdown as a numbered list. For each phase show:
 - **Title**: short descriptive name
 - **User stories covered**: which user stories from the PRD this addresses
 
-Ask the user:
+Use `AskUserQuestion` to ask about granularity with structured choices:
 
-- Does the granularity feel right? (too coarse / too fine)
-- Should any phases be merged or split further?
+> Does the granularity feel right?
+> 1. Too coarse — split phases further
+> 2. About right — approve breakdown
+> 3. Too fine — merge some phases
 
-Iterate until the user approves the breakdown.
+Iterate (adjusting and re-presenting) until the user selects "About right". Call `ExitPlanMode` once the breakdown is approved.
 
 ### 6. Write the plan file
 
 Create `./plans/` if it doesn't exist. Write the plan as a Markdown file named after the feature (e.g. `./plans/user-onboarding.md`). Use the template below.
+
+After writing the file, call `TaskCreate` for each approved phase (e.g. "Phase 1: Scaffold auth endpoint"). These become a live checklist for the implementation work ahead.
 
 <plan-template>
 # Plan: <Feature Name>

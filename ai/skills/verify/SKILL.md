@@ -23,9 +23,10 @@ Check the project root for these files (first match wins per category):
 ## Execution
 
 1. Detect the project type(s). Monorepos may have multiple — run each.
-2. For each category (lint, typecheck, test), run the command if it exists.
-3. **Stop on first failure** within a category and report the error. Don't run tests if lint fails.
-4. Summarize: which checks passed, which failed, and the relevant error output.
+2. **Task tracking for multi-stack projects**: if two or more stacks are detected, call `TaskCreate` for each discrete step before running anything — one task per `<stack>: <step>` combination (e.g. "TypeScript: lint", "TypeScript: typecheck", "TypeScript: test", "Foundry: test"). Single-stack projects don't need tasks.
+3. For each category (lint, typecheck, test), run the command if it exists. Mark each task `completed` on pass; leave it `in_progress` on failure so the summary reflects the real state.
+4. **Stop on first failure** within a category and report the error. Don't run tests if lint fails.
+5. Summarize: which checks passed, which failed, and the relevant error output.
 
 ## Notes
 

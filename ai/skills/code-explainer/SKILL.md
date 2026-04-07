@@ -14,8 +14,18 @@ Two modes depending on what the user asks:
 
 - **Repo overview** — high-level architecture summary of the current repository
 - **Code explanation** — walk through specific code, functions, or subsystems
+- **Subsystem explanation** — deep dive into one domain or module within the repo
 
-Detect automatically: if the user asks about the *repo*, *codebase*, *project structure*, or says "orient me" / "what is this" → **Repo overview**. Otherwise → **Code explanation**.
+Use `AskUserQuestion` upfront to confirm the mode before proceeding — this eliminates heuristic misdetection:
+
+```
+What would you like me to do?
+1. Repo overview — high-level architecture of the whole project
+2. Explain specific code — walk through a function, file, or snippet
+3. Explain a subsystem — deep dive into one domain or module
+```
+
+If the user's request already makes the mode unambiguous (e.g. they pasted code, or said "orient me"), skip the question and proceed directly.
 
 ---
 

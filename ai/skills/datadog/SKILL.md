@@ -43,6 +43,20 @@ proceeding. If the token is valid but expiring soon (< 5 minutes), proactively r
 pup auth refresh
 ```
 
+## Time Range
+
+Before running any log query, check if the user specified a time range. If they didn't, use `AskUserQuestion`:
+
+```
+How far back should I search?
+1. 15m — last 15 minutes
+2. 1h — last hour (default)
+3. 4h — last 4 hours
+4. 1d — last day
+```
+
+Use the selected value as the `--from` flag. If the user already specified a range in their request, skip the question and use it directly.
+
 ## Logs
 
 pup has several log commands. Choose based on what the user needs:

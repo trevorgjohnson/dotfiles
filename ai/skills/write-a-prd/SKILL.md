@@ -11,11 +11,18 @@ This skill will be invoked when the user wants to create a PRD. You may skip ste
 
 3. Interview the user relentlessly about every aspect of this plan until you reach a shared understanding. Walk down each branch of the design tree, resolving dependencies between decisions one-by-one.
 
-4. Sketch out the major modules you will need to build or modify to complete the implementation. Actively look for opportunities to extract deep modules that can be tested in isolation.
+   Use `AskUserQuestion` for finite-choice decisions rather than open-ended prose. Example structured prompts:
+   - "Which layers does this touch? API / DB / UI / All"
+   - "Does this need tests written? Yes / No / Unsure"
+   - "Is this breaking or backwards-compatible? Breaking / Compatible / Unsure"
 
-A deep module (as opposed to a shallow module) is one which encapsulates a lot of functionality in a simple, testable interface which rarely changes.
+   As unresolved open questions emerge during the interview, call `TaskCreate` for each one (e.g. "Resolve: auth strategy for new endpoint"). This gives the user a visible list of what's still outstanding. Call `TaskUpdate` to `completed` when each question is resolved.
 
-Check with the user that these modules match their expectations. Check with the user which modules they want tests written for.
+4. Call `EnterPlanMode`, then sketch out the major modules you will need to build or modify to complete the implementation. Actively look for opportunities to extract deep modules that can be tested in isolation.
+
+   A deep module (as opposed to a shallow module) is one which encapsulates a lot of functionality in a simple, testable interface which rarely changes.
+
+   Check with the user that these modules match their expectations. Check with the user which modules they want tests written for. Call `ExitPlanMode` once the user approves the module design.
 
 5. Once you have a complete understanding of the problem and solution, use the template below to write the PRD. Ask the user for a short feature name (used as the directory name), then save the PRD to `~/.claude/prds/<feature-name>/prd.md`. Print the file path when done.
 

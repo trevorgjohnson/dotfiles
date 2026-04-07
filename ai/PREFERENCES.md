@@ -80,13 +80,6 @@ step N requires step N−1's output.
 
 ## Self-Improvement
 
-After solving a domain-specific problem, ask: "Should I create or update a skill for this?"
+The AI framework (skills, rules, CLAUDE.md) should evolve as it gets used. After completing a non-trivial task, check whether a gap or improvement was revealed — then either note it or run `/self-improve` to audit and apply changes.
 
-Update an existing skill when:
-- A workaround was needed for something it should have covered
-- A library version changed established patterns
-- A better approach was found
-
-Create a new skill when:
-- The same domain context was needed across 2+ sessions
-- A reusable pattern emerged that isn't project-specific
+See the `/self-improve` skill for the full process and per-layer criteria.

@@ -9,6 +9,18 @@ Create and edit valid Obsidian Flavored Markdown. Obsidian extends CommonMark an
 
 ## Workflow: Creating an Obsidian Note
 
+Before starting, use `AskUserQuestion` to establish the note type:
+
+```
+What kind of note are you creating?
+1. Daily note — date-based journal or log entry
+2. Meeting note — structured record of a meeting (attendees, agenda, decisions, action items)
+3. Project note — ongoing reference for a project (goals, status, links)
+4. Free-form — no specific structure
+```
+
+Use the selection to inform the frontmatter properties and section structure. Skip this question if the user has already described the note type clearly in their request.
+
 1. **Add frontmatter** with properties (title, tags, aliases) at the top of the file. See [PROPERTIES.md](references/PROPERTIES.md) for all property types.
 2. **Write content** using standard Markdown for structure, plus Obsidian-specific syntax below.
 3. **Link related notes** using wikilinks (`[[Note]]`) for internal vault connections, or standard Markdown links for external URLs.

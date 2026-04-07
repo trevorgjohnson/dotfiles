@@ -304,10 +304,20 @@ For inline code within ADF text nodes, use the `code` mark:
 
 Follow this flow — never skip the confirmation step:
 
-1. **Gather details** — Ask the user questions to fill in any missing fields (summary, description, type, assignee,
-   labels, business unit, etc.)
-   - **Business unit** — Ask whether the ticket pertains to **ProATS**, **ProCap**, or neither. If applicable,
-     include it as context in the summary or description and add the corresponding label (`proats` or `procap`).
+1. **Gather details** — use `AskUserQuestion` to collect the core fields in one structured prompt before asking for prose details:
+
+   ```
+   Let me gather some details:
+
+   Type: Task / Bug / Story / Epic / Sub-task
+   Project: INF / PLAT / PROAT / PCAP / BLOC / PB / QA / SUP / other
+   Assignee: Me (@me) / Someone else (provide email) / Unassigned
+   Business unit: ProATS / ProCap / Neither
+   ```
+
+   Then collect summary, description, labels, and any other fields through follow-up questions.
+
+   When **creating multiple tickets in a batch** (e.g. from a PRD breakdown), call `TaskCreate` for each ticket before starting. Mark each `completed` as the ticket is created in Jira. This gives the user live progress when creating many tickets at once.
 2. **Present a summary** — Show the ticket in a clean table for review, including the full prose description:
 
    ```markdown

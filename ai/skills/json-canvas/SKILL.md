@@ -23,6 +23,18 @@ A canvas file (`.canvas`) contains two top-level arrays following the [JSON Canv
 
 ### 1. Create a New Canvas
 
+Before writing any content, use `AskUserQuestion` to establish the canvas type:
+
+```
+What kind of canvas are you creating?
+1. Mind map — central topic with branching ideas
+2. Flowchart — process steps with directional edges
+3. Project board — columns of grouped cards (e.g. To Do / In Progress / Done)
+4. Free-form — no specific structure
+```
+
+Use the selection to inform default layout, node sizing, and edge directionality. Then:
+
 1. Create a `.canvas` file with the base structure `{"nodes": [], "edges": []}`
 2. Generate unique 16-character hex IDs for each node (e.g., `"6f0ad84f44ce9c17"`)
 3. Add nodes with required fields: `id`, `type`, `x`, `y`, `width`, `height`

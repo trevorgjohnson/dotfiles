@@ -11,6 +11,17 @@ A **deep module** (John Ousterhout, "A Philosophy of Software Design") has a sma
 
 ## Process
 
+At the start, call `TaskCreate` for each checkpoint in the workflow:
+1. "Explore codebase"
+2. "Present candidates"
+3. "User picks candidate"
+4. "Frame problem space"
+5. "Design multiple interfaces" (one sub-task per agent)
+6. "User picks interface"
+7. "Write RFC"
+
+Update each to `completed` as it finishes.
+
 ### 1. Explore the codebase
 
 Use the Agent tool with subagent_type=Explore to navigate the codebase naturally. Do NOT follow rigid heuristics — explore organically and note where you experience friction:
@@ -36,15 +47,17 @@ Do NOT propose interfaces yet. Ask the user: "Which of these would you like to e
 
 ### 3. User picks a candidate
 
+Use `AskUserQuestion` with the numbered candidate list (from Step 2) as the prompt body. Ask: "Which of these would you like to explore?" with the list as numbered choices.
+
 ### 4. Frame the problem space
 
-Before spawning sub-agents, write a user-facing explanation of the problem space for the chosen candidate:
+Before spawning sub-agents, call `EnterPlanMode` and write a user-facing explanation of the problem space for the chosen candidate:
 
 - The constraints any new interface would need to satisfy
 - The dependencies it would need to rely on
 - A rough illustrative code sketch to make the constraints concrete — this is not a proposal, just a way to ground the constraints
 
-Show this to the user, then immediately proceed to Step 5. The user reads and thinks about the problem while the sub-agents work in parallel.
+Call `ExitPlanMode` after the user acknowledges. Then immediately proceed to Step 5. The user reads and thinks about the problem while the sub-agents work in parallel.
 
 ### 5. Design multiple interfaces
 
@@ -70,6 +83,8 @@ Present designs sequentially, then compare them in prose.
 After comparing, give your own recommendation: which design you think is strongest and why. If elements from different designs would combine well, propose a hybrid. Be opinionated — the user wants a strong read, not just a menu.
 
 ### 6. User picks an interface (or accepts recommendation)
+
+Use `AskUserQuestion` with the numbered design options (1–N plus "Accept recommendation") as choices. Avoid free-form text — each option should be a single numbered item the user can pick.
 
 ### 7. Write the RFC file
 

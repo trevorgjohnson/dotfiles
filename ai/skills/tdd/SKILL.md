@@ -44,18 +44,18 @@ RIGHT (vertical):
 
 ### 1. Planning
 
-Before writing any code:
+Before writing any code, call `EnterPlanMode` — present the interface design and behavior list inside plan mode so the user can approve before any implementation begins.
 
 - [ ] Confirm with user what interface changes are needed
-- [ ] Confirm with user which behaviors to test (prioritize)
 - [ ] Identify opportunities for [deep modules](deep-modules.md) (small interface, deep implementation)
 - [ ] Design interfaces for [testability](interface-design.md)
 - [ ] List the behaviors to test (not implementation steps)
-- [ ] Get user approval on the plan
 
-Ask: "What should the public interface look like? Which behaviors are most important to test?"
+Use `AskUserQuestion` to ask the user to prioritize behaviors: present the candidate behaviors as a numbered list and ask them to rank or select which to implement first.
 
-**You can't test everything.** Confirm with the user exactly which behaviors matter most. Focus testing effort on critical paths and complex logic, not every possible edge case.
+**You can't test everything.** Focus testing effort on critical paths and complex logic, not every possible edge case.
+
+Call `ExitPlanMode` once the user approves the interface design and behavior list. Then call `TaskCreate` for each approved RED-GREEN behavior — one task per behavior, named after the behavior it tests (e.g. "RED→GREEN: user can checkout with valid cart").
 
 ### 2. Tracer Bullet
 
@@ -83,6 +83,8 @@ Rules:
 - Only enough code to pass current test
 - Don't anticipate future tests
 - Keep tests focused on observable behavior
+
+When a behavior reaches GREEN, call `TaskUpdate` to mark its task `completed`.
 
 ### 4. Refactor
 

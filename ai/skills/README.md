@@ -26,3 +26,4 @@ Matt                -   write-a-prd/
 Matt                -   write-a-skill/
 
 Shared              -   obsidian-vault/   (dependency for Kepano obsidian skills)
+Shared              -   obsidian-capture/ (quick todo/note capture to vault from any session)

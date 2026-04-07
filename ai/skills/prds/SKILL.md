@@ -8,6 +8,19 @@ argument-hint: "[list|search <query>|show <name>]"
 
 PRD storage lives at `~/.claude/prds/`. Each PRD is a directory containing at minimum a `prd.md`, and may contain subdirectories like `issues/` or nested sub-feature PRDs.
 
+## Entry Point
+
+If `$ARGUMENTS` is empty or not provided, use `AskUserQuestion` before doing anything:
+
+```
+What would you like to do?
+1. List all PRDs
+2. Search by keyword
+3. Show a specific PRD
+```
+
+Map the selection to the corresponding command below. If `$ARGUMENTS` is provided, parse it directly as `[list|search <query>|show <name>]` and skip the question.
+
 ## Commands
 
 ### list (default)

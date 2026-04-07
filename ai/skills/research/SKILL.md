@@ -19,14 +19,13 @@ Dual-mode documentation skill. Detect which mode applies from the input:
 
 ### Step 0 — Topic Scoping (in-band, before any research)
 
-If the topic is **broad, ambiguous, or undefined**, do not proceed to research. Instead, run a
-short in-band interview to scope it:
+If the topic is **broad, ambiguous, or undefined**, do not proceed to research. Instead, use
+`AskUserQuestion` to scope it in one structured prompt:
 
-1. Ask what angle or subtopics the user cares most about (e.g. "theory, implementation, tradeoffs,
-   history?")
-2. Ask what depth they want — overview, working knowledge, or deep dive?
-3. Ask if there are adjacent concepts to include or explicitly exclude
-4. Ask about intended audience / prior knowledge assumptions
+- **Angle/subtopics**: theory, implementation, tradeoffs, history — which do you care most about?
+- **Depth**: Overview (high-level mental model) / Working knowledge (enough to use it) / Deep dive (internals and edge cases)
+- **Audience**: Novice (no background) / Practitioner (familiar with the domain) / Expert (deep specialist)
+- **Exclusions**: any adjacent concepts to explicitly skip?
 
 Collect answers before moving to Step 1. For well-scoped topics, skip straight to Step 1.
 
@@ -42,7 +41,7 @@ surface, not understand it deeply.
 - Note which areas are sparse, contested, or require primary sources
 - Time-box this phase — it should feel like a scout, not a study session
 
-After the sweep, **present a research plan to the user** before executing it:
+After the sweep, call `EnterPlanMode` and **present a research plan to the user** before executing it:
 
 ```
 Topics identified:
@@ -64,13 +63,17 @@ Estimated depth per agent: [skim / standard / deep dive]
 - Whether any topic needs more or less depth
 - Whether agents should run in parallel (breadth-first) or sequentially (each informs the next)
 
-Only proceed to Step 2 after explicit confirmation.
+Only proceed to Step 2 after explicit confirmation. Call `ExitPlanMode` once the user confirms.
 
 ---
 
 ### Step 2 — Research Execution
 
-Execute the confirmed plan. Launch agents per the approved configuration.
+Execute the confirmed plan. For each agent in the approved plan, call `TaskCreate` (one task per
+agent, named after its focus area) before dispatching. Call `TaskUpdate` (status `completed`) as
+each agent returns.
+
+Launch agents per the approved configuration.
 
 **Agent orchestration rules:**
 - Parallel agents: use when topics are independent — each agent gets a focused scope and returns

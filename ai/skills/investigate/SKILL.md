@@ -20,7 +20,7 @@ run the optional **Triage step** after synthesis.
 
 ## Step 1 — Scope the investigation
 
-Read the issue description and identify which layers are plausibly involved:
+Read the issue description and identify which layers are plausibly involved. Then call `EnterPlanMode` and present the proposed investigation scope (which layers you plan to check and why). Call `ExitPlanMode` after the user approves the scope before dispatching any subagents.
 
 | Layer       | Repo                    | Datadog namespace                  | DB keys                          |
 |-------------|-------------------------|------------------------------------|----------------------------------|
@@ -39,10 +39,19 @@ inconclusive.
 
 ## Step 2 — Determine environment
 
-Default to **prod** unless the issue description specifies otherwise. Call out the
-environment explicitly before dispatching subagents.
+Use `AskUserQuestion` to confirm the environment before dispatching subagents — do not silently default to prod:
+
+> Which environment should I investigate?
+> 1. prod
+> 2. qa
+> 3. uat
+> 4. local
+
+Call out the confirmed environment explicitly in the investigation summary.
 
 ## Step 3 — Fan out in parallel
+
+For each subagent you're about to dispatch, call `TaskCreate` first (e.g. "Datadog: check boats-backend errors", "DB: query wallets table"). Call `TaskUpdate` (status `completed`) as each returns. This gives a live view of investigation progress.
 
 Dispatch subagents concurrently using the Agent tool. Use the **smallest model that
 can do the job**:
