@@ -68,7 +68,7 @@ require("lazy").setup({
     event = { "BufReadPre", "BufNewFile" },
     config = function()
       local ts = require('nvim-treesitter')
-      ts.install({ 'solidity', 'rush', 'typescript', 'markdown', 'markdown_inline' })
+      ts.install({ 'solidity', 'typescript', 'markdown', 'markdown_inline' })
       vim.api.nvim_create_autocmd('FileType', {
         callback = function(args)
           local language = vim.treesitter.language.get_lang(args.match)
