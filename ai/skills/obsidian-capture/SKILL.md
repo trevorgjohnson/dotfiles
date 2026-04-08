@@ -21,13 +21,13 @@ Extract from the user's request and surrounding conversation:
 | Field | Notes |
 |---|---|
 | **Title** | Concise, descriptive — becomes the filename. Title-case, matching existing note style. |
-| **Tags** | Pick from discovered tags; infer from context |
+| **Tags** | Pick from discovered tags; infer from context. Add `#P0` if the user signals high urgency ("urgent", "critical", "top priority", etc.). |
 | **Body** | Optional — description, links, task list pulled from conversation |
 | **Status** | `backlog` (default) or `pending` if actively in progress |
-| **Rating** | 1–7 scale — if not supplied, use `AskUserQuestion` with: "Priority? 1–2 (low) / 3–4 (medium) / 5–6 (high) / 7 (critical)" and include your recommendation |
+| **Rating** | 1–7 effort scale (agile story points — 1=trivial, 7=very hard) — if not supplied, infer from complexity or use `AskUserQuestion` with: "Effort? 1–2 (trivial) / 3–4 (medium) / 5–6 (hard) / 7 (very hard)" and include your recommendation. |
 
 Ask only for what can't be inferred. One short clarifying question beats multiple.
 
 ## 3. Write the file
 
-Use the `obsidian-cli` skill to create the note from `Templates/Todo Template.md` and set its properties.
+Use the `obsidian-cli` skill to create the note with `template="Todo Template"` — do not read the template file first; the CLI handles expansion. Then set properties with `property:set`. Trust the CLI's success output after each call; no verification read needed.

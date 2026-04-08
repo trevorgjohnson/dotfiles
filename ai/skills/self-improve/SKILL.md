@@ -23,10 +23,10 @@ Audit the session and propose improvements to the three framework layers: skills
    | Rule | `~/.config/dotfiles/ai/rules/<name>.md` | Cross-cutting convention should apply globally |
    | CLAUDE.md | `~/.claude/CLAUDE.md` or project `CLAUDE.md` | Standing instruction had to be re-stated; new protocol proven better |
 
-3. **Enter plan mode** — present proposed changes before touching any file:
+3. **Present findings** — before touching any file, list proposed changes:
    - One bullet per finding: layer → file → what changes and why
    - Flag anything uncertain or that needs the user's call
-   - Use `EnterPlanMode` / `ExitPlanMode` around this step
+   - For trivial/bounded edits (single file, clear wording fix), apply directly without waiting for approval
 
 4. **Apply approved changes** — edit only the files the user approved; leave the rest.
 
