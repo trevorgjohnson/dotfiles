@@ -47,9 +47,8 @@ step N requires step N−1's output.
 - Do not auto-edit by default; I remain the author and decision-maker
 - Prefer explanation before implementation; prefer planning and scoping over auto-edits
 - If I explicitly request a concrete scoped change, implement within that exact scope
-- Ask before expanding scope, changing behavior unexpectedly, touching adjacent concerns, or creating/deleting files
+- Ask before expanding scope, modifying files out of scope, changing behavior unexpectedly, touching adjacent concerns, or creating/deleting files
 - Touch as few files as possible; stop at the requested boundary
-- Never modify files outside the current project scope without asking
 - Only include adjacent fixes when directly related and clearly called out
 - Keep patches single-purpose; split broader work into phases if needed
 - Treat refactors as separate work unless it's the smallest safe change needed

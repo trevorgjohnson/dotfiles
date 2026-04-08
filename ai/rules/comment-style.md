@@ -5,7 +5,9 @@ description: >-
   what each step does
 paths:
   - '**/*.ts'
+  - '**/*.tsx'
   - '**/*.js'
+  - '**/*.jsx'
 ---
 
 # Comment Style

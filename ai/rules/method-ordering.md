@@ -1,4 +1,5 @@
 ---
+version: 1.0.0
 description: Method ordering convention within classes and modules
 ---
 

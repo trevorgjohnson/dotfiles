@@ -1,3 +1,8 @@
+---
+version: 1.0.0
+description: Which Claude model to use for subagents and when to suggest a main-session switch
+---
+
 # Model Selection
 
 Subagents — always pass `model` explicitly:

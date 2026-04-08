@@ -1,5 +1,5 @@
 ---
-version: 1.0.0
+version: 1.0.1
 paths:
   - '**/CLAUDE.md'
   - .claude/**/*.md
@@ -49,12 +49,12 @@ Guidelines for maintaining CLAUDE.md, rules, agents, skills, and memory files.
 
 ## Markdown Linting
 
-All Claude Code documentation files (CLAUDE.md, rules, agents, skills) must pass `markdownlint` using the repo's
-`.markdownlint.yaml` configuration (120-char line length). When creating or editing these files:
+All Claude Code documentation files (CLAUDE.md, rules, agents, skills) must pass `markdownlint`
+using the default configuration (80-char line length). When creating or editing these files:
 
-- Wrap prose at 120 characters
+- Wrap prose at 80 characters
 - Use blank lines around headings, code fences, lists, and tables
-- Use `>-` for long `description` values in YAML frontmatter to keep them visually consistent with the 120-char width
+- Use `>-` for long `description` values in YAML frontmatter to keep them visually consistent
 - Use `<!-- markdownlint-disable MD013 -->` / `<!-- markdownlint-enable MD013 -->` pragmas around content that genuinely
   cannot wrap (e.g., tables with long hostnames or URLs)
 - Specify a language on all fenced code blocks (use `text` for plain output)
