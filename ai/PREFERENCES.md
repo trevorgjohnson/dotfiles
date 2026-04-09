@@ -81,4 +81,6 @@ step N requires step N−1's output.
 
 The AI framework (skills, rules, CLAUDE.md) should evolve as it gets used. After completing a non-trivial task, check whether a gap or improvement was revealed — then either note it or run `/self-improve` to audit and apply changes.
 
+**Prefer framework over memory:** if something could go to MEMORY but is a reusable behavior, convention, or standing instruction, put it in rules, skills, or CLAUDE.md instead. MEMORY is for ephemeral context (user profile, project state); the framework is for durable instruction.
+
 See the `/self-improve` skill for the full process and per-layer criteria.

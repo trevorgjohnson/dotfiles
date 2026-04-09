@@ -7,6 +7,70 @@ description: Interact with Obsidian vaults using the Obsidian CLI to read, creat
 
 Use the `obsidian` CLI to interact with a running Obsidian instance. Requires Obsidian to be open.
 
+## Vault Conventions (Core Principals)
+
+Before any write, complex query, or note creation, read `$VAULT_PATH/Core Principals.md`
+to load the vault owner's conventions (categories, status values, tag style, date
+formats, property patterns, temporal note structures). This file is the single source of
+truth for how the vault is organized — derive structure from it, don't hardcode it.
+
+If `Core Principals.md` doesn't exist, interview the user to create it using
+`AskUserQuestion`. Walk through the sections below in order. Accept the recommended
+default when the user has no preference. After the interview, write the file with all
+sections populated.
+
+### General Conventions
+
+| Question | Recommended default |
+|---|---|
+| Single vault or multiple? | Single vault |
+| Folders for organization, or flat? | Flat — no folders |
+| Standard Markdown or Obsidian-specific syntax? | Standard Markdown only |
+| Singular or plural categories and tags? | Always plural |
+| How often do you use internal links? | Profusely — link everything relevant |
+| Preferred date format? | `YYYY-MM-DD` everywhere |
+| Rating scale? | 7-point (1–7) |
+| Reusable property names across note types? | Yes — shared names enable cross-category views |
+| Composable templates (stack multiple on one note)? | Yes |
+| Short or descriptive property names? | Short — faster to type |
+| Default property type for potentially multi-value fields? | `list` — even if currently single-value |
+
+### Categories
+
+Ask the user to list their note categories (e.g. Todos, Projects, Books, Shows).
+Document the category property format — recommend `categories: ["[[Name]]"]` with
+wikilinks. Note whether category index pages exist and how they work (e.g. embed
+`.base` files, carry `tags: [categories]`).
+
+### Key Properties
+
+Ask what frontmatter properties are used for querying and filtering. Build a table
+with columns: Property, Used on, Values. At minimum cover: `categories`, `status`,
+`start`, `end`, `rating`, `tags`. Add any vault-specific properties the user mentions.
+
+### Status Lifecycle
+
+Ask about status values and their order. Recommend:
+`backlog → pending → in progress → blocked (optional) → finished`.
+Document any side effects (e.g. `in progress` sets `start`, `finished` sets `end`).
+
+### Tags
+
+Ask about the tag taxonomy. Cover:
+- **Scope tags** — primary classification axis (e.g. `work` / `personal`)
+- **Priority tags** — urgency markers (e.g. `P0`)
+- **Structural tags** — note-type markers (e.g. `weekly`, `daily`, `categories`)
+- **Topical tags** — any recurring subject tags
+
+### Temporal Notes
+
+Ask whether the user uses weekly and/or daily notes. For each, document:
+- Filename pattern (e.g. `YYYY-Www`, `YYYY-MM-DD`)
+- Category assignment
+- Key frontmatter properties (`start`, `end`, `prev`, `next`, `parent`, `date`)
+- Tags (e.g. `weekly`, `daily`)
+- What the body typically embeds
+
 ## Step 1 — Detect the CLI
 
 Before the first vault operation, run:

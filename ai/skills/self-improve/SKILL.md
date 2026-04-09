@@ -15,6 +15,8 @@ Audit the session and propose improvements to the three framework layers: skills
    - A workaround was used that a skill should have covered
    - A reusable pattern emerged that isn't captured anywhere
    - A rule was too broad, too narrow, or produced the wrong behavior
+   - A tool call was approved repeatedly that could be added to the allowlist
+   - A Claude Code configuration would have improved the session if set persistently
 
 2. **Classify each finding** by layer:
    | Layer | File location | Update when |
@@ -22,6 +24,7 @@ Audit the session and propose improvements to the three framework layers: skills
    | Skill | `~/.claude/skills/<name>/SKILL.md` | Domain context or reusable workflow missing/incomplete |
    | Rule | `~/.config/dotfiles/ai/rules/<name>.md` | Cross-cutting convention should apply globally |
    | CLAUDE.md | `~/.claude/CLAUDE.md` or project `CLAUDE.md` | Standing instruction had to be re-stated; new protocol proven better |
+   | settings.json | `~/.claude/settings.json` | Any Claude Code configuration that would benefit from a persistent setting (permissions, hooks, env vars, model, etc.) |
 
 3. **Present findings** — before touching any file, list proposed changes:
    - One bullet per finding: layer → file → what changes and why
@@ -37,4 +40,5 @@ Audit the session and propose improvements to the three framework layers: skills
 - Never bloat CLAUDE.md — move detail into rules or skills when a section grows beyond a few bullets
 - Don't create a new skill for a one-session pattern; require 2+ session recurrence or an explicit user request
 - Rules go in dotfiles (`~/.config/dotfiles/ai/rules/`), not in CLAUDE.md
+- **Prefer framework over memory:** before writing a MEMORY entry, ask whether the insight is a reusable behavior or standing instruction — if so, it belongs in a rule, skill, or CLAUDE.md, not memory
 - Propose; never auto-apply without approval
