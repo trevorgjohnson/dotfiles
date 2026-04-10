@@ -3,15 +3,15 @@ name: obsidian-todo
 description: Quickly create a todo in the user's Obsidian vault from any project or session. Use when user says "add a todo", "create a todo" or any similar phrasing asking to save something to the vault.
 ---
 
-# Obsidian Capture
+# obsidian-todo
 
 Create a todo in the Obsidian vault from any session.
 
 ## 1. Resolve vault and discover tags
 
-Load the `obsidian-vault` skill to resolve `$VAULT_PATH`, `$VAULT_NAME`, and vault conventions (Core Principals).
+Load the `obsidian-vault` skill to resolve `$VAULT_PATH` and `$VAULT_NAME`.
 
-Next, Use the `obsidian-cli` skill to pull existing tags from the vault to inform selection. If no related tag exists, create a new one in a similar fashion/language as the existing tags.
+Then use the `obsidian-cli` skill — it reads `Core Principals.md` for vault conventions before any vault operation. Use it to pull existing tags from the vault to inform selection. If no related tag exists, create a new one in a similar fashion/language as the existing tags.
 Note that all todos should be tagged either `work` or `personal`.
 
 ## 2. Infer content from context
