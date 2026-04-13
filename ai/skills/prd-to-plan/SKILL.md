@@ -29,6 +29,8 @@ Before slicing, identify high-level decisions that are unlikely to change throug
 
 These go in the plan header so every phase can reference them.
 
+Also pull the **verify command** from the PRD's Testing Decisions section (`Verify command` field). If it's missing, ask for it now — it's required for the `## Execution` block and downstream `ralph-wiggum` setup.
+
 ### 4. Draft vertical slices
 
 Call `EnterPlanMode` before presenting the phase breakdown — you're proposing a plan, not implementing one yet.
@@ -64,6 +66,14 @@ Iterate (adjusting and re-presenting) until the user selects "About right". Call
 Create `~/.claude/plans/` if it doesn't exist. Write the plan as a Markdown file named after the feature (e.g. `~/.claude/plans/user-onboarding.md`). Use the template below.
 
 After writing the file, call `TaskCreate` for each approved phase (e.g. "Phase 1: Scaffold auth endpoint"). These become a live checklist for the implementation work ahead.
+
+Finally, offer the next step using `AskUserQuestion`:
+> Plan written. How do you want to execute it?
+> 1. `/ralph-wiggum setup` — autonomous loop, runs until verified (recommended for greenfield or low-risk work)
+> 2. `/phasic-plan` — phase-gated with human approval between phases (recommended when each phase needs review)
+> 3. Neither — I'll execute manually
+
+If the user picks ralph-wiggum, run `/ralph-wiggum setup` immediately, pre-filling `plan_path` and `verify_command` from the `## Execution` block.
 
 <plan-template>
 # Plan: <Feature Name>
@@ -110,4 +120,14 @@ A concise description of this vertical slice. Describe the end-to-end behavior, 
 - [ ] ...
 
 <!-- Repeat for each phase -->
+
+---
+
+## Execution
+
+Configuration for autonomous execution via `ralph-wiggum`. Pre-filled from the PRD's verify command.
+
+- **Verify command**: `<shell command from PRD Testing Decisions>`
+- **Completion promise**: `TASK_COMPLETE`
+- **Max iterations**: `25`
 </plan-template>

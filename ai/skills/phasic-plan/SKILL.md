@@ -20,5 +20,7 @@ Execute the current plan with strict phase gating:
    - `[~]` work complete, awaiting user approval
    - `[x]` approved by user
    When a phase finishes, mark it `[~]`. When the user explicitly approves, update to `[x]`.
-7. **Context hygiene** — after the user approves a phase and the marker is updated to `[x]`, prompt them to clear context before the next phase begins (especially when approaching context limits). Provide a short copy-pasteable prompt they can use after `/clear` to resume — something like: "Continue [plan name]. Read the plan at [memory path] and pick up the next phase."
+7. **Context hygiene** — after the user approves a phase and the marker is updated to `[x]`, always prompt them to `/clear` context before the next phase begins. Each phase is designed to run in a fresh context — the plan file is the handoff artifact. Provide a structured, copy-pasteable resume prompt using this exact format:
+   > `Continue [plan name] — phase [N+1]. Plan at [memory path]. Previous phases [x]. Resume next phase.`
+   For short plans (≤2 phases, low complexity), note that `/clear` is optional but recommended.
 8. **Task tracking** — at the start of each phase, call `TaskCreate` for each discrete work item in that phase. As work finishes, call `TaskUpdate` (status `completed`) on each item. During the verification step (rule 3), call `TaskList` to machine-check that all phase tasks are completed before marking the phase `[~]`. Complete or delete all phase tasks before halting for user approval.

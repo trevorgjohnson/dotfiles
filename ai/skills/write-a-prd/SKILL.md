@@ -16,6 +16,8 @@ This skill will be invoked when the user wants to create a PRD. You may skip ste
    - "Does this need tests written? Yes / No / Unsure"
    - "Is this breaking or backwards-compatible? Breaking / Compatible / Unsure"
 
+   Before closing the interview, confirm the **verify command** — the single shell command that must exit 0 for this feature to be considered complete (e.g. `npm test`, `pytest -x`, `forge test`, `./scripts/verify.sh`). Run `/verify` if unsure what the project uses. This is required for downstream automation (`prd-to-plan` → `ralph-wiggum`).
+
    As unresolved open questions emerge during the interview, call `TaskCreate` for each one (e.g. "Resolve: auth strategy for new endpoint"). This gives the user a visible list of what's still outstanding. Call `TaskUpdate` to `completed` when each question is resolved.
 
 4. Call `EnterPlanMode`, then sketch out the major modules you will need to build or modify to complete the implementation. Actively look for opportunities to extract deep modules that can be tested in isolation.
@@ -69,6 +71,7 @@ A list of testing decisions that were made. Include:
 - A description of what makes a good test (only test external behavior, not implementation details)
 - Which modules will be tested
 - Prior art for the tests (i.e. similar types of tests in the codebase)
+- **Verify command**: the exact shell command to run to confirm this feature is complete (e.g. `npm test`, `pytest -x`, `forge test`)
 
 ## Out of Scope
 

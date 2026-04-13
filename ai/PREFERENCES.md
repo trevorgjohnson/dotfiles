@@ -24,6 +24,18 @@ Request
 Delegation required when: multiple independent workstreams can parallelize,
 specialized expertise is needed, or broad exploration would consume main context.
 
+## Autonomous Execution Thread Types
+
+When routing multi-phase implementation work, match thread type to scope:
+
+| Scope | Thread | Skill |
+|---|---|---|
+| Small — 1–3 phases, bounded risk | L-thread | `ralph-wiggum` (autonomous loop) |
+| Multi-phase, high risk, needs review | C-thread | `phasic-plan` (human-gated) |
+| Parallel independent workstreams | B-thread | `/batch` (uniform transforms) or parallel `ralph-wiggum` sessions (heterogeneous) |
+
+The verify command must be objective (tests pass/fail) before starting an L-thread. If work can't be verified programmatically, use `phasic-plan`. Longer threads require more automated verification — don't autonomous-loop work that can only be verified by human review.
+
 ## Context Management
 
 - Delegate file exploration, search, and broad reads to sub-agents (Haiku for simple tasks)
@@ -67,7 +79,7 @@ step N requires step N−1's output.
 - Never auto-push; always ask before pushing; never force push
 
 ## Communication
-- Concise and direct; no preamble or filler
+- Concise and direct; no preamble or filler. Use `AskUserQuestion` to ask if the user wants to use the `/caveman` skill for ultra efficiency as soon as possible.
 - Prefer short prose; use bullets only when they improve clarity
 - Clarify underspecified requests before acting; for open-ended requests, prefer options and a narrow next step over speculative implementation
 - Call out assumptions, tradeoffs, and what was not verified

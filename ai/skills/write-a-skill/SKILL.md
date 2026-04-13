@@ -12,6 +12,7 @@ description: Create new agent skills with proper structure, progressive disclosu
    - Specific use cases it must handle (ask for 2–3 concrete examples)
    - Whether it needs executable scripts or just instructions (Scripts / Instructions only / Both)
    - Reference materials to include (docs URLs, existing files, none)
+   - **Pipeline role**: is this a primitive (one focused capability) or an pipeline (sequences other skills)? What skills does it sit between?
 
 2. **Draft the skill** — enter `EnterPlanMode` before presenting the proposed file structure and SKILL.md outline. Show:
    - Proposed file layout (`SKILL.md` + any supplementary files)
@@ -101,6 +102,28 @@ Every skill should use built-in tools where they add structure or safety. Apply 
 | Auto-fetch on error | `WebFetch` | When a command fails and official docs exist — fetch them automatically rather than telling the user to check manually. |
 
 When writing or reviewing a skill, ask for each workflow step: *could a built-in tool make this more structured, safer, or more visible to the user?*
+
+## Composability
+
+Skills are composable pieces meant to be chained, not monoliths. Every skill is either a **primitive** or an **pipeline**.
+
+| Role | What it does | Examples |
+|------|-------------|---------|
+| **Primitive** | One focused capability; clear inputs and outputs | `grill-me`, `verify`, `ralph-wiggum` |
+| **Orchestrator** | Sequences primitives; owns end-to-end flow | `prd-to-plan` (branches to `ralph-wiggum` or `phasic-plan`) |
+
+**Primitive rules:**
+- Document which upstream skills produce its inputs
+- Document which downstream skills it can hand off to
+- Write outputs to a predictable, readable location (e.g. `~/.claude/plans/*.md`)
+- Pre-fill from upstream output — don't re-ask questions already answered
+
+**Orchestrator rules:**
+- Use `AskUserQuestion` at branch points to let the user choose the next primitive
+- Never hardcode the chain — always offer options
+- Hand off with context pre-loaded (paths, config values), not just a suggestion
+
+When authoring, decide upfront: primitive or pipeline? If primitive, note its position in the pipeline in the `description` field.
 
 ## When to Add Scripts
 
