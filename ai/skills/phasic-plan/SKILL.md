@@ -8,6 +8,10 @@ description: >-
 
 # Phasic Plan
 
+Use when phases need human approval between them, or work can't be verified
+programmatically. Use `ralph-wiggum` instead when verification is objective and
+risk is bounded.
+
 Execute the current plan with strict phase gating:
 
 1. **Phase gating** — halt at the end of each phase and wait for explicit user approval before starting the next. Never pick up tasks from a future phase unprompted.

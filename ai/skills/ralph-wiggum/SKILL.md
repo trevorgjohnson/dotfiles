@@ -7,6 +7,12 @@ description: Autonomous verify-until-done execution loop. Agent doesn't stop whe
 
 Autonomous execution layer. Agent quits when work is verified, not when it thinks it's done.
 
+## When to Use
+
+- 1–3 phases, bounded risk, objective verify command exists (tests pass/fail, CI green)
+- Use `phasic-plan` instead when phases need human approval or can't be verified programmatically
+- Use parallel sessions for independent workstreams
+
 ## Pipeline Position
 
 ```

@@ -1,6 +1,9 @@
 ---
 name: obsidian-bases
-description: Create and edit Obsidian Bases (.base files) with views, filters, formulas, and summaries. Use when working with .base files, creating database-like views of notes, or when the user mentions Bases, table views, card views, filters, or formulas in Obsidian.
+description: >-
+  Create and edit Obsidian Bases (.base files) — table, card, and list views
+  with filters and formulas. Use when working with .base files or when the user
+  mentions Bases, table views, or database-like note views.
 ---
 
 # Obsidian Bases Skill

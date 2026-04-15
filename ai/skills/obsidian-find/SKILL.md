@@ -1,9 +1,9 @@
 ---
 name: obsidian-find
 description: >-
-  Locate and load Obsidian notes or structured vault data (todos, tasks, projects
-  by status; weekly/daily notes) into context. Also handles fuzzy note lookup by
-  approximate name, content, or intent.
+  Locate Obsidian notes by structured query (status, category, tags), temporal
+  reference (this week, today), or fuzzy search. Use when searching for or
+  loading vault notes into context.
 ---
 
 # Obsidian Find
@@ -13,11 +13,8 @@ data into context.
 
 ## Setup
 
-Load these two skills first — every workflow depends on them:
-
-1. `obsidian-vault` — resolves `$VAULT_PATH` and `$VAULT_NAME`
-2. `obsidian-cli` — search, read, property interface, and vault conventions
-   (Core Principals)
+Load `obsidian-cli` first — it resolves the vault and loads vault conventions
+(Core Principals).
 
 ## Query Classification
 

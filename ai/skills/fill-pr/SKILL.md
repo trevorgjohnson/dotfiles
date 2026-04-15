@@ -161,3 +161,12 @@ Print the PR URL when done.
 - Do not change the PR title unless the user asks.
 - If no open PR exists for the current branch, say so and stop — do not create one.
 - If the Jira ticket has no description, derive context from the summary and commits only.
+
+---
+
+## After completing either mode
+
+Once the PR body is written or updated, suggest running `/annotate-pr` to add
+inline contextual annotations to the diff:
+
+> PR body is done. Want me to add inline annotations to the diff? Run `/annotate-pr` to post brief contextual notes on non-obvious lines.

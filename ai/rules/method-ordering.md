@@ -1,10 +1,8 @@
 ---
-version: 1.0.0
 description: Method ordering convention within classes and modules
 ---
 
-Order methods like a C program (defined before used):
-
+Order methods to be defined before used:
 1. Simple constants — keys, config getters
 2. Small/highly-reused immutable methods — getters (DB, cache, external)
 3. Small/highly-reused mutable methods — setters, queue-adders

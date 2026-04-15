@@ -1,9 +1,33 @@
 ---
 name: obsidian-cli
-description: Interact with Obsidian vaults using the Obsidian CLI to read, create, search, and manage notes, tasks, properties, and more. Use when the user asks to interact with their Obsidian vault, manage notes, search vault content, or perform vault operations from the command line.
+description: >-
+  Core interface for all Obsidian vault operations: vault resolution, CLI
+  commands, todo creation, and raw file I/O. Use when the user asks to interact
+  with their Obsidian vault, manage notes, create todos, or run any vault
+  operation.
 ---
 
 # Obsidian CLI
+
+## Vault Resolution
+
+Before any vault operation, resolve the target vault:
+
+```bash
+VAULT_PATH="$VAULT"
+VAULT_NAME="$(basename "$VAULT")"
+```
+
+- `VAULT_PATH` — absolute filesystem path, for direct file reads/writes
+- `VAULT_NAME` — vault name for the `obsidian` CLI `vault=` parameter
+
+**If `$VAULT` is unset:** use `AskUserQuestion` to ask for the absolute path, then:
+
+```bash
+export VAULT="/path/from/user"
+```
+
+Derive `VAULT_PATH` and `VAULT_NAME` as above, then proceed.
 
 Use the `obsidian` CLI to interact with a running Obsidian instance. Requires Obsidian to be open.
 
@@ -137,6 +161,10 @@ Commands target the most recently focused vault by default. Use `vault=<name>` a
 obsidian vault="My Vault" search query="test"
 ```
 
+## Property types
+
+Property types are defined in `{vault}/.obsidian/types.json`. Consult it before calling `property:set` to ensure the value matches the declared type.
+
 ## Destructive operations
 
 Before running any destructive command, use `AskUserQuestion` to confirm. Destructive commands include:
@@ -182,6 +210,31 @@ obsidian deadends
 ```
 
 Use `--copy` on any command to copy output to clipboard. Use `silent` to prevent files from opening in Obsidian. Use `total` on list commands to get a count.
+
+For Obsidian-specific markdown syntax (wikilinks, callouts, embeds, properties),
+see [references/MARKDOWN.md](references/MARKDOWN.md).
+
+---
+
+## Creating a Todo
+
+1. Resolve vault (above) and read `Core Principals.md` for conventions
+2. Pull existing tags: `obsidian tags sort=count counts`
+3. Infer from conversation:
+
+| Field | Notes |
+|---|---|
+| **Title** | Concise, title-case, matches existing note style |
+| **Tags** | From vault tags; infer from context. Add `#P0` for urgent |
+| **Body** | Optional — description, links, tasks from conversation |
+| **Status** | `backlog` (default) or `pending` if actively in progress |
+| **Rating** | 1–7 effort (1=trivial, 7=very hard). Ask if unclear |
+| **Scope** | Tag all todos `work` or `personal` |
+
+Ask only for what can't be inferred.
+
+4. Create with `template="Todo Template"` — CLI handles expansion. Set remaining
+   properties with `property:set`.
 
 ---
 
