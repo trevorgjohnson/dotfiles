@@ -173,7 +173,7 @@ require("lazy").setup({
       nmap('<leader>/', fzf.grep_curbuf, 'find in current buffer')
       nmap('<leader>ff', fzf.files, '[f]ind [f]ile')
       nmap('<leader>fo', fzf.lines, '[f]ind line in open buffers')
-      nmap('<leader>fw', fzf.grep_cWORD, '[f]ind [w]ord')
+      nmap('<leader>fw', fzf.grep_cword, '[f]ind [w]ord')
       nmap('<leader>fg', fzf.live_grep, '[f]ind [w]ord')
       nmap('<leader>fs', fzf.git_status, '[f]ind git [s]tatus')
       nmap('<leader>fd', fzf.diagnostics_workspace, '[f]ind [d]iagnostics')

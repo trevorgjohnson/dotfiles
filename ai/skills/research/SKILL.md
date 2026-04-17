@@ -91,12 +91,42 @@ integrate, deduplicate, and resolve conflicts.
 
 ### Step 3 — Write the Document
 
+#### Complexity-Ascending Structure (required)
+
+Order all sections and subsections from foundational to advanced — the same way every good teacher
+structures a lesson. A reader who opens the document cold should never encounter a concept that
+depends on something explained later.
+
+Apply this principle at every level of the document:
+
+- **Document level**: open with prerequisites (math primitives, vocabulary, mental models), then
+  the core mechanism, then advanced variants, edge cases, and production concerns
+- **Section level**: within each section, define terms before using them; show the simple case
+  before generalising; introduce the intuition before the formal statement
+- **Math level**: derive or explain each component of an equation in the order it's needed, not
+  the order it appears in the formula
+
+For multi-topic documents, identify the dependency graph across concepts and sequence topics so
+that each one builds on the ones before it. For example: shared-secret primitives → basic
+signature schemes → linear signature properties → threshold extensions is a valid ascending chain;
+jumping straight to threshold schemes without establishing the signing equation is not.
+
+If a concept genuinely has no simpler prerequisite, place it first. If two concepts are at equal
+complexity, prefer the one that is historically or conceptually foundational to the other.
+
+**Avoid**: opening with the most interesting or advanced concept "because it's the point of the
+document." Readers need the foundation to appreciate the advanced material. Save the impressive
+result for after it has been earned.
+
+#### Output Structure
+
 Produce a structured explanation of the given topic. Use this output structure (include a section
 only if the topic warrants it — don't add empty or padding sections):
 
 1. **Summary** — one plain-English paragraph, no jargon, explains what and why
 2. **Diagram** — see diagram rules below
-3. **Core explanation** — section(s) walking through the concept in depth
+3. **Core explanation** — section(s) walking through the concept in depth, ordered
+   complexity-ascending (see above)
 4. **Math** — if the topic is math-heavy; see LaTeX rules below
 5. **Pseudocode** — if the topic involves an algorithm, process, or implementation; see rules below
 6. **Gotchas / key takeaways** — non-obvious behavior, common mistakes, edge cases
@@ -174,6 +204,8 @@ flowchart LR
   B -->|yes| C[Path A]
   B -->|no| D[Path B]
 ```
+
+For multi-line node labels, use `<br>` — not `\n`. Mermaid does not render `\n` as a line break inside node label strings.
 
 ### LaTeX Math
 

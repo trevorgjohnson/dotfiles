@@ -51,22 +51,18 @@ local servers = {
       },
     }
   },
-  nil_ls = {}
 }
 
 return {
   'neovim/nvim-lspconfig',
   event = { "BufReadPre", "BufNewFile" },
   config = function()
-    -- Attempt to attach
+    -- Attempt to configure and enable each server listed in `servers`
     for s_name, s_opts in pairs(servers) do
-      -- skip 'rust_analyzer' in favor of 'rustaceanvim'
-      if s_name ~= 'rust_analyzer' then
-        -- set the configuration of the lsp
-        vim.lsp.config(s_name, s_opts or {})
-        -- Skip servers that fail validation, such as missing executables.
-        pcall(vim.lsp.enable, s_name)
-      end
+      -- set the configuration of the lsp
+      vim.lsp.config(s_name, s_opts or {})
+      -- Skip servers that fail validation (eg. missing executables)
+      pcall(vim.lsp.enable, s_name)
     end
     vim.api.nvim_create_autocmd('LspAttach', {
       group = vim.api.nvim_create_augroup('lsp-attach-group', { clear = true }),
