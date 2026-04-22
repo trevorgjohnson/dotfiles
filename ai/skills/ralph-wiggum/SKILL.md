@@ -1,6 +1,12 @@
 ---
 name: ralph-wiggum
-description: Autonomous verify-until-done execution loop. Agent doesn't stop when it thinks it's done — it stops when work is objectively verified. Supports multiple concurrent sessions (one per plan). Use when the user wants to run a task autonomously until all tests pass, a plan is complete, or a verification command exits 0. Sits at the end of the skill pipeline: write-a-prd → prd-to-plan → ralph-wiggum.
+description: >-
+  Autonomous verify-until-done execution loop. Agent doesn't stop when it
+  thinks it's done - it stops when work is objectively verified. Supports
+  multiple concurrent sessions (one per plan). Use when the user wants to run
+  a task autonomously until all tests pass, a plan is complete, or a
+  verification command exits 0. Sits at the end of the skill pipeline:
+  write-a-prd → prd-to-plan → ralph-wiggum.
 ---
 
 # Ralph Wiggum

@@ -1,5 +1,5 @@
 ---
-name: pr
+name: fill-pr
 description: >-
   Draft or fill out a GitHub PR. Two modes: (1) generate a PR title and body
   from the current branch's diff — use when drafting a new PR; (2) flesh out
@@ -8,7 +8,7 @@ description: >-
   pull request description.
 ---
 
-# PR
+# Fill PR
 
 Two modes depending on context:
 
