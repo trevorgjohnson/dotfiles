@@ -4,14 +4,8 @@ Before gathering context on any non-trivial request:
 2. Load it before exploring the codebase
 3. Let skill instructions guide context gathering
 
-## When to Execute
-- Trivial — single file, obvious fix, bounded scope: Execute directly
-- Moderate — clear solution path, bounded scope: Brief planning →  execute directly
-- Complex — architectural impact, multi-phase, or specialized domain: Delegate to sub-agent; synthesize results in main session
-- Ambiguous — unclear requirements, cross-cutting concerns: Clarify first → re-route
-
 ## Context Management
-- Start narrow — load context only when the task demands it (aka progressive disclosure)
+- Start narrow — load context only when the task demands it
 - Reserve main context for coordination, synthesis, and decisions
 - Delegate file exploration, search, and broad reads to cheap sub-agents
 

@@ -223,8 +223,17 @@ kebab-case. Avoid creating new variants of labels that already exist.
 
 ### Summary naming
 
-Always prefix the summary with the project key in brackets: `[BLOC] Fix withdrawal batch validation`. This applies to
-all tickets regardless of project.
+Always prefix the summary with the project key in brackets. This applies to all tickets regardless of project.
+
+Title style: short imperative verb phrase — write what the ticket does, not what the problem is. No colons, dashes, or special characters beyond the `[PROJECT]` prefix. Keep it conversational and scannable.
+
+Good examples:
+- `[BLOC] Fix withdrawal batch validation`
+- `[BOATS] Improve error handling around gas pricing`
+- `[PLAT] Migrate auth service to vite`
+- `[PCAP] Fix types in detect deposit module`
+
+Avoid: subtitles after a colon or dash, listing multiple things joined by punctuation, overly technical jargon in the summary.
 
 ### Description structure
 
@@ -238,6 +247,33 @@ Every ticket description must use these three sections in order, as ADF level-2 
 
 Write descriptions with enough detail that someone unfamiliar with the immediate context can pick up the ticket and
 understand what to do and why. Use inline code for all symbol names, config keys, file names, and values.
+
+### Voice and language
+
+When writing Context, Technical Context, and AC sections, match the voice of the boats-backend codebase:
+
+**Prose and identifier formatting**
+- Wrap all identifiers, flags, file names, function names, and config keys in backticks — both in bullet prose and in ADF inline code marks. No exceptions.
+- Never use em dashes. Use a comma, parenthetical, or a new sentence instead.
+- No subtitles or colons mid-sentence in headings or bullet leads.
+
+**Error and log message patterns**
+When describing what a method logs or throws, use these exact patterns:
+- "An error occurred while `<gerund phrase>`" — for caught/rethrown errors
+- "Failed to `<verb>` `<thing>`" — for outright failures
+- "`<Thing>` failed for `<identifier>`" — for job/pipeline failures (e.g. "Blockchain Transaction failed for CASTL Blockchain Transaction `uuid`")
+- "started processing for" / "finished processing for" / "failed processing for" — for job lifecycle log messages
+
+**Comment style (when referencing code in ticket prose)**
+- Short and lowercase after `//`
+- Imperative, no trailing period: "Validate the job data", "Return status casted to `TransactionProcessStatus`"
+- Identifiers in backticks even inside inline comment quotes
+
+**JSDoc-style method descriptions**
+When the Technical Context describes a method or function, open with an action verb in present tense:
+- "Retrieves", "Processes", "Creates", "Sets", "Sends"
+- Follow with a noun phrase, then a sentence about edge cases if relevant (e.g. "Will return `null` if no record was found.")
+- `@param` descriptions are lowercase noun phrases, not full sentences
 
 ### ADF requirement
 
