@@ -8,8 +8,8 @@
 PS1='[\u@\h \W]\$ '
 . "$HOME/.cargo/env"
 
-# Set default `TERMINAL` to `ghostty`
-export TERMINAL="ghostty"
+# Set default `TERMINAL`
+export TERMINAL="foot"
 
 # Set the location of the obsidian vault
 export VAULT=/home/Documents/eighth-ring-of-hell/
@@ -26,7 +26,7 @@ eval "$(zoxide init bash)"
 # alias common unix cli tools with newer/modern alternatives
 alias ls='exa --color=auto'
 alias grep='rg --color=auto'
-alias cat='bat --color=auto'
+alias cat='bat -p --color=auto'
 alias cd='z'
 
 # add fzf to shell

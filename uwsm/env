@@ -2,7 +2,7 @@
 export PATH=/home/trevo/bin:$PATH
 
 # Set some preferred terminal and editor
-export TERMINAL=ghostty
+export TERMINAL=foot
 export EDITOR=nvim
 
 # Set GTK settings

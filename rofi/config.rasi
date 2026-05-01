@@ -2,7 +2,7 @@ configuration {
   modes: "window,drun,ssh,combi";
 	combi-modes: "window,drun";
 	show-icons: true;
-	terminal: "ghostty";
+	terminal: "foot";
   window-format: "{w}  {c}  {t}";
   drun-display-format: "{name} [<span weight='light' size='small'><i>({generic})</i></span>]";
 /*	sort: false;*/

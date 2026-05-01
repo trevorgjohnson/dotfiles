@@ -168,27 +168,18 @@ function M.setup()
     }
   end
 
-  -- ----- opencode.nvim -----------------------------------------------------
-  if vim.fn.executable("opencode") == 1 then
+  -- ----- pi-nvim -----------------------------------------------------
+  if vim.fn.executable("pi") == 1 then
     return {
-      "nickjvandyke/opencode.nvim",
-      version = "*", -- Latest stable release
-      keys = {
-        { "<leader>ap", function() require("opencode").ask("@this: ", { submit = true }) end,
-          mode = { "v", "x" }, desc = "[]: [P]rompt Opencode on selection" },
-        { "<leader>ay", function() return require("opencode").operator("@this ") end,
-          mode = { "v", "x" }, desc = "[]: [Y]ank range context and send to AI", expr = true },
-        { "ayy", function() return require("opencode").operator("@this ") .. "_" end,
-          mode = "n", desc = "[]: [Y]ank line context and send to AI", expr = true },
-      },
-      config = function()
-        -- Configure the opencode's server callbacks to use the float term under user.terminal
-        require("opencode.config").opts.server = {
-          start  = function() term.float:start_hidden("opencode --port", opencode_terminal_setup) end,
-          stop   = function() term.float:stop() end,
-          toggle = function() term.float:toggle({ cmd = "opencode --port", on_create = opencode_terminal_setup }) end,
-        }
-      end,
+      "carderne/pi-nvim",
+      -- keys = {
+      --   { "<leader>ap", function() require("opencode").ask("@this: ", { submit = true }) end,
+      --     mode = { "v", "x" }, desc = "[]: [P]rompt Opencode on selection" },
+      --   { "<leader>ay", function() return require("opencode").operator("@this ") end,
+      --     mode = { "v", "x" }, desc = "[]: [Y]ank range context and send to AI", expr = true },
+      --   { "ayy", function() return require("opencode").operator("@this ") .. "_" end,
+      --     mode = "n", desc = "[]: [Y]ank line context and send to AI", expr = true },
+      -- },
     }
   end
 
