@@ -64,14 +64,3 @@ PGOPTIONS="-c default_transaction_read_only=on" \
 UAT and prod connections require AWS VPN (split tunnel) to be active. If a connection
 times out or is refused on a non-local host, remind the user to check VPN before
 assuming a query error.
-
-## Write operations
-
-Writes are blocked by the `psql-guard` hook. If the user has **explicitly** requested a
-write (e.g. a one-off fix on localhost), prefix the command with `ALLOW_DB_WRITES=1`:
-
-```bash
-ALLOW_DB_WRITES=1 psql -h localhost -U prometheum -d postgres -c "UPDATE ..."
-```
-
-Never use `ALLOW_DB_WRITES=1` on remote (QA/UAT/prod) connections.
