@@ -6,16 +6,13 @@
 [[ $- != *i* ]] && return
 
 PS1='[\u@\h \W]\$ '
-. "$HOME/.cargo/env"
+# . "$HOME/.cargo/env"
 
 # Set default `TERMINAL`
 export TERMINAL="foot"
 
 # Set the location of the obsidian vault
 export VAULT=/home/Documents/eighth-ring-of-hell/
-
-# Add ~/bin to the list of binary paths under $PATH
-export PATH="${PATH}:${HOME}/bin"
 
 # Add starship for ~*_pretty-ness_*~
 eval "$(starship init bash)"

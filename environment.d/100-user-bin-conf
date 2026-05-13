@@ -1,2 +1,3 @@
 export TERMINAL=foot
-PATH=/home/trevo/bin:$PATH
+export EDITOR=nvim
+PATH=$PATH:/home/trevo/bin

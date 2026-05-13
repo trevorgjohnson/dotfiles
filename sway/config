@@ -1,0 +1,131 @@
+# You can get the names of your outputs by running: swaymsg -t get_outputs
+output * bg ~/Pictures/wallpapers/rainworlddeer.png fill
+# output HDMI-A-1 resolution 1920x1080 position 1920,0
+
+# This will lock your screen after 300 seconds of inactivity, then turn off
+# your displays after another 300 seconds, and turn your screens back on when
+# resumed. It will also lock your screen before your computer goes to sleep.
+# exec swayidle -w \
+#          timeout 300 'swaylock -f -c 000000' \
+#          timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
+#          before-sleep 'swaylock -f -c 000000'
+
+# Set the cursor size and theme
+set $cursor_size 18
+set $cursor_theme Adwaita
+
+# Set cursor settings for GTK
+exec_always {
+  gsettings set org.gnome.desktop.interface cursor-theme $cursor_theme
+  gsettings set org.gnome.desktop.interface cursor-size $cursor_size
+}
+
+# Set xcursor theme settings in seatd
+seat seat0 xcursor_theme $cursor_theme $cursor_size
+
+input type:touchpad {
+    dwt enabled
+    tap enabled
+    natural_scroll enabled
+    scroll_factor 0.5
+    middle_emulation enabled
+}
+
+input type:keyboard {
+    repeat_delay 300
+    repeat_rate 40
+}
+
+focus_follows_mouse no
+gaps inner 3
+gaps outer 5
+
+default_border pixel
+
+# Change the default sway "blue" to "mauve"
+client.focused #cba6f7 #1e1e2e #cdd6f4 #cba6f7 #cba6f7
+
+default_floating_border normal 0
+
+# Logo key. Use Mod1 for Alt.
+set $super Mod4
+
+set $term foot
+set $menu rofi -show drun
+set $browser helium-browser
+
+bindsym $super+Return exec $term
+bindsym $super+Control+Space exec piggy-menu
+bindsym $super+B exec $browser
+bindsym $super+q kill
+bindsym $super+Space exec $menu
+bindsym $super+f fullscreen
+
+# Drag (non-)floating windows by holding down $super and left mouse button
+# Also Resize them with right mouse button + $super.
+floating_modifier $super normal
+
+# Reload the configuration file
+bindsym $super+Shift+c reload
+# bindsym $super+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
+bindsym $super+Shift+q exec swaymsg exit
+
+bindsym $super+h focus left
+bindsym $super+j focus down
+bindsym $super+k focus up
+bindsym $super+l focus right
+
+bindsym $super+Shift+h move left
+bindsym $super+Shift+j move down
+bindsym $super+Shift+k move up
+bindsym $super+Shift+l move right
+
+bindsym $super+Mod1+h resize shrink width 10px
+bindsym $super+Mod1+j resize grow height 10px
+bindsym $super+Mod1+k resize shrink height 10px
+bindsym $super+Mod1+l resize grow width 10px
+
+bindsym $super+1 workspace number 1
+bindsym $super+2 workspace number 2
+bindsym $super+3 workspace number 3
+bindsym $super+4 workspace number 4
+bindsym $super+5 workspace number 5
+bindsym $super+Shift+1 move container to workspace number 1
+bindsym $super+Shift+2 move container to workspace number 2
+bindsym $super+Shift+3 move container to workspace number 3
+bindsym $super+Shift+4 move container to workspace number 4
+bindsym $super+Shift+5 move container to workspace number 5
+
+bindsym $super+R layout toggle split
+
+bindsym --locked XF86AudioMute exec wpctl set-sink-mute \@DEFAULT_SINK@ toggle
+bindsym --locked XF86AudioLowerVolume exec wpctl set-sink-volume \@DEFAULT_SINK@ -5%
+bindsym --locked XF86AudioRaiseVolume exec wpctl set-sink-volume \@DEFAULT_SINK@ +5%
+bindsym --locked XF86AudioMicMute exec wpctl set-source-mute \@DEFAULT_SOURCE@ toggle
+bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
+bindsym --locked XF86MonBrightnessUp exec brightnessctl set 5%+
+# Special key to take a screenshot with grim
+# bindsym Print exec grim
+
+# Read `man 5 sway-bar` for more information about this section.
+bar {
+    position top
+    # gaps 4
+    font "Iosevka Nerd Font 8"
+
+    status_command ~/.config/sway/status.sh
+
+    colors {
+        background  #18182488
+        statusline  #cdd6f4
+        separator   #45475a
+
+        focused_workspace   #cba6f7    #313244    #cdd6f4
+        active_workspace    #89b4fa    #313244    #cdd6f4
+        inactive_workspace  #18182488  #18182488  #6c7086
+        urgent_workspace    #f38ba8    #313244    #cdd6f4
+    }
+}
+
+# DO NOT DELETE! THIS IS NEEDED FOR SOME ENV SET UP
+include /etc/sway/config.d/*
