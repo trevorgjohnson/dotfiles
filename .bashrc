@@ -8,11 +8,20 @@
 PS1='[\u@\h \W]\$ '
 # . "$HOME/.cargo/env"
 
+# Add ~/bin to PATH
+export PATH=$PATH:/home/trevo/bin
+
 # Set default `TERMINAL`
 export TERMINAL="foot"
 
+# Set default `EDITOR`
+export EDITOR="nvim"
+
 # Set the location of the obsidian vault
 export VAULT=/home/Documents/eighth-ring-of-hell/
+
+# Colorize man pages with bat
+export MANPAGER="bat -plman"
 
 # Add starship for ~*_pretty-ness_*~
 eval "$(starship init bash)"
@@ -21,7 +30,7 @@ eval "$(starship init bash)"
 eval "$(zoxide init bash)"
 
 # alias common unix cli tools with newer/modern alternatives
-alias ls='exa --color=auto'
+alias ls='ls --color=auto'
 alias grep='rg --color=auto'
 alias cat='bat -p --color=auto'
 alias cd='z'

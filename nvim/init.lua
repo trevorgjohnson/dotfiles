@@ -177,6 +177,7 @@ require("lazy").setup({
       nmap('<leader>fg', fzf.live_grep, '[f]ind [w]ord')
       nmap('<leader>fs', fzf.git_status, '[f]ind git [s]tatus')
       nmap('<leader>fd', fzf.diagnostics_workspace, '[f]ind [d]iagnostics')
+      nmap('<leader>fn', function() fzf.live_grep({ cwd = vim.fn.expand('~/Documents/eighth-ring-of-hell') }) end, '[f]ind in [n]otes')
       nmap('grr', fzf.lsp_references, 'find LSP [r]efe[r]ences of a word')
       nmap('grd', fzf.lsp_definitions, 'find LSP [d]efinitions of a word')
       nmap('gtd', fzf.lsp_typedefs, 'find LSP [t]ype [d]efinitions of a word')

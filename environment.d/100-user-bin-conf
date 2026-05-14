@@ -1,3 +1,9 @@
 export TERMINAL=foot
 export EDITOR=nvim
-PATH=$PATH:/home/trevo/bin
+export PATH=$PATH:/home/trevo/bin
+
+# Force Wayland
+export GDK_BACKEND=wayland,x11,*
+export ELECTRON_OZONE_PLATFORM_HINT=wayland
+export OZONE_PLATFORM=wayland
+export XDG_SESSION_TYPE=wayland

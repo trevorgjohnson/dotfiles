@@ -1,18 +1,11 @@
-# You can get the names of your outputs by running: swaymsg -t get_outputs
-output * bg ~/Pictures/wallpapers/rainworlddeer.png fill
-# output HDMI-A-1 resolution 1920x1080 position 1920,0
+# HINT: Use `swaymsg -t get_outputs` to get the outputs
+output DP-1 bg ~/Pictures/wallpapers/rainworld_newworld.jpg fill res 1920x1080@144Hz pos 0 2560
+output DP-2 bg ~/Pictures/wallpapers/rainworlddeer.png fill res 2560x1400@144Hz pos 0 0 adaptive_sync on disable
 
-# This will lock your screen after 300 seconds of inactivity, then turn off
-# your displays after another 300 seconds, and turn your screens back on when
-# resumed. It will also lock your screen before your computer goes to sleep.
-# exec swayidle -w \
-#          timeout 300 'swaylock -f -c 000000' \
-#          timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
-#          before-sleep 'swaylock -f -c 000000'
-
-# Set the cursor size and theme
-set $cursor_size 18
+# Set sizes and themes
+set $cursor_size 24
 set $cursor_theme Adwaita
+set $gtk_theme catppuccin-mocha-mauve-standard+default
 
 # Set cursor settings for GTK
 exec_always {
@@ -23,12 +16,9 @@ exec_always {
 # Set xcursor theme settings in seatd
 seat seat0 xcursor_theme $cursor_theme $cursor_size
 
-input type:touchpad {
-    dwt enabled
-    tap enabled
-    natural_scroll enabled
-    scroll_factor 0.5
-    middle_emulation enabled
+input type:pointer {
+    pointer_accel -0.2
+    accel_profile flat
 }
 
 input type:keyboard {
@@ -37,10 +27,9 @@ input type:keyboard {
 }
 
 focus_follows_mouse no
-gaps inner 3
-gaps outer 5
-
-default_border pixel
+gaps inner 2
+gaps outer 3
+default_border pixel 3
 
 # Change the default sway "blue" to "mauve"
 client.focused #cba6f7 #1e1e2e #cdd6f4 #cba6f7 #cba6f7
@@ -50,15 +39,14 @@ default_floating_border normal 0
 # Logo key. Use Mod1 for Alt.
 set $super Mod4
 
-set $term foot
-set $menu rofi -show drun
-set $browser helium-browser
-
-bindsym $super+Return exec $term
-bindsym $super+Control+Space exec piggy-menu
-bindsym $super+B exec $browser
+bindsym $super+Return exec foot
+bindsym $super+Control+Space exec ~/bin/piggy-menu
+bindsym $super+B exec helium-browser
+bindsym $super+E exec nautilus --new-window
+bindsym $super+N exec ~/bin/launch-or-focus-obsidian
+bindsym $super+S exec ~/bin/screenshot
 bindsym $super+q kill
-bindsym $super+Space exec $menu
+bindsym $super+Space exec rofi -show combi
 bindsym $super+f fullscreen
 
 # Drag (non-)floating windows by holding down $super and left mouse button
@@ -67,8 +55,7 @@ floating_modifier $super normal
 
 # Reload the configuration file
 bindsym $super+Shift+c reload
-# bindsym $super+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
-bindsym $super+Shift+q exec swaymsg exit
+bindsym $super+Shift+Escape exec swaymsg exit
 
 bindsym $super+h focus left
 bindsym $super+j focus down
@@ -80,10 +67,10 @@ bindsym $super+Shift+j move down
 bindsym $super+Shift+k move up
 bindsym $super+Shift+l move right
 
-bindsym $super+Mod1+h resize shrink width 10px
-bindsym $super+Mod1+j resize grow height 10px
-bindsym $super+Mod1+k resize shrink height 10px
-bindsym $super+Mod1+l resize grow width 10px
+bindsym $super+Mod1+h resize shrink width 15px
+bindsym $super+Mod1+j resize grow height 15px
+bindsym $super+Mod1+k resize shrink height 15px
+bindsym $super+Mod1+l resize grow width 15px
 
 bindsym $super+1 workspace number 1
 bindsym $super+2 workspace number 2

@@ -73,6 +73,7 @@ function Terminal:_start_job(cmd, on_create)
   })
   self.buf = vim.api.nvim_get_current_buf()
   vim.bo[self.buf].bufhidden = "hide"
+  vim.bo[self.buf].buflisted = false
 end
 
 ---Ensure the current window is backed by a running terminal buffer.
