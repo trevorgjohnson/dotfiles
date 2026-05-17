@@ -21,15 +21,12 @@ battery() {
     printf '%s  %s%%' "$icon" "$cap"
 }
 
-if [[ -d "/sys/class/power_supply/BAT0" ]]; then
-  has_battery = "y";
-fi
-
 while true; do
-    if [[ -n $has_battery ]]; then
-      printf '%s | %s | %s' "$(battery)" "$(date +'%H:%M  %a %D')"
+    battery=$(battery)
+    if [ -z $battery ]; then
+      printf '%s' "$(date +'%H:%M  %a %D')";
     else
-      printf '%s' "$(date +'%H:%M  %a %D')"
+      printf '%s | %s' "$battery" "$(date +'%H:%M  %a %D')";
     fi
     sleep 1
 done

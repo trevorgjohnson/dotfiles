@@ -1,0 +1,10 @@
+# HINT: Use `swaymsg -t get_outputs` to get the outputs
+output * bg $(find /home/trevo/Pictures/wallpapers/ -type f | shuf -n1) fill
+
+input type:touchpad {
+    dwt enabled
+    tap enabled
+    natural_scroll enabled
+    scroll_factor 0.5
+    middle_emulation enabled
+}

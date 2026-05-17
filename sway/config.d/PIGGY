@@ -1,0 +1,8 @@
+# HINT: Use `swaymsg -t get_outputs` to get the outputs
+output DP-1 bg ~/Pictures/wallpapers/rainworld_newworld.jpg fill res 1920x1080@144Hz pos 0 2560
+output DP-2 bg ~/Pictures/wallpapers/rainworlddeer.png fill res 2560x1400@144Hz pos 0 0 adaptive_sync on disable
+
+input type:pointer {
+    pointer_accel -0.2
+    accel_profile flat
+}
