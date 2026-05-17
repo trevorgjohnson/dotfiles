@@ -49,6 +49,11 @@ vim.keymap.set("n", "<M-h>", "<c-w>5>", opts_w_desc("Decrease window's horizonta
 vim.keymap.set("n", "<S-l>", ":bnext<CR>", opts_w_desc("Switch to the next buffer"))
 vim.keymap.set("n", "<S-h>", ":bprevious<CR>", opts_w_desc("Switch to the previous buffer"))
 
+-- Inspect vim pack plugin state (including any pending updates)
+vim.keymap.set("n", "<leader>ps", function() vim.pack.update(nil, { offline = true }) end, opts_w_desc("Check [P]lugin [S]tatus"))
+-- Update vim pack plugins
+vim.keymap.set("n", "<leader>pu", function() vim.pack.update() end, opts_w_desc("Check [P]lugins and then [U]pdate them"))
+
 -- Move text up and down
 vim.keymap.set("x", "J", ":move '>+1<CR>gv-gv", opts_w_desc("Move the current line up"))
 vim.keymap.set("x", "K", ":move '<-2<CR>gv-gv", opts_w_desc("Move the current line down"))

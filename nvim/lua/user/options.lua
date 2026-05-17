@@ -1,8 +1,9 @@
--- scheduled to decrease startup time
-vim.schedule(function()
-  -- allows neovim to access the system clipboard
-  vim.opt.clipboard = 'unnamedplus'
-end)
+-- cache compiled lua modules for quicker startup time
+vim.loader.enable()
+
+-- allows neovim to access the system clipboard - we schedule this to decrease startup time
+vim.schedule(function() vim.opt.clipboard = 'unnamedplus' end)
+
 vim.o.mouse = "a"   -- allow the mouse to be used in neovim
 
 vim.o.cmdheight = 0 -- more space in the neovim command line for displaying messages
@@ -73,6 +74,11 @@ vim.o.confirm = true
 -- adds rounded borders to hover docs
 vim.o.winborder = 'rounded'
 
+vim.o.autocomplete = true
+vim.o.complete = ".,o" -- use buffer and omnifunc
+vim.o.completeopt = 'fuzzy,menuone,noselect,popup'
+vim.o.pumheight = 7
+
 -- highlight briefly after yanking
 vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking text',
@@ -103,4 +109,8 @@ vim.diagnostic.config {
   float = { border = 'rounded', source = 'if_many' },
   underline = { severity = vim.diagnostic.severity.ERROR },
   virtual_text = { severity = { min = vim.diagnostic.severity.ERROR } },
+  -- auto opens diagnostic floats on [d/]d jumps
+  jump = {
+    on_jump = function(_, bufnr) vim.diagnostic.open_float { bufnr = bufnr, scope = 'cursor', focus = false, } end,
+  },
 }

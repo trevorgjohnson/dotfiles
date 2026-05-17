@@ -18,7 +18,7 @@ export TERMINAL="foot"
 export EDITOR="nvim"
 
 # Set the location of the obsidian vault
-export VAULT=/home/Documents/eighth-ring-of-hell/
+export VAULT=/home/trevo/Documents/eighth-ring-of-hell/
 
 # Colorize man pages with bat
 export MANPAGER="bat -plman"

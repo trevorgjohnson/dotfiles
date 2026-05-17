@@ -52,8 +52,6 @@ function M.render()
 end
 
 -- Initializes the statusline
-function M.init()
-  vim.o.statusline = "%!v:lua.require'user.statusline'.render()"
-end
+vim.o.statusline = "%!v:lua.require'user.statusline'.render()"
 
 return M
