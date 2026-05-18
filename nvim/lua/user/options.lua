@@ -76,8 +76,11 @@ vim.o.winborder = 'rounded'
 
 vim.o.autocomplete = true
 vim.o.complete = ".,o" -- use buffer and omnifunc
+-- vim.o.complete:append('o')
 vim.o.completeopt = 'fuzzy,menuone,noselect,popup'
+-- vim.o.completeopt = { 'menuone', 'noselect' }
 vim.o.pumheight = 7
+vim.o.pumborder = 'rounded'
 
 -- highlight briefly after yanking
 vim.api.nvim_create_autocmd('TextYankPost', {
