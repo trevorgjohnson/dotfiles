@@ -1,7 +1,7 @@
 include "config.d/$(cat /etc/hostname)"
 
 # Set sizes and themes
-set $cursor_size 10
+set $cursor_size 20
 set $cursor_theme Adwaita
 set $gtk_theme catppuccin-mocha-mauve-standard+default
 
