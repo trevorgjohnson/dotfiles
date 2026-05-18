@@ -1,7 +1,7 @@
 include "config.d/$(cat /etc/hostname)"
 
 # Set sizes and themes
-set $cursor_size 24
+set $cursor_size 10
 set $cursor_theme Adwaita
 set $gtk_theme catppuccin-mocha-mauve-standard+default
 
@@ -90,7 +90,6 @@ bindsym --locked XF86MonBrightnessUp exec brightnessctl set 5%+
 # Read `man 5 sway-bar` for more information about this section.
 bar {
     position top
-    # gaps 4
     font "Iosevka Nerd Font 8"
 
     status_command ~/.config/sway/status.sh
