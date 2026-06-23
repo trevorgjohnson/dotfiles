@@ -37,7 +37,7 @@ go_to_menu() {
   *audio*) open_in_term wiremix ;;
   *wifi*) launch_wifi ;;
   *bluetooth*) launch_bluetooth ;;
-  *vpn*) /home/trevo/bin/toggle-vpn ;;
+  *vpn*) open_in_term /home/trevo/bin/toggle-vpn ;;
   *power*) open_in_term /home/trevo/bin/select-tlp-profile ;;
   *suspend*) systemctl suspend ;;
   *restart*) systemctl reboot --no-wall ;;

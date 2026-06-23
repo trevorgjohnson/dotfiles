@@ -1,10 +1,24 @@
 #!/bin/bash
 
-VPN_CONF_NAME=surfshark
-IS_VPN_CONNECTED=$(ip addr show | grep -qF $VPN_CONF_NAME && echo "1")
+# Build fzf input with colored status prefixes
+fzf_input=""
+for conf in /etc/wireguard/*.conf; do
+    [[ -f "$conf" ]] || continue
+    name=$(basename "$conf" .conf)
+    if ip link show "$name" >/dev/null 2>&1; then
+        fzf_input+=$'\033[32m[UP]\033[0m   '"$name"$'\n'
+    else
+        fzf_input+=$'\033[31m[DOWN]\033[0m '"$name"$'\n'
+    fi
+done
 
-if [[ -z $IS_VPN_CONNECTED ]]; then
-    $TERMINAL -e sudo wg-quick up surfshark
-else 
-    $TERMINAL -e sudo wg-quick down surfshark
-fi 
+selected=$(printf '%s' "$fzf_input" | fzf --ansi --prompt="Select VPN to toggle > " --preview='name=$(echo {} | sed "s/\x1b\[[0-9;]*m//g; s/^\[UP\]   //; s/^\[DOWN\] //"); ip link show $name >/dev/null 2>&1 && wg show $name || echo disconnected') || exit 0
+
+# Extract the config name (strip ANSI codes and status prefix)
+name=$(echo "$selected" | sed 's/\x1b\[[0-9;]*m//g; s/^\[UP\]   //; s/^\[DOWN\] //')
+
+if ip link show "$name" >/dev/null 2>&1; then
+    sudo wg-quick down "$name"
+else
+    sudo wg-quick up "$name"
+fi
