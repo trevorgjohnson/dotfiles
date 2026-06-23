@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# ------------------------------------------------------------------------------
+# download-latest-yt — Download the latest N videos from a YouTube channel,
+# optionally filtering by max video duration and quality.
+#
+# Usage: download-latest-yt <channel> <count> [-q best|high] [-t max-seconds]
+#
+#   channel    YouTube channel URL or @handle (e.g. @NoodleAndPals)
+#   count      How many of the latest videos to download
+#   -q, --quality   "high" (1080p, default) or "best" (max available)
+#   -t, --maxtime   Skip videos longer than this many seconds
+#
+# Writes best video+audio (merged, mp4) to the current working directory.
+# ------------------------------------------------------------------------------
+
+usage() {
+  sed -n 's/^# //p' "$0" | head -11
+  exit 1
+}
+
+# --- defaults -----------------------------------------------------------------
+
+QUALITY="high"
+MAX_DURATION=""
+
+# --- parse args ---------------------------------------------------------------
+
+[[ $# -ge 2 ]] || usage
+
+CHANNEL="$1"
+COUNT="$2"
+shift 2
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -q|--quality)
+      QUALITY="$2"
+      shift 2
+      ;;
+    -t|--maxtime)
+      MAX_DURATION="$2"
+      shift 2
+      ;;
+    -h|--help)
+      usage
+      ;;
+    *)
+      echo "Unknown flag: $1" >&2
+      usage
+      ;;
+  esac
+done
+
+if [[ "$QUALITY" != "best" && "$QUALITY" != "high" ]]; then
+  echo "Quality must be 'best' or 'high'" >&2
+  exit 1
+fi
+
+# --- build yt-dlp args --------------------------------------------------------
+
+YT_DLP_ARGS=(
+  --no-playlist
+  --playlist-end "$COUNT"
+  --merge-output-format mp4
+  --output "%(title)s.%(ext)s"
+)
+
+case "$QUALITY" in
+  high)
+    YT_DLP_ARGS+=(--format "bestvideo[height<=1080]+bestaudio/best")
+    ;;
+  best)
+    YT_DLP_ARGS+=(--format "bestvideo+bestaudio/best")
+    ;;
+esac
+
+if [[ -n "$MAX_DURATION" ]]; then
+  YT_DLP_ARGS+=(--match-filter "duration <= $MAX_DURATION")
+fi
+
+YT_DLP_ARGS+=("https://www.youtube.com/${CHANNEL}")
+
+# --- run ----------------------------------------------------------------------
+
+exec yt-dlp "${YT_DLP_ARGS[@]}"

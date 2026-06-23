@@ -29,6 +29,12 @@ eval "$(starship init bash)"
 # Add zoxide (or `z`) to a smarter cd
 eval "$(zoxide init bash)"
 
+# Force Wayland
+export GDK_BACKEND=wayland,x11,*
+export ELECTRON_OZONE_PLATFORM_HINT=wayland
+export OZONE_PLATFORM=wayland
+export XDG_SESSION_TYPE=wayland
+
 # alias common unix cli tools with newer/modern alternatives
 alias ls='ls --color=auto'
 alias grep='rg --color=auto'
