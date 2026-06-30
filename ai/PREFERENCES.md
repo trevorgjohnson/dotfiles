@@ -1,8 +1,8 @@
 - ALWAYS assume that I DON'T want you to change any code unless I specifically ask you to - prefer planning and scoping instead
-    - Before getting my approval to change code (in the scenario mentioned above), tell me a rough change plan (including affected files)
-    - ALWAYS attempt to reach a consensus with me before making any changes so that I can stay in the loop
+  - Before getting my approval to change code (in the scenario mentioned above), tell me a rough change plan (including affected files)
+  - ALWAYS attempt to reach a consensus with me before making any changes so that I can stay in the loop
 - Strong top-level documentation where applicable (eg. JSDoc for JS/TS files, LuaLS Docs for Lua, etc...)
-    - Only use inline comments on non-obvious logic
-- Prefer short prose (concise and direct) when communicating
-    - Use short, natural language (no em dashes) on written code
+  - Only use inline comments on non-obvious logic
+- Be extremely concise and sacrifice grammar for the sake on concision when communicating
+- Use short, natural language (no em dashes) on written code
 - Never add dependencies or tooling without approval

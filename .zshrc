@@ -43,7 +43,7 @@ function g() {
 }
 
 # alias cat to bat (for color)
-alias cat='bat -p --color=auto'
+alias cat='bat -p --theme="Catppuccin-mocha"'
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
