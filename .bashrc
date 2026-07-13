@@ -24,7 +24,29 @@ export VAULT=/home/trevo/Documents/eighth-ring-of-hell/
 export MANPAGER="bat -plman"
 
 # Stylize the shell
-source ./prompt.sh
+__set_prompt() {
+    local reset='\[\e[0m\]'
+    local c_text='\[\e[38;2;205;214;244m\]'
+    local c_sky='\[\e[38;2;137;220;235m\]'
+    local c_mauve='\[\e[38;2;202;158;230m\]'
+    local c_red='\[\e[38;2;243;139;168m\]'
+    local c_yellow='\[\e[38;2;249;226;175m\]'
+
+    local git='' st head branch
+    st=$(git status --porcelain -b 2>/dev/null)
+    if [[ -n $st ]]; then
+        head=${st%%$'\n'*}
+        head=${head#'## '}
+        branch=${head%%...*}
+        git=" ${c_mauve}${branch}${reset}"
+        [[ $st == *$'\n'* ]] && git+=" ${c_red}!${reset} "
+        [[ $head == *'ahead '* ]] && { local a=${head#*ahead }; git+=" ${c_yellow}↑ ${a%%[!0-9]*}${reset}"; }
+        [[ $head == *'behind '* ]] && { local b=${head#*behind }; git+=" ${c_yellow}↓ ${b%%[!0-9]*}${reset}"; }
+    fi
+
+    PS1="${c_text}\u@\h${reset}:${c_sky}\w${reset}${git}\\\$ ${reset}"
+}
+PROMPT_COMMAND=__set_prompt
 
 # Add zoxide (or `z`) to a smarter cd
 eval "$(zoxide init bash)"

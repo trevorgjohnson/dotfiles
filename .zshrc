@@ -14,7 +14,31 @@ export PATH="$PATH:$HOME/.config/dotfiles/bin"
 export PATH="$PATH:$HOME/work_bin"
 
 # Stylize the shell
-source ./prompt.sh
+__set_prompt() {
+    local esc=$'\e'
+    local reset="%{${esc}[0m%}"
+    local c_text="%{${esc}[38;2;205;214;244m%}"
+    local c_sky="%{${esc}[38;2;137;220;235m%}"
+    local c_mauve="%{${esc}[38;2;202;158;230m%}"
+    local c_red="%{${esc}[38;2;243;139;168m%}"
+    local c_yellow="%{${esc}[38;2;249;226;175m%}"
+
+    local git='' st head branch
+    st=$(git status --porcelain -b 2>/dev/null)
+    if [[ -n $st ]]; then
+        head=${st%%$'\n'*}
+        head=${head#'## '}
+        branch=${head%%...*}
+        branch=${branch//\%/%%}  # escape % so zsh does not treat it as a prompt token
+        git=" ${c_mauve}${branch}${reset}"
+        [[ $st == *$'\n'* ]] && git+=" ${c_red}!${reset} "
+        [[ $head == *'ahead '* ]] && { local a=${head#*ahead }; git+=" ${c_yellow}↑ ${a%%[!0-9]*}${reset}"; }
+        [[ $head == *'behind '* ]] && { local b=${head#*behind }; git+=" ${c_yellow}↓ ${b%%[!0-9]*}${reset}"; }
+    fi
+
+    PROMPT="${c_text}%n@%m${reset}:${c_sky}%~${reset}${git}%(#.#.$) ${reset}"
+}
+precmd_functions+=(__set_prompt)
 
 # nvim
 export EDITOR=nvim
