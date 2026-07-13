@@ -111,9 +111,33 @@ Note: separate PRs that touch related-but-distinct targets are **not**
 duplicates (e.g. a node `bullseye` image and a node `bullseye-slim` image are
 different Dockerfile lines — keep both).
 
-After deduplication, present the user with:
-- A table of PRs to merge (number, title, branch).
-- A table of PRs to skip/close as duplicates.
+## Step 2b — Flag major-version bumps for delegation
+
+Major-version bumps often carry breaking changes that don't belong in a routine
+batch (e.g. a `typescript` 5→7 jump, or a framework major). Forcing one in can
+break the build/typecheck for reasons unrelated to the rest of the batch, and
+burying a breaking change in a batch PR hides work that deserves its own review.
+
+For each PR whose bump crosses a **major version** (semver `X.0.0`):
+- Call it out to the user **before merging**, with the from→to versions.
+- **Recommend excluding it** and delegating it to a dedicated tech-debt ticket
+  rather than merging it into the batch. Leave it per-PR — some majors are safe
+  and belong in the batch; let the user decide.
+
+When the user opts to delegate a major, use the `/jira` skill to:
+1. Create a tech-debt ticket describing the upgrade, the from→to versions, and
+   any blocker(s) found (peer-dep conflicts, build failures). Reference the dep
+   PR number and any similar prior ticket. Labels: `tech-debt` + the repo's
+   product label (e.g. `boats`).
+2. Close the dep PR with a comment pointing at the new ticket (not the
+   duplicate/batch comment).
+3. **Tell the user to set `parent` (epic) and `sprint` manually** — acli can't
+   set those fields cleanly, so don't attempt it; just suggest the values.
+
+After deduplication and major-bump triage, present the user with:
+- A table of PRs to **merge** (number, title, branch).
+- A table of PRs to **skip/close as duplicates**.
+- A table of PRs to **delegate to a ticket** (major bumps), if any.
 
 Ask the user to confirm before proceeding.
 
@@ -250,6 +274,10 @@ gh pr close <number> --repo "$REPO" \
 For PRs that **failed** to merge, do not close them — leave them open and
 note them in the summary.
 
+Major bumps **delegated to a ticket** (Step 2b) were already closed at
+delegation time with a ticket-reference comment — don't re-close them here or
+apply the batch comment.
+
 ## Step 7 — Push and monitor CI
 
 The assistant **cannot** run `git push` — a local git hook blocks it. Ask the
@@ -315,6 +343,9 @@ Merged PRs (N):
 
 Closed as duplicates (N):
   #<num>  <title>  (duplicate of #<kept-num>)
+
+Delegated to ticket (N):
+  #<num>  <title>  — <TICKET-KEY> (set parent/sprint manually)
 
 Failed / skipped (N):
   #<num>  <title>  — reason: <conflict details>

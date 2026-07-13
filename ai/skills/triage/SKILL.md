@@ -19,6 +19,7 @@ Read the issue description and identify which layers are plausibly involved.
 |-------------|-------------------------|------------------------------------|----------------------------------|
 | Frontend    | `../platform-frontend`  | `kube_namespace:procap-platform-frontend` | —                           |
 | Platform BE | `../platform-backend`   | `kube_namespace:procap-platform-backend`  | `{env}-platform`, `{env}-procap` |
+| ProKeys     | `../mobile-prokeys-ios` | —                                  | —                                |
 | Boats BE    | `../boats-backend`      | `kube_namespace:procap-boats-backend`     | `{env}-boats`                    |
 | Chain       | `../cows` (contracts)   | —                                  | —                                |
 
@@ -26,6 +27,8 @@ Data flows:
 - **FE → Platform BE**: GraphQL
 - **Platform BE → Boats BE**: BullQueue jobs
 - **Boats BE → Chain**: Ethereum RPC calls
+- **ProKeys ↔ Platform BE**: GraphQL (ProCap) — polls `getDasWithdrawalsForSigning` for pending approvals, returns approver signatures via `signedByApproverDasWithdrawal`
+- **ProKeys → Chain**: approver signatures are verified on-chain by the `cows` contracts
 
 Only pull in layers that are plausibly relevant. Start narrow; expand if necessary.
 
