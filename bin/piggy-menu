@@ -38,7 +38,7 @@ go_to_menu() {
   *wifi*) launch_wifi ;;
   *bluetooth*) launch_bluetooth ;;
   *vpn*) open_in_term /home/trevo/bin/toggle-vpn ;;
-  *power*) open_in_term /home/trevo/bin/select-tlp-profile ;;
+  *power*) open_in_term /home/trevo/bin/select-power-profile ;;
   *suspend*) systemctl suspend ;;
   *restart*) systemctl reboot --no-wall ;;
   *shutdown*) systemctl poweroff --no-wall ;;

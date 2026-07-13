@@ -8,3 +8,10 @@ input type:touchpad {
     scroll_factor 0.5
     middle_emulation enabled
 }
+
+# Idle management: dim (60s) -> screen off (65s) -> suspend (300s)
+exec swayidle -w \
+    timeout 60 'brightnessctl set 0%' resume 'brightnessctl set 100%' \
+    timeout 65 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
+    timeout 300 'systemctl suspend' \
+    before-sleep 'swaylock -f'

@@ -49,6 +49,7 @@ floating_modifier $super normal
 # Reload the configuration file
 bindsym $super+Shift+c reload
 bindsym $super+Shift+Escape exec swaymsg exit
+bindsym $super+Escape exec swaylock -f
 
 bindsym $super+h focus left
 bindsym $super+j focus down

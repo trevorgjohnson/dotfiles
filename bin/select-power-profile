@@ -1,0 +1,5 @@
+#!/bin/bash
+
+PROFILES=$(powerprofilesctl list | awk '/^\s*(\*\s*)?[a-zA-Z-]+:$/ { gsub(/^[*[:space:]]+|:$/,""); print }')
+SELECTED_PROFILE=$(printf "%s\n" "${PROFILES[@]}" | fzf)
+powerprofilesctl set "$SELECTED_PROFILE"

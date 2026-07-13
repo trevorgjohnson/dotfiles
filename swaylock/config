@@ -1,0 +1,33 @@
+# Catppuccin Mocha (mauve)
+color=1e1e2e
+font=Iosevka Nerd Font
+
+# Indicator
+indicator-radius=25
+indicator-thickness=5
+indicator-idle-visible
+
+# Ring colors
+ring-color=45475a
+ring-clear-color=b4befe
+ring-ver-color=cba6f7
+ring-wrong-color=f38ba8
+
+# Inside colors
+inside-color=00000000
+inside-clear-color=00000000
+inside-ver-color=00000000
+inside-wrong-color=00000000
+
+# Text
+text-color=cdd6f4
+text-clear-color=cdd6f4
+text-ver-color=cdd6f4
+text-wrong-color=f38ba8
+
+# Key highlights
+key-hl-color=cba6f7
+bs-hl-color=f38ba8
+
+# Hide separator for minimal look
+separator-color=00000000
