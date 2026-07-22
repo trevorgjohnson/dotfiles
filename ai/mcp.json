@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "fin": {
+      "command": "cargo",
+      "args": ["run"],
+      "cwd": "/home/trevo/Documents/git/fin-mcp",
+      "lifecycle": "lazy",
+      "directTools": true
+    }
+  }
+}

@@ -60,7 +60,7 @@ export XDG_SESSION_TYPE=wayland
 # alias common unix cli tools with newer/modern alternatives
 alias ls='ls --color=auto'
 alias grep='rg --color=auto'
-alias cat='bat -p --theme="Catppuccin-mocha"'
+alias cat='bat -p --theme="Catppuccin Mocha"'
 alias cd='z'
 
 # add fzf to shell
