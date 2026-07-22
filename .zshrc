@@ -63,6 +63,9 @@ export FZF_DEFAULT_OPTS=" \
 --color=border:#6C7086,label:#CDD6F4"
 bindkey "ç" fzf-cd-widget # For OSX, Alt-C outputs 'ç' which should use 'fzf-cd-widget' instead
 
+# Disables vi-mode
+bindkey -e
+
 # prevent C-d terminating the shell
 setopt ignore_eof 
 

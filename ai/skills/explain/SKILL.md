@@ -114,6 +114,12 @@ script that emits the SVG keeps it accurate and consistent with the running exam
 geometry and never hit a CDN/remote image. Style to the palette. Wrap in `<figure>` + `<figcaption>`
 and make it responsive (`width:100%; height:auto`).
 
+**Never hand-align ASCII-art diagrams in `<pre>` for spatial or sequence flows** (party-to-party message
+exchanges, data-flow layouts, anything with columns that must line up). Space-counted column alignment
+silently breaks across fonts (Iosevka missing, fallback metrics differ) and it forces raw `^`/`_`
+notation. Use an inline SVG sequence/flow diagram instead. Left-aligned pseudocode in `<pre>` is fine;
+spatial ASCII art is not.
+
 **The typed-wire flowchart** is the gold-standard "how the pieces connect" figure for any
 multi-step construction (algorithms, protocols, derivations). Model it on the best reference:
 
@@ -142,6 +148,11 @@ dependencies, no network.
 
 The document is **fully self-contained**: all CSS, JS, and SVG inlined, no CDN, no network fetches.
 It renders offline and prints cleanly.
+
+The document **must** begin with `<meta charset="utf-8" />` as the first line of the head (before the
+`<title>`). Without it, a browser opening the file over `file://` guesses the encoding and decodes the
+UTF-8 bytes as Latin-1, mangling all the Unicode math (superscripts, subscripts, symbols) into mojibake
+(e.g. `2⁰..2¹⁰` renders as `2â °..2Â¹â °`). This is non-negotiable for any doc using Unicode math.
 
 ### Palette and type
 
@@ -219,8 +230,11 @@ reference material; design around it.)
 Default to **Unicode + styled HTML** for inline expressions, sub/superscripts, and single-line
 equations, in a `.math` span in the accent color. Render sub/superscripts as real `<sub>`/`<sup>`
 tags or Unicode (`x₁`, `k⁻¹`), never literal LaTeX underscores (`u_A` reads as a bug; write
-`u<sub>A</sub>`). On multi-line code/equation blocks set `white-space:pre-wrap` and keep each line
-short so it doesn't wrap mid-content.
+`u<sub>A</sub>`). This holds inside code/pseudocode panels and SVG `<text>` too, not only prose. Unicode
+subscripts are incomplete (there is no subscript `b`, `c`, `d`, ...), so use real `<sub>` tags in HTML or
+`baseline-shift="sub"` tspans in SVG for letter subscripts; reserve Unicode subscripts for the ones that
+exist. On multi-line code/equation blocks set `white-space:pre-wrap` and keep each line short so it
+doesn't wrap mid-content.
 
 Reach for **KaTeX only when Unicode gets genuinely cramped** (multi-level fractions, matrices, large
 operators with limits, aligned multi-line derivations). Then vendor it locally: inline it, or drop a
