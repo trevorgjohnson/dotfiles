@@ -1,6 +1,6 @@
 ---
 name: eli5
-description: Explains any topic in Reddit ELI5 style: plain adult vocabulary, 5-year-old conceptual framing, no jargon or assumed knowledge. Trigger on `/eli5 {topic}`.
+description: "Explains any topic in Reddit ELI5 style: plain adult vocabulary, 5-year-old conceptual framing, no jargon or assumed knowledge. Trigger on `/eli5 {topic}`."
 triggers:
   - /eli5
 ---
