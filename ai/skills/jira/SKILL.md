@@ -2,51 +2,30 @@
 name: jira
 version: 1.0.0
 description: >-
-  Create, view, search, edit, transition, and manage Jira tickets.
+  Create, view, search, edit, transition, and manage Jira tickets via the Atlassian CLI (acli).
 argument-hint: '[create|view|search|edit|transition|comment|assign|link] [details]'
 ---
 
 # Jira Ticket Management
 
-Manage Jira tickets using the Atlassian CLI (`acli`). Always prefer `acli` over any MCP-based Atlassian tools — it
-uses local authentication with appropriate permissions scoped to the user's Jira access.
+Use `acli` for all Jira work. Consult `acli jira workitem --help` for the interface.
 
-## Before every operation
+**Never use the `mcp__claude_ai_Atlassian__*` tools.** `acli` uses local auth scoped to the user's
+Jira access and is the established workflow.
 
-Run these checks in order before executing any acli command. Do all three in a single Bash call to keep it fast.
+## Auth
 
-```bash
-which acli && acli --version && acli auth status 2>&1
-```
+`acli auth login` is interactive (site selection prompt) and cannot run from the Bash tool. If auth
+status is not `✓ Authenticated`, or a command returns 401, tell the user to run it in their own
+terminal and select `prometheum.atlassian.net`. There is no refresh command, so token renewal always
+means the full interactive flow. Wait for them to confirm before continuing.
 
-### If acli is not installed
+The message "Following apps are not authenticated with your global profile: Jira, Confluence" is
+informational, not a broken session.
 
-Tell the user and offer to install:
+Install, if missing: `brew tap atlassian/homebrew-acli && brew install acli`.
 
-```bash
-brew tap atlassian/homebrew-acli
-brew install acli
-```
-
-### If not authenticated or token expired
-
-Check the `acli auth status` output. If it does not show `✓ Authenticated`, or if a command fails with a 401 or
-permission error, the user needs to re-authenticate.
-
-**`acli auth login` requires interactive input** (site selection prompt) and cannot be run from Claude Code's Bash
-tool. Instruct the user to do the following in their own terminal:
-
-1. Run `acli auth login`
-2. Select the `prometheum.atlassian.net` site when prompted
-3. Complete the OAuth flow in the browser that opens
-
-Wait for the user to confirm they've authenticated before proceeding. acli has no token refresh command — token renewal
-always requires this full interactive login flow.
-
-> **Note**: The message "Following apps are not authenticated with your global profile: Jira, Confluence" is
-> informational and does not indicate a broken session. Commands will work as long as `✓ Authenticated` is shown.
-
-## Key Projects
+## Key projects
 
 | Key   | Name            | Notes                          |
 | ----- | --------------- | ------------------------------ |
@@ -59,153 +38,11 @@ always requires this full interactive login flow.
 | QA    | QA              | Quality assurance              |
 | SUP   | Support         | Support tickets                |
 
-## Commands
-
-### View a ticket
-
-```bash
-acli jira workitem view KEY-123
-acli jira workitem view KEY-123 --json
-acli jira workitem view KEY-123 --fields '*all'
-```
-
-### Search tickets
-
-```bash
-acli jira workitem search --jql "project = INF AND status = 'To Do'" --limit 20
-acli jira workitem search --jql "project = INF AND assignee = currentUser()" --limit 20
-acli jira workitem search --jql "project = INF AND text ~ 'search term'" --limit 20
-acli jira workitem search --jql "project = INF AND status not in (Done) ORDER BY created DESC" --limit 10
-```
-
-### JQL syntax notes
-
-- **Never use `!=`** — the `!` character is treated as an escape prefix by `acli`'s JQL parser and causes
-  `illegal jql escape sequence` errors. Use `not in (value)` instead: `status not in (Done)`.
-- **Quote string values** — wrap multi-word status names in single quotes: `status = 'To Do'`,
-  `status = 'In Progress'`.
-- **Text search** — use `text ~ 'term'` for full-text search across summary and description fields.
-
-### Create a ticket
-
-```bash
-acli jira workitem create \
-  --project "INF" \
-  --type "Task" \
-  --summary "[PROJECT] Brief title" \
-  --description-file /tmp/ticket.json
-```
-
-Supported types: Task, Bug, Story, Epic, Sub-task.
-
-Use `--assignee "@me"` to self-assign, or an email address for others.
-
-**Never use `--description` with plain text.** Always write the description as ADF JSON to a temp file and pass it
-via `--description-file`. This ensures headings, bullet lists, and inline code render correctly in Jira.
-
-### Edit a ticket
-
-```bash
-acli jira workitem edit --key "KEY-123" --summary "Updated title"
-acli jira workitem edit --key "KEY-123" --description "Updated description"
-acli jira workitem edit --key "KEY-123" --labels "label1,label2"
-acli jira workitem edit --key "KEY-123" --type "Bug"
-```
-
-### Transition a ticket
-
-```bash
-acli jira workitem transition --key "KEY-123" --status "In Progress"
-acli jira workitem transition --key "KEY-123" --status "Done"
-acli jira workitem transition --key "KEY-123" --status "To Do"
-```
-
-**Note**: Not all transitions are allowed from every status. Service request tickets (PITM project) use a different
-workflow — "Done" may not be a valid transition. Try "Resolved" instead. If a transition fails with "No allowed
-transitions found", check the current status and try alternative target statuses.
-
-### Assign a ticket
-
-```bash
-acli jira workitem assign --key "KEY-123" --assignee "@me"
-acli jira workitem assign --key "KEY-123" --assignee "<user>@prometheum.com"
-acli jira workitem assign --key "KEY-123" --remove-assignee
-```
-
-### Comment on a ticket
-
-**Plain text comments:**
-
-```bash
-acli jira workitem comment create --key "KEY-123" --body "Comment text here"
-```
-
-**Formatted comments (code blocks, etc.):**
-
-The `--body` flag treats content as plain text — wiki markup (`{code}`) and markdown (triple backticks) are **not**
-rendered. For formatted comments, use Atlassian Document Format (ADF) via `--body-file`:
-
-```bash
-# Write ADF JSON to a temp file, then pass it
-acli jira workitem comment create --key "KEY-123" --body-file /tmp/comment.json
-```
-
-ADF code block example:
-
-```json
-{
-  "version": 1,
-  "type": "doc",
-  "content": [
-    {
-      "type": "codeBlock",
-      "attrs": { "language": "json" },
-      "content": [
-        { "type": "text", "text": "your code here" }
-      ]
-    }
-  ]
-}
-```
-
-Write the ADF JSON to a temp file, then pass it:
-
-```bash
-acli jira workitem comment create --key "KEY-123" --body-file /tmp/comment.json
-```
-
-### Link tickets
-
-```bash
-acli jira workitem link create --out KEY-123 --in KEY-456 --type "Blocks"
-```
-
-## Output handling
-
-Default output is a formatted table. Use these flags to control output:
-
-| Flag        | Available on    | Use when                                          |
-| ----------- | --------------- | ------------------------------------------------- |
-| `--json`    | `view`, `search`| Parsing output programmatically with `jq`         |
-| `--csv`     | `search`        | Clean tabular export, good for sharing or piping  |
-| `--count`   | `search`        | Just need the total number of matching tickets    |
-| `--fields`  | `view`, `search`| Limit which fields are returned                   |
-
-```bash
-# CSV export of open tickets
-acli jira workitem search --jql "project = INF AND status not in (Done)" --csv
-
-# Count without fetching details
-acli jira workitem search --jql "project = INF AND status = 'To Do'" --count
-
-# Only return specific fields
-acli jira workitem view INF-123 --fields "key,status,assignee"
-```
+Default to INF unless the user says otherwise. New tickets default to Backlog.
 
 ## Labels
 
-When creating or editing tickets, suggest appropriate labels from this list. All labels should be lowercase or
-kebab-case. Avoid creating new variants of labels that already exist.
+Suggest from this list rather than inventing variants. All lowercase or kebab-case.
 
 | Label       | Use for                                      |
 | ----------- | -------------------------------------------- |
@@ -219,182 +56,70 @@ kebab-case. Avoid creating new variants of labels that already exist.
 | `tech-debt` | Technical debt, refactoring, cleanup         |
 | `unplanned` | Ad-hoc work not part of a sprint or PI       |
 
-## Ticket Conventions
+## Gotchas
 
-### Summary naming
+**JQL: never use `!=`.** `acli`'s JQL parser treats `!` as an escape prefix and errors with
+`illegal jql escape sequence`. Use `not in (value)`. Quote multi-word values (`status = 'To Do'`).
+Full-text search is `text ~ 'term'`.
 
-Always prefix the summary with the project key in brackets. This applies to all tickets regardless of project.
+**Descriptions must be ADF JSON, never plain text.** `--description` renders as raw markdown in Jira.
+Write ADF to `/tmp/<key>-desc.json` and pass `--description-file`. Same for comments: `--body` is
+plain text and ignores both wiki markup and backticks, so formatted comments need `--body-file`.
+For inline code inside an ADF text node, use the `code` mark.
 
-Title style: short imperative verb phrase — write what the ticket does, not what the problem is. No colons, dashes, or special characters beyond the `[PROJECT]` prefix. Keep it conversational and scannable.
+**`acli jira workitem edit` cannot set parent (epic) or sprint.** It exposes only `--summary`,
+`--description[-file]`, `--type`, `--labels`, `--remove-labels`, `--assignee`, `--from-json`,
+`--generate-json`. Do not fight it: create or edit the ticket, then tell the user the parent and
+sprint values to set manually.
 
-Good examples:
-- `[BLOC] Fix withdrawal batch validation`
-- `[BOATS] Improve error handling around gas pricing`
-- `[PLAT] Migrate auth service to vite`
-- `[PCAP] Fix types in detect deposit module`
+**Transitions are workflow-dependent.** Not every status is reachable from every other. Service
+request tickets (PITM) use a different workflow where `Done` may be invalid; try `Resolved`. On
+"No allowed transitions found", check current status and try alternatives.
 
-Avoid: subtitles after a colon or dash, listing multiple things joined by punctuation, overly technical jargon in the summary.
+## Ticket conventions
 
-### Description structure
+### Summary
 
-Every ticket description must use these three sections in order, as ADF level-2 headings:
+Always prefix with the project key in brackets. Title style is a short imperative verb phrase saying
+what the ticket does, not what the problem is. No colons, dashes, subtitles, or enumerated lists of
+multiple things. Keep it scannable.
 
-1. **Context** — Why this ticket exists. Background, the problem, relevant history, or the trigger (e.g. a compiler
-   bug, a deprecation notice, a compliance requirement). No implementation detail here.
-2. **Technical Context** — What needs to be done. Specific files, functions, patterns, flags, or steps involved.
-   Use inline code formatting (`code`) for all identifiers, flags, and values. Bullet list format.
-3. **AC** — Acceptance criteria. Concrete, verifiable conditions that define done. Bullet list format.
+- Good: `[BLOC] Fix withdrawal batch validation`
+- Bad: `[PCAP] DB Write Correctness - DirectDeposit Atomicity and Find-or-Create Race Condition`
 
-Write descriptions with enough detail that someone unfamiliar with the immediate context can pick up the ticket and
-understand what to do and why. Use inline code for all symbol names, config keys, file names, and values.
+### Description
 
-### Voice and language
+Three sections in order, as ADF level-2 headings:
 
-When writing Context, Technical Context, and AC sections, match the voice of the boats-backend codebase:
+1. **Context**: why this ticket exists. Background, the problem, the trigger (a compiler bug, a
+   deprecation, a compliance requirement). No implementation detail.
+2. **Technical Context**: what needs doing. Specific files, functions, patterns, flags, steps.
+   Bullet list.
+3. **AC**: acceptance criteria. Concrete, verifiable conditions defining done. Bullet list.
 
-**Prose and identifier formatting**
-- Wrap all identifiers, flags, file names, function names, and config keys in backticks — both in bullet prose and in ADF inline code marks. No exceptions.
-- Never use em dashes. Use a comma, parenthetical, or a new sentence instead.
-- No subtitles or colons mid-sentence in headings or bullet leads.
+Write so someone without the immediate context can pick it up. Wrap every identifier, flag, file
+name, and config key in backticks, in both bullet prose and ADF `code` marks. No em dashes. When
+quoting what a method logs or throws, match the boats-backend phrasing rather than inventing a
+format.
 
-**Error and log message patterns**
-When describing what a method logs or throws, use these exact patterns:
-- "An error occurred while `<gerund phrase>`" — for caught/rethrown errors
-- "Failed to `<verb>` `<thing>`" — for outright failures
-- "`<Thing>` failed for `<identifier>`" — for job/pipeline failures (e.g. "Blockchain Transaction failed for CASTL Blockchain Transaction `uuid`")
-- "started processing for" / "finished processing for" / "failed processing for" — for job lifecycle log messages
+## Creating a ticket
 
-**Comment style (when referencing code in ticket prose)**
-- Short and lowercase after `//`
-- Imperative, no trailing period: "Validate the job data", "Return status casted to `TransactionProcessStatus`"
-- Identifiers in backticks even inside inline comment quotes
+1. Gather fields with `AskUserQuestion` (type, project, assignee, business unit), then collect
+   summary, description, and labels.
+2. Search first, to catch duplicates.
+3. Present the full ticket for review, description prose included.
+4. **Get explicit confirmation. Never run create until the user confirms.**
+5. Write the ADF file, run create with `--description-file`, then show the key and link.
 
-**JSDoc-style method descriptions**
-When the Technical Context describes a method or function, open with an action verb in present tense:
-- "Retrieves", "Processes", "Creates", "Sets", "Sends"
-- Follow with a noun phrase, then a sentence about edge cases if relevant (e.g. "Will return `null` if no record was found.")
-- `@param` descriptions are lowercase noun phrases, not full sentences
+Creating a batch (e.g. from a PRD breakdown): `TaskCreate` per ticket up front, mark each completed
+as it lands, so the user sees live progress.
 
-### ADF requirement
+## Output
 
-**Always write descriptions as ADF JSON**, never plain text. The `--description` flag renders as raw markdown in
-Jira. Workflow:
-
-1. Write the ADF JSON to `/tmp/<key>-desc.json`
-2. Pass it with `--description-file /tmp/<key>-desc.json` on create or edit
-
-ADF description template:
-
-```json
-{
-  "version": 1,
-  "type": "doc",
-  "content": [
-    {
-      "type": "heading",
-      "attrs": { "level": 2 },
-      "content": [{ "type": "text", "text": "Context" }]
-    },
-    { "type": "paragraph", "content": [{ "type": "text", "text": "..." }] },
-    {
-      "type": "heading",
-      "attrs": { "level": 2 },
-      "content": [{ "type": "text", "text": "Technical Context" }]
-    },
-    {
-      "type": "bulletList",
-      "content": [
-        {
-          "type": "listItem",
-          "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "..." }] }]
-        }
-      ]
-    },
-    {
-      "type": "heading",
-      "attrs": { "level": 2 },
-      "content": [{ "type": "text", "text": "AC" }]
-    },
-    {
-      "type": "bulletList",
-      "content": [
-        {
-          "type": "listItem",
-          "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "..." }] }]
-        }
-      ]
-    }
-  ]
-}
-```
-
-For inline code within ADF text nodes, use the `code` mark:
-
-```json
-{ "type": "text", "text": "someIdentifier", "marks": [{ "type": "code" }] }
-```
-
-## Workflow Guidelines
-
-### Creating a ticket
-
-Follow this flow — never skip the confirmation step:
-
-1. **Gather details** — use `AskUserQuestion` to collect the core fields in one structured prompt before asking for prose details:
-
-   ```
-   Let me gather some details:
-
-   Type: Task / Bug / Story / Epic / Sub-task
-   Project: INF / PLAT / PROAT / PCAP / BLOC / PB / QA / SUP / other
-   Assignee: Me (@me) / Someone else (provide email) / Unassigned
-   Business unit: ProATS / ProCap / Neither
-   ```
-
-   Then collect summary, description, labels, and any other fields through follow-up questions.
-
-   When **creating multiple tickets in a batch** (e.g. from a PRD breakdown), call `TaskCreate` for each ticket before starting. Mark each `completed` as the ticket is created in Jira. This gives the user live progress when creating many tickets at once.
-2. **Present a summary** — Show the ticket in a clean table for review, including the full prose description:
-
-   ```markdown
-   | Field       | Value                                      |
-   | ----------- | ------------------------------------------ |
-   | Project     | BLOC                                       |
-   | Type        | Task                                       |
-   | Summary     | [BLOC] Brief title here                    |
-   | Status      | Backlog                                    |
-   | Assignee    | Unassigned                                 |
-   | Labels      | —                                          |
-
-   **Context**
-   ...
-
-   **Technical Context**
-   - ...
-
-   **AC**
-   - ...
-   ```
-
-3. **Get explicit confirmation** — Do NOT run the create command until the user confirms. Ask "Does this look good?"
-4. **Write the ADF file** — Construct the full ADF JSON and write to `/tmp/<key>-desc.json`.
-5. **Create the ticket** — Run `acli jira workitem create` with `--description-file`.
-6. **Show the result** — Display the created ticket key and a link.
-
-## Best practices
-
-- **Search before creating** — check for duplicates first
-- **Always confirm** ticket details with the user before running create/edit/transition commands
-- **Default project is INF** unless the user specifies otherwise
-- **Default status is Backlog** — new tickets go to the backlog unless the user says otherwise
-- **Descriptions always use ADF** — never `--description` with plain text; always `--description-file` with ADF JSON
-- **Assignee** — ask whether to assign. Options: self (`@me`), another user (by email), or unassigned (omit the flag)
-- Use `--count` to get totals instead of fetching all tickets and counting locally
-- Use `--csv` or `--json` when you need to parse output programmatically
-- If a request returns a 401, instruct the user to re-authenticate with `acli auth login` in their terminal
-- If a JQL query fails, check for `!=` (use `not in` instead) and unquoted multi-word values
+`--json` (view, search) for `jq` parsing, `--csv` (search) for export, `--count` (search) for totals
+instead of fetching and counting locally, `--fields` to limit what comes back.
 
 ## Arguments
 
-If `$ARGUMENTS` specifies an action (create, view, search, etc.), proceed with that action. If only a ticket key is
-given (e.g., `INF-3097`), default to viewing the ticket. Otherwise, ask what the user needs.
+If `$ARGUMENTS` names an action, do that. If it is only a ticket key (`INF-3097`), view the ticket.
+Otherwise ask.

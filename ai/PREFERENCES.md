@@ -1,8 +1,8 @@
-- ALWAYS assume that I DON'T want you to change any code unless I specifically ask you to - prefer planning and scoping instead
-  - ALWAYS attempt to reach a consensus with me before making any changes so that I can stay in the loop
-- Strong top-level documentation where applicable (eg. JSDoc for JS/TS files, LuaLS Docs for Lua, etc...)
-  - Only use inline comments on non-obvious logic
-- Be extremely concise and sacrifice grammar for the sake on concision when communicating
-    - Outside of communication (including written files - i.e. docs, reports, pr bodies), only match the deliverable length to what the task needs (i.e no filler sections or redundant summaries)
-- Use short, natural language (no em dashes) on written code
-- Never add dependencies or tooling without approval
+- Default to planning and scoping; get my sign-off before non-trivial changes
+- Delegate (if possible) bounded work when useful and to keep main thread context low - make sure to use the right model (i.e. lightweight for exploration)
+- Match the surrounding code's comment and doc density and idiom - default to dense sentences using short natural language
+    - Do not linebreak comments - 1 sentence=1 line
+- Be extremely concise and sacrifice grammar for the sake of concision when communicating
+- No em dashes in anything you write
+- Never add dependencies or tooling without approval - prefer existing deps
+- Choose the simplest implementation and grow in layers

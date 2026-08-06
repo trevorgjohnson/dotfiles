@@ -74,58 +74,21 @@ Use the **smallest model that can do the job**. For code search that means the *
 
 ## Step 3 - HTML article (self-contained)
 
-Load the `artifact-design` skill for calibration. This is a utilitarian-but-polished reference doc, not
-an editorial landing page: strong hierarchy, real information design, tasteful restraint.
+**Load the `deliverable-style` skill and follow it.** It is the single source of truth for the
+palette and token block, type, layout and measure, functional color, callouts, code panels, math,
+figures, charts, and the self-contained guarantee. Do not restate or fork any of it here.
 
-The output is one `.html` file with **all CSS, JS, and SVG inlined, no CDN, no network fetches**. It
-must render offline and print cleanly. Wide content (tables, code, diagrams) lives in its own
-`overflow-x:auto` container so the page body never scrolls sideways.
-
-This skill borrows its HTML output contract from the `/explain` skill (see that skill for the full
-detail on functional color, callouts, code/long-value handling, and SVG figures). Reuse it, with these
-points held firm:
-
-### Styling default (house style)
-
-Catppuccin Mocha, dark, **Mauve** as the primary accent, **Iosevka Nerd Font** throughout (the doc
-reads mono; that is intended). Embed this token block as `:root` and draw every color from it:
-
-```css
-:root{
-  --crust:#11111b; --mantle:#181825; --base:#1e1e2e;
-  --surface0:#313244; --surface1:#45475a; --surface2:#585b70;
-  --overlay0:#6c7086; --overlay1:#7f849c; --overlay2:#9399b2;
-  --subtext0:#a6adc8; --subtext1:#bac2de; --text:#cdd6f4;
-  --pink:#f5c2e7; --mauve:#cba6f7; --red:#f38ba8; --peach:#fab387;
-  --yellow:#f9e2af; --green:#a6e3a1; --teal:#94e2d5; --sapphire:#74c7ec;
-  --blue:#89b4fa; --lavender:#b4befe;
-  --bg:var(--base); --panel:var(--mantle); --ink:var(--text); --muted:var(--subtext0);
-  --accent:var(--mauve); --rule:var(--surface0); --hl:rgba(203,166,247,.14);
-  --font:"Iosevka Nerd Font","IosevkaTerm Nerd Font","Iosevka NF","Iosevka",
-         ui-monospace,"Cascadia Code",Menlo,monospace;
-}
-body{font-family:var(--font);background:var(--bg);color:var(--ink)}
-a{color:var(--mauve)}
-```
+This is a utilitarian-but-polished reference doc, not an editorial landing page: strong hierarchy,
+real information design, tasteful restraint.
 
 The subject drives **layout, which diagrams to build, and how semantic color is assigned**, not the
 palette or type. Assign each accent a fixed role for the subject (for example a status ramp:
-neutral/in-flight/signing/success/failure) and hold it consistent across prose, diagrams, and pills so
-the same idea is the same color everywhere. Keep the accent as Mauve; do not let the state ramp fight
-it.
+neutral/in-flight/signing/success/failure) and hold it consistent across prose, diagrams, and pills
+so the same idea is the same color everywhere.
 
-### Readability
+### Figures for a flow doc
 
-Constrain running prose to a comfortable measure (a `--measure` of roughly 70-80ch for mono) in a
-centered column; let full-bleed diagram and table blocks break wider. Lay out sibling groups with
-flex/grid `gap`, not per-element margins. Use `font-variant-numeric:tabular-nums` wherever digits align
-in columns. Watch selector specificity so component styles do not silently cancel each other out.
-
-### Visualizations (hand-built, CSP-safe)
-
-The Artifact CSP and the offline guarantee block external scripts, so **do not use mermaid or any CDN
-library**. Build diagrams by hand with CSS (flex/grid) or inline static SVG with computed coordinates.
-The high-value figures for a flow doc:
+Beyond the general figure contract, these are the high-value ones here:
 
 - **Service/pipeline map** - the boundaries the flow crosses and the transport on each hop.
 - **Numbered sequence** - what happens in order, with the responsible layer tagged on each step.
@@ -133,8 +96,7 @@ The high-value figures for a flow doc:
 - **Message/field anatomy** - color-code each field and trace it across the messages it flows through.
 - **Worked-example tables** - field to value to note, with the real values.
 
-Give every figure a `<figure>`/`<figcaption>`, make it responsive, and respect
-`prefers-reduced-motion` for any animation. Length follows the subject; do not pad.
+Length follows the subject; do not pad.
 
 ## Step 4 - Verify (fresh context; iterate on doubt)
 
@@ -164,4 +126,4 @@ with unresolved doubts, and surface any UNVERIFIABLE claims to the user as open 
 - The worked example is the spine of the article. If a section cannot advance or reference it,
   question whether it belongs.
 - For the full HTML styling contract (callouts, functional color, code panels, SVG technique), defer to
-  the `/explain` skill so the two stay consistent.
+  the `deliverable-style` skill so every deliverable stays consistent.

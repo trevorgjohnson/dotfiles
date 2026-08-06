@@ -10,8 +10,8 @@ argument-hint: '<env> <service> "<SQL query>"'
 
 # DB Query
 
-Read-only PostgreSQL access across all Prometheum environments. Credentials are stored in
-`~/.pgpass` — no password flags needed.
+Read-only PostgreSQL access across all Prometheum environments. Credentials live in `~/.pgpass`, so
+no password flags are needed.
 
 ## Connection map
 
@@ -29,38 +29,18 @@ Read-only PostgreSQL access across all Prometheum environments. Credentials are 
 ## Running a query
 
 Non-localhost connections **must** include `PGOPTIONS="-c default_transaction_read_only=on"`.
-A `psql-guard` hook will block any DML that slips through.
+A `psql-guard` hook blocks any DML that slips through.
 
 ```bash
 # Non-localhost (read-only enforced at session level)
 PGOPTIONS="-c default_transaction_read_only=on" \
   psql -h <host> -U <user> -d <database> -c "<SQL>"
 
-# Localhost (read-only by default; writes allowed only when user explicitly requests)
+# Localhost (read-only by default; writes only when the user explicitly asks)
 psql -h localhost -U prometheum -d postgres -c "<SQL>"
 ```
 
-### Example
+## VPN
 
-```bash
-# Check a wallet balance in prod
-PGOPTIONS="-c default_transaction_read_only=on" \
-  psql -h procap-boats-backend-prod.cpdze5cocd6u.us-east-1.rds.amazonaws.com \
-       -U tjohnson -d boats \
-       -c "SELECT address, balance FROM wallets WHERE address = '0xABC...' LIMIT 1"
-```
-
-## Output formatting
-
-Prefer `-c` for inline queries. For wide result sets pipe through `column` or use `--csv`:
-
-```bash
-PGOPTIONS="-c default_transaction_read_only=on" \
-  psql -h <host> -U <user> -d <database> --csv -c "<SQL>" | column -t -s ','
-```
-
-## VPN requirement
-
-UAT and prod connections require AWS VPN (split tunnel) to be active. If a connection
-times out or is refused on a non-local host, remind the user to check VPN before
-assuming a query error.
+UAT and prod need AWS VPN (split tunnel) active. A timeout or refused connection on a non-local host
+usually means VPN is off, not that the query is wrong.

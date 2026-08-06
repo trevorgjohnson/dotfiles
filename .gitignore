@@ -12,3 +12,6 @@ hypr/hyprconfig.conf
 # Ignore local Neovim runtime artifacts
 nvim/.nvimlog
 nvim/.tmp_ai_preferences/
+
+# Ignore harness specific skills
+ai/skills/.system

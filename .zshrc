@@ -78,3 +78,24 @@ alias cat='bat -p --theme="Catppuccin-mocha"'
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# Switch node to the nearest .nvmrc on cd, and back to default when leaving one
+autoload -U add-zsh-hook
+load-nvmrc() {
+  local nvmrc_path nvmrc_version
+  nvmrc_path="$(nvm_find_nvmrc)"
+  if [ -n "$nvmrc_path" ]; then
+    nvmrc_version="$(nvm version "$(cat "$nvmrc_path")")"
+    if [ "$nvmrc_version" = "N/A" ]; then
+      nvm install # .nvmrc names a version that isn't installed yet
+    elif [ "$nvmrc_version" != "$(nvm version)" ]; then
+      nvm use --silent
+    fi
+  elif [ "$(nvm version)" != "$(nvm version default)" ]; then
+    nvm use --silent default
+  fi
+  # brew shellenv (line 2) prepends /opt/homebrew/bin, which holds its own node, so force nvm's bin ahead of it
+  [ -n "$NVM_BIN" ] && export PATH="$NVM_BIN:${PATH//:$NVM_BIN/}"
+}
+add-zsh-hook chpwd load-nvmrc
+load-nvmrc
