@@ -75,10 +75,9 @@ vim.o.confirm = true
 vim.o.winborder = 'rounded'
 
 vim.o.autocomplete = true
-vim.o.complete = ".,o" -- use buffer and omnifunc
--- vim.o.complete:append('o')
+vim.o.complete = ".,w,b,u" -- use buffer and omnifunc
+vim.o.autocompletedelay = 80 -- don't start showing results until 80 ms
 vim.o.completeopt = 'fuzzy,menuone,noselect,popup'
--- vim.o.completeopt = { 'menuone', 'noselect' }
 vim.o.pumheight = 7
 vim.o.pumborder = 'rounded'
 

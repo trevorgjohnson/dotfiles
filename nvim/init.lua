@@ -7,6 +7,9 @@ require('user.terminal').init()
 
 local function gh(repo) return 'https://github.com/' .. repo end
 
+-- TODO: change this to use native catppuccin built into nvim:
+-- vim.cmd.colorscheme 'catppuccin'
+-- vim.api.nvim_set_hl(0, "Normal", { bg = "none" }) -- <- transparent background
 vim.pack.add { gh 'catppuccin/nvim' }
 require('catppuccin').setup {
   flavour = "mocha",
