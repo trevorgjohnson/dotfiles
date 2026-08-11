@@ -70,3 +70,7 @@ gh api repos/{owner}/{repo}/pulls/{n}/reviews --method POST --input review.json
 - Verify anchors afterward: `gh api .../reviews/{id}/comments --jq '.[] | "\(.path) \(.diff_hunk|split("\n")|.[-1])"'`. Pending comments report `line: null`, so the last line of `diff_hunk` is the real check that a comment landed where intended.
 
 Related: the mirror rule for annotating **your own** PR is in memory as `feedback-pr-annotations-over-body` (same inline-over-body preference, slightly longer bodies since they explain a fix rather than request one).
+
+## Posting under Trevor's account
+
+If there's no separate bot/LLM GitHub token available, the review posts under Trevor's own authenticated `gh` account. In that case prefix every comment body (and the review body) with `🤖 ` so it's unmistakably LLM-authored, not Trevor reviewing by hand. This overrides the "no emoji in findings" voice rule for the prefix specifically — the rest of the sentence still follows normal voice. Skip the prefix entirely if posting through an actual bot/app identity.

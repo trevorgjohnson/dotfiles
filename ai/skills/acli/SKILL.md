@@ -1,17 +1,15 @@
 ---
-name: jira
-version: 1.0.0
+name: acli
 description: >-
-  Create, view, search, edit, transition, and manage Jira tickets via the Atlassian CLI (acli).
-argument-hint: '[create|view|search|edit|transition|comment|assign|link] [details]'
+  Manage Jira work items and Confluence pages, blogs, and spaces with the Atlassian CLI (acli). Use for Jira or Confluence requests, including create, view, search, edit, transition, comment, assign, link, and space management.
 ---
 
-# Jira Ticket Management
+# Atlassian CLI
 
-Use `acli` for all Jira work. Consult `acli jira workitem --help` for the interface.
+Use `acli` for all Jira and Confluence work. Consult the relevant command's `--help` before using an unfamiliar operation.
 
 **Never use the `mcp__claude_ai_Atlassian__*` tools.** `acli` uses local auth scoped to the user's
-Jira access and is the established workflow.
+Atlassian access and is the established workflow.
 
 ## Auth
 
@@ -25,7 +23,12 @@ informational, not a broken session.
 
 Install, if missing: `brew tap atlassian/homebrew-acli && brew install acli`.
 
-## Key projects
+## Route requests
+
+- Jira: use `acli jira`; for work items, start with `acli jira workitem --help` and follow the Jira guidance below.
+- Confluence: use `acli confluence`; available groups are `page`, `blog`, and `space`. Confirm before creating, updating, archiving, restoring, or deleting content or spaces. Do not assume an operation exists; inspect its command help first.
+
+## Jira projects
 
 | Key   | Name            | Notes                          |
 | ----- | --------------- | ------------------------------ |
@@ -121,5 +124,4 @@ instead of fetching and counting locally, `--fields` to limit what comes back.
 
 ## Arguments
 
-If `$ARGUMENTS` names an action, do that. If it is only a ticket key (`INF-3097`), view the ticket.
-Otherwise ask.
+If `$ARGUMENTS` names Jira or Confluence plus an action, route accordingly. If it is only a Jira ticket key (`INF-3097`), view the ticket. Otherwise ask.

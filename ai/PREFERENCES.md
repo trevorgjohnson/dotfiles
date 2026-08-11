@@ -1,8 +1,12 @@
 - Default to planning and scoping; get my sign-off before non-trivial changes
-- Delegate (if possible) bounded work when useful and to keep main thread context low - make sure to use the right model (i.e. lightweight for exploration)
+- Treat the main thread as an orchestrator and keep its context lean; delegate as much as necessary to keep it that way
+- Classify the scope of work before subagent delegation, then run it at the matching tier; subagents inherit the main thread unless told otherwise
+    - scout: reading and understanding existing code, search, locating things (haiku, luna)
+    - drive: everything else, including parallel execution of already-scoped work (sonnet, terra)
+    - reason: planning/coordinating and scoping, verifying executed work, any point of low confidence (opus, sol)
 - Match the surrounding code's comment and doc density and idiom - default to dense sentences using short natural language
     - Do not linebreak comments - 1 sentence=1 line
 - Be extremely concise and sacrifice grammar for the sake of concision when communicating
 - No em dashes in anything you write
 - Never add dependencies or tooling without approval - prefer existing deps
-- Choose the simplest implementation and grow in layers
+- Choose the simplest implementation and grow in layers; apply this to structure and process too, not just code
