@@ -5,38 +5,31 @@ require('user.context')
 
 require('user.terminal').init()
 
-local function gh(repo) return 'https://github.com/' .. repo end
+vim.cmd.colorscheme 'catppuccin'
+local mocha = { base = "#1e1e2e", mantle = "#181825", surface0 = "#313244", surface1 = "#45475a", mauve = "#cba6f7", blue =
+"#89b4fa", red = "#f38ba8", green = "#a6e3a1", yellow = "#f9e2af", sky = "#89dceb", teal = "#94e2d5", text = "#cdd6f4", }
+vim.api.nvim_set_hl(0, "Normal", { bg = "none" }) -- transparent background
+for level, color in pairs({ Error = mocha.red, Warn = mocha.yellow, Info = mocha.sky, Hint = mocha.teal, Ok = mocha.green }) do
+  vim.api.nvim_set_hl(0, "Diagnostic" .. level, { fg = color })
+  vim.api.nvim_set_hl(0, "DiagnosticSign" .. level, { fg = color })
+  vim.api.nvim_set_hl(0, "DiagnosticFloating" .. level, { fg = color })
+  vim.api.nvim_set_hl(0, "DiagnosticUnderline" .. level, { sp = color, underline = true })
+  vim.api.nvim_set_hl(0, "DiagnosticVirtualText" .. level, { fg = color, bg = mocha.surface0 })
+end
+vim.api.nvim_set_hl(0, "NormalFloat", { bg = mocha.mantle })
+vim.api.nvim_set_hl(0, "FloatBorder", { fg = mocha.mauve })
+vim.api.nvim_set_hl(0, "StatusLine", { fg = mocha.text, bg = "none" })
+vim.api.nvim_set_hl(0, "StatusLineNC", { fg = mocha.surface1, bg = "none" })
+vim.api.nvim_set_hl(0, "StatuslineFile", { fg = mocha.text, bg = "none" })
+vim.api.nvim_set_hl(0, "FzfLuaSearch", { fg = mocha.base, bg = mocha.mauve })
+vim.api.nvim_set_hl(0, "StatuslineGit", { fg = mocha.base, bg = mocha.mauve })
+vim.api.nvim_set_hl(0, "ContextYank", { fg = mocha.base, bg = mocha.blue })
+vim.api.nvim_set_hl(0, "StatuslineModeNormal", { fg = mocha.base, bg = mocha.blue })
+vim.api.nvim_set_hl(0, "StatuslineModeVisual", { fg = mocha.base, bg = mocha.red })
+vim.api.nvim_set_hl(0, "StatuslineModeInsert", { fg = mocha.base, bg = mocha.green })
+vim.api.nvim_set_hl(0, "StatuslineModeOther", { fg = mocha.base, bg = mocha.yellow })
 
--- TODO: change this to use native catppuccin built into nvim:
--- vim.cmd.colorscheme 'catppuccin'
--- vim.api.nvim_set_hl(0, "Normal", { bg = "none" }) -- <- transparent background
-vim.pack.add { gh 'catppuccin/nvim' }
-require('catppuccin').setup {
-  flavour = "mocha",
-  transparent_background = true,
-  ---@class CtpColors<T>: {rosewater: T, flamingo: T, pink: T, mauve: T, red: T, maroon: T, peach: T, yellow: T, green: T, teal: T, sky: T, sapphire: T, blue: T, lavender: T, text: T, subtext1: T, subtext0: T, overlay2: T, overlay1: T, overlay0: T, surface2: T, surface1: T, surface0: T, base: T, mantle: T, crust: T, none: T }
-  ---@param colors CtpColors<string>
-  custom_highlights = function(colors)
-    return {
-      NormalFloat = { bg = colors.mantle },
-      FloatBorder = { fg = colors.mauve, bg = colors.none },
-      -- BlinkCmpMenuBorder = { fg = colors.mauve },
-      CurSearch = { bg = colors.mauve },
-      ContextYank = { bg = colors.blue, fg = colors.base },
-      OpencodeAskPending = { bg = colors.peach, fg = colors.base },
-      IncSearch = { bg = colors.mauve },
-      FzfLuaSearch = { bg = colors.mauve, fg = colors.base },
-      DiagnosticVirtualTextError = { bg = colors.surface0 },
-      StatuslineFile = { fg = colors.surface1 },
-      StatuslineGit = { bg = colors.mauve, fg = colors.base },
-      StatuslineModeNormal = { bg = colors.blue, fg = colors.base },
-      StatuslineModeVisual = { bg = colors.red, fg = colors.base },
-      StatuslineModeInsert = { bg = colors.green, fg = colors.base },
-      StatuslineModeOther = { bg = colors.yellow, fg = colors.base },
-    }
-  end
-}
-vim.cmd.colorscheme 'catppuccin-mocha'
+local function gh(repo) return 'https://github.com/' .. repo end
 
 if vim.g.have_nerd_font then vim.pack.add { gh 'nvim-tree/nvim-web-devicons' } end
 
@@ -51,7 +44,7 @@ require('oil').setup {
 }
 vim.keymap.set('n', '<leader>e', "<cmd>Oil --float<cr>", { desc = 'Toggle file explorer' })
 
-vim.pack.add {{ src = gh 'nvim-treesitter/nvim-treesitter', version = 'main' }}
+vim.pack.add { { src = gh 'nvim-treesitter/nvim-treesitter', version = 'main' } }
 local ts = require('nvim-treesitter')
 ts.install({ 'solidity', 'typescript', 'markdown', 'markdown_inline' })
 vim.api.nvim_create_autocmd('FileType', {
@@ -75,15 +68,16 @@ require('gitsigns').setup {
     vim.keymap.set('n', ']h', gs.next_hunk, { buffer = bufnr, desc = "next [h]unk" })
     vim.keymap.set('n', '<leader>rh', gs.reset_hunk, { buffer = bufnr, desc = "[r]eset [h]unk" })
     vim.keymap.set('n', '<leader>ph', gs.preview_hunk, { buffer = bufnr, desc = "[p]review [h]unk" })
-    vim.keymap.set('n', '<leader>sb', function() gs.blame_line { full = true } end, { buffer = bufnr, desc = "[s]how [b]lame" })
+    vim.keymap.set('n', '<leader>sb', function() gs.blame_line { full = true } end,
+      { buffer = bufnr, desc = "[s]how [b]lame" })
   end
 }
 
 vim.pack.add { gh "stevearc/conform.nvim" }
 require('conform').setup {
-  formatters_by_ft = { typescript = { "prettier" }, rust = { "rustfmt" } } 
+  formatters_by_ft = { typescript = { "prettier" }, rust = { "rustfmt" } }
 }
-vim.keymap.set('n', '<leader>fm', 
+vim.keymap.set('n', '<leader>fm',
   function() require("conform").format({ async = true, lsp_format = "fallback" }) end,
   { desc = '[f]or[m]at buffer' })
 
@@ -102,7 +96,9 @@ vim.keymap.set('n', '<leader>fw', fzf.grep_cword, { desc = '[󰍉]: [f]ind [w]or
 vim.keymap.set('n', '<leader>fg', fzf.live_grep, { desc = '[󰍉]: [f]ind [w]ord' })
 vim.keymap.set('n', '<leader>fs', fzf.git_status, { desc = '[󰍉]: [f]ind git [s]tatus' })
 vim.keymap.set('n', '<leader>fd', fzf.diagnostics_workspace, { desc = '[󰍉]: [f]ind [d]iagnostics' })
-vim.keymap.set('n', '<leader>fn', function() fzf.live_grep({ cwd = vim.env.VAULT, winopts = { title="Grep Notes" }}) end, { desc = '[󰍉]: [f]ind in [n]otes' })
+vim.keymap.set('n', '<leader>fn',
+  function() fzf.live_grep({ cwd = vim.env.VAULT, winopts = { title = "Grep Notes" } }) end,
+  { desc = '[󰍉]: [f]ind in [n]otes' })
 vim.keymap.set('n', 'grr', fzf.lsp_references, { desc = '[󰍉]: find LSP [r]efe[r]ences of a word' })
 vim.keymap.set('n', 'grd', fzf.lsp_definitions, { desc = '[󰍉]: find LSP [d]efinitions of a word' })
 vim.keymap.set('n', 'gtd', fzf.lsp_typedefs, { desc = '[󰍉]: find LSP [t]ype [d]efinitions of a word' })

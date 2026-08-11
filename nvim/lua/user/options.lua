@@ -75,7 +75,7 @@ vim.o.confirm = true
 vim.o.winborder = 'rounded'
 
 vim.o.autocomplete = true
-vim.o.complete = ".,w,b,u" -- use buffer and omnifunc
+vim.o.complete = ".,f" -- current buffer + filenames
 vim.o.autocompletedelay = 80 -- don't start showing results until 80 ms
 vim.o.completeopt = 'fuzzy,menuone,noselect,popup'
 vim.o.pumheight = 7
