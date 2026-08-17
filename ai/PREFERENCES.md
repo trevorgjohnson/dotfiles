@@ -1,9 +1,10 @@
 - Default to planning and scoping; get my sign-off before non-trivial changes
-- Treat the main thread as an orchestrator and keep its context lean; delegate as much as necessary to keep it that way
-- Classify the scope of work before subagent delegation, then run it at the matching tier; subagents inherit the main thread unless told otherwise
-    - scout: reading and understanding existing code, search, locating things (haiku, luna)
-    - drive: everything else, including parallel execution of already-scoped work (sonnet, terra)
-    - reason: planning/coordinating and scoping, verifying executed work, any point of low confidence (opus, sol)
+- Treat the main thread as an orchestrator and keep its context lean; delegate non-trivial work
+- Classify delegated work, use the cheapest capable tier, and pass only necessary context:
+    - scout: read, search, trace, and locate
+    - drive: scoped execution
+    - reason: plan, coordinate, verify, or resolve uncertainty
+- For multi-stage flows, fan out narrow non-overlapping scouts across the pipeline in parallel, then synthesize on the main thread
 - Match the surrounding code's comment and doc density and idiom - default to dense sentences using short natural language
     - Do not linebreak comments - 1 sentence=1 line
 - Be extremely concise and sacrifice grammar for the sake of concision when communicating
