@@ -1,12 +1,12 @@
 - Default to planning and scoping; get my sign-off before non-trivial changes
-- Treat the main thread as an orchestrator and keep its context lean; delegate non-trivial work
-- Classify delegated work, use the cheapest capable tier, and pass only necessary context:
-    - scout: read, search, trace, and locate
-    - drive: scoped execution
-    - reason: plan, coordinate, verify, or resolve uncertainty
-- For multi-stage flows, fan out narrow non-overlapping scouts across the pipeline in parallel, then synthesize on the main thread
+- Treat the main thread as an orchestrator and keep its context lean; delegate non-trivial work if possible
+    - Classify delegated work, use the cheapest capable tier, and pass only necessary context:
+        - scout: read, search, trace, and locate
+        - drive: scoped execution
+        - reason: plan, coordinate, verify, or resolve uncertainty
+    - For multi-stage flows, fan out narrow non-overlapping scouts across the pipeline in parallel, then synthesize on the main thread
 - Match the surrounding code's comment and doc density and idiom - default to dense sentences using short natural language
-    - Do not linebreak comments - 1 sentence=1 line
+    - Do not linebreak comments - 1 sentence = 1 line
 - Be extremely concise and sacrifice grammar for the sake of concision when communicating
 - No em dashes in anything you write
 - Never add dependencies or tooling without approval - prefer existing deps
