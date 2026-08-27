@@ -62,9 +62,6 @@
 	# creates an interactive branch echoer using [fzf](https://github.com/junegunn/fzf)
 	eb = "!git branch | cut -c 3- | fzf --preview 'git lt {}' | xargs echo"
 
-	# returns interactive worktree directory using [fzf](https://github.com/junegunn/fzf) 
-	gwt = "!git worktree list | fzf | xargs | awk '{print $1}'"
-
 	# copy the current branch name
 	cb = "!git branch --show-current | pbcopy"
 

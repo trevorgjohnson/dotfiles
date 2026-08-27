@@ -1,10 +1,10 @@
 - Default to planning and scoping; get my sign-off before non-trivial changes
-- Treat the main thread as an orchestrator and keep its context lean; delegate non-trivial work if possible
-    - Classify delegated work, use the cheapest capable tier, and pass only necessary context:
+- Keep the main thread user-facing and lean; retain approvals, delegate substantive work when useful, and synthesize results
+    - Give agents focused, non-overlapping ownership using the cheapest capable tier:
         - scout: read, search, trace, and locate
         - drive: scoped execution
-        - reason: plan, coordinate, verify, or resolve uncertainty
-    - For multi-stage flows, fan out narrow non-overlapping scouts across the pipeline in parallel, then synthesize on the main thread
+        - reason: difficult work, ambiguity, coordination, or verification
+    - Fan out independent scouts for multi-stage flows; give fresh-context agents essential constraints and tell leaf agents not to delegate
 - Match the surrounding code's comment and doc density and idiom - default to dense sentences using short natural language
     - Do not linebreak comments - 1 sentence = 1 line
 - Be extremely concise and sacrifice grammar for the sake of concision when communicating

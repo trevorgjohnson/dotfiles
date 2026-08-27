@@ -13,6 +13,13 @@ export PATH="$PATH:$HOME/.config/dotfiles/bin"
 # work scripts
 export PATH="$PATH:$HOME/work_bin"
 
+# Run the interactive branch picker and enter a selected or newly created worktree
+gic() {
+    local worktree
+    worktree=$(command gic "$@") || return $?
+    [[ -n $worktree ]] && builtin cd -- "$worktree"
+}
+
 # Stylize the shell
 __set_prompt() {
     local esc=$'\e'
