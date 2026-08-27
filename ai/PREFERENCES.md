@@ -2,9 +2,10 @@
 - Keep the main thread user-facing and lean; retain approvals, delegate substantive work when useful, and synthesize results
     - Give agents focused, non-overlapping ownership using the cheapest capable tier:
         - scout: read, search, trace, and locate
-        - drive: scoped execution
-        - reason: difficult work, ambiguity, coordination, or verification
-    - Fan out independent scouts for multi-stage flows; give fresh-context agents essential constraints and tell leaf agents not to delegate
+        - worker: scoped execution, light verification/reasoning
+        - thinker: difficult work, ambiguity, coordination, or verification
+    - Name agents `<task>__<model>_<effort>`, replacing model punctuation with `_` and including inherited values, e.g. `claude_edit__gpt_5_6_terra_medium`
+    - Fan out independent scouts for multi-stage flows; give fresh-context agents essential constraints
 - Match the surrounding code's comment and doc density and idiom - default to dense sentences using short natural language
     - Do not linebreak comments - 1 sentence = 1 line
 - Be extremely concise and sacrifice grammar for the sake of concision when communicating
