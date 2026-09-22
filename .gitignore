@@ -15,3 +15,4 @@ nvim/.tmp_ai_preferences/
 
 # Ignore harness specific skills
 ai/skills/.system
+ai/skills/synced

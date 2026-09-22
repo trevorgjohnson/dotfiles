@@ -20,6 +20,15 @@ gic() {
     [[ -n $worktree ]] && builtin cd -- "$worktree"
 }
 
+js2json() {
+    node -e '
+        const fs = require("fs");
+        const vm = require("vm");
+        const input = fs.readFileSync(process.argv[1], "utf8");
+        process.stdout.write(JSON.stringify(vm.runInNewContext(`(${input})`)));
+    ' "$1" | jq .
+}
+
 # Stylize the shell
 __set_prompt() {
     local esc=$'\e'
@@ -54,7 +63,7 @@ export EDITOR=nvim
 export VAULT=/Users/trevorjohnson/Documents/eighth-ring-of-hell/
 
 # Colorize man pages with bat
-export MANPAGER="bat -plman"
+export MANPAGER="sh -c 'col -bx | bat -plman'"
 
 # zsh autocomplete and syntax highlighting
 source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
@@ -78,6 +87,23 @@ setopt ignore_eof
 
 # alias cat to bat (for color)
 alias cat='bat -p --theme="Catppuccin-mocha"'
+
+formatunix() {
+    local unit=$1 timestamp=$2 timezone=$3 fraction
+    [[ $# -lt 2 || $# -gt 3 || $unit != (s|ms) || $timestamp != <-> ]] && { echo 'usage: formatunix <s|ms> <timestamp> [timezone]' >&2; return 1; }
+    if [[ $unit == ms ]]; then
+        printf -v fraction '.%03d' $((timestamp % 1000))
+        timestamp=$((timestamp / 1000))
+    fi
+    [[ -n $timezone && ! -e /usr/share/zoneinfo/$timezone ]] && { echo "unknown timezone: $timezone" >&2; return 1; }
+    (
+        [[ -n $timezone ]] && export TZ=$timezone
+        date -r "$timestamp" "+%Y/%m/%d %I:%M:%S${fraction}%p %Z"
+    )
+}
+
+# EXPERIMENTAL lil alias for claude to use the peter agent file with an effort of low
+alias peter='claude --agent peter --effort low'
 
 # if the term is "foot" (likely through ssh) then use a better common default
 [[ $TERM == foot* ]] && export TERM=xterm-256color

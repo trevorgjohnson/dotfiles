@@ -79,15 +79,24 @@ sprint values to set manually.
 request tickets (PITM) use a different workflow where `Done` may be invalid; try `Resolved`. On
 "No allowed transitions found", check current status and try alternatives.
 
+**`Blocks` link arguments are counterintuitive.** For the intended Jira relation `A blocks B`, run
+`acli jira workitem link create --out B --in A --type Blocks`. The CLI success text prints the arguments in an
+order that reads like the opposite relation. Verify `B` with `workitem view --fields issuelinks --json`: its link
+must contain `inwardIssue.key = A`, which Jira renders as `B is blocked by A`.
+
 ## Ticket conventions
+
+Before drafting epics, stories, or tasks, read [TICKET_PRACTICE.md](TICKET_PRACTICE.md). It defines the audience,
+ticket structure, application prefixes, acceptance-criteria style, and brevity limits.
 
 ### Summary
 
-Always prefix with the project key in brackets. Title style is a short imperative verb phrase saying
-what the ticket does, not what the problem is. No colons, dashes, subtitles, or enumerated lists of
-multiple things. Keep it scannable.
+Prefix with the target application in brackets. On the shared BLOC board use `[BOATS]` or `[COWS]`, based on the
+codebase receiving the change, rather than `[BLOC]`. Title style is a short imperative verb phrase saying what the
+ticket does, not what the problem is. No colons, dashes, subtitles, or enumerated lists of multiple things. Keep it
+scannable.
 
-- Good: `[BLOC] Fix withdrawal batch validation`
+- Good: `[BOATS] Fix withdrawal batch validation`
 - Bad: `[PCAP] DB Write Correctness - DirectDeposit Atomicity and Find-or-Create Race Condition`
 
 ### Description
@@ -114,8 +123,9 @@ format.
 4. **Get explicit confirmation. Never run create until the user confirms.**
 5. Write the ADF file, run create with `--description-file`, then show the key and link.
 
-Creating a batch (e.g. from a PRD breakdown): `TaskCreate` per ticket up front, mark each completed
-as it lands, so the user sees live progress.
+Creating a batch (e.g. from a PRD breakdown): work through [EPIC_PLANNING.md](EPIC_PLANNING.md)
+first (agreed target state before the DAG), then `TaskCreate` per ticket up
+front, mark each completed as it lands, so the user sees live progress.
 
 ## Output
 

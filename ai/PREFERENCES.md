@@ -1,14 +1,8 @@
+- Be extremely concise and use natural language (no emdashes)
+    - Comments should match the surrounding density and idiom (default to dense, short sentences) - no linebreaks: 1sentence=1line
 - Default to planning and scoping; get my sign-off before non-trivial changes
-- Keep the main thread user-facing and lean; retain approvals, delegate substantive work when useful, and synthesize results
-    - Give agents focused, non-overlapping ownership using the cheapest capable tier:
-        - scout: read, search, trace, and locate
-        - worker: scoped execution, light verification/reasoning
-        - thinker: difficult work, ambiguity, coordination, or verification
-    - Name agents `<task>__<model>_<effort>`, replacing model punctuation with `_` and including inherited values, e.g. `claude_edit__gpt_5_6_terra_medium`
-    - Fan out independent scouts for multi-stage flows; give fresh-context agents essential constraints
-- Match the surrounding code's comment and doc density and idiom - default to dense sentences using short natural language
-    - Do not linebreak comments - 1 sentence = 1 line
-- Be extremely concise and sacrifice grammar for the sake of concision when communicating
-- No em dashes in anything you write
+- Delegate when necessary to speed up, keep context lean, and/or save tokens
+    - Always choose the right model+effort for the job and be transparent about your choice
+    - Always give clear, narrow scoped work to delegators with an expected return structure and size
 - Never add dependencies or tooling without approval - prefer existing deps
-- Choose the simplest implementation and grow in layers; apply this to structure and process too, not just code
+- Start with the simplest solution/scope and grow as necessary - stop once the scoped problem is solved
