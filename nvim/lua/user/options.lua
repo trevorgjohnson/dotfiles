@@ -75,8 +75,8 @@ vim.o.confirm = true
 vim.o.winborder = 'rounded'
 
 vim.o.autocomplete = true
-vim.o.complete = ".,f" -- current buffer + filenames
-vim.o.autocompletedelay = 80 -- don't start showing results until 80 ms
+vim.o.complete = "o,.^10" -- lsp first, then up to 10 current buffer words
+vim.o.autocompletedelay = 0 -- show immediately
 vim.o.completeopt = 'fuzzy,menuone,noselect,popup'
 vim.o.pumheight = 7
 vim.o.pumborder = 'rounded'
