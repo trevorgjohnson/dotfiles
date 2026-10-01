@@ -35,6 +35,15 @@ function M.git_component()
   return string.format('%%#StatuslineGit#  %s ', head)
 end
 
+function M.diff_base_component()
+  local config = package.loaded['gitsigns.config']
+  if not config then return '' end
+  local base = config.config.base or 'index'
+  base = base:gsub('^refs/heads/', ''):gsub('^refs/remotes/', '') -- Strip branch namespaces.
+  if base:match('^%x+$') and #base == 40 then base = base:sub(1, 8) end -- Abbreviate full hexadecimal commit SHAs.
+  return string.format('%%#StatuslineDiffBase# (%s..) ', base:gsub('%%', '%%%%')) -- Escape percent signs for the statusline.
+end
+
 -- Returns information on the buffer's filetype
 function M.filename()
   return string.format('%%#StatuslineFile# %s', vim.api.nvim_buf_get_name(0))
@@ -47,7 +56,7 @@ function M.render()
     '%#StatusLine#%=',
     vim.diagnostic.status(), ' ',
     vim.ui.progress_status(),
-    M.mode_component(), M.git_component(),
+    M.mode_component(), M.git_component(), M.diff_base_component(),
   }
 end
 

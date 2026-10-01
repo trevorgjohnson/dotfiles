@@ -23,6 +23,7 @@ require('catppuccin').setup {
       DiagnosticVirtualTextError = { bg = colors.surface0 },
       StatuslineFile = { fg = colors.surface1 },
       StatuslineGit = { bg = colors.mauve, fg = colors.base },
+      StatuslineDiffBase = { bg = colors.surface0, fg = colors.mauve, italic = true },
       StatuslineModeNormal = { bg = colors.blue, fg = colors.base },
       StatuslineModeVisual = { bg = colors.red, fg = colors.base },
       StatuslineModeInsert = { bg = colors.green, fg = colors.base },
@@ -63,6 +64,7 @@ vim.api.nvim_create_autocmd('FileType', {
 
 vim.pack.add { gh "lewis6991/gitsigns.nvim" }
 require('gitsigns').setup {
+  base = 'HEAD', -- default the base branch to HEAD (only show local changes)
   on_attach = function(bufnr)
     local gs = package.loaded.gitsigns
     vim.keymap.set('n', '[h', gs.prev_hunk, { buffer = bufnr, desc = "previous [h]unk" })
@@ -83,10 +85,42 @@ vim.keymap.set('n', '<leader>fm',
 
 vim.pack.add { gh "ibhagwan/fzf-lua" }
 local fzf = require("fzf-lua")
--- Set ctrl-q to send all search results to the qfixlist (similar to telescope)
-fzf.setup { keymap = { fzf = { ["ctrl-q"] = "select-all+accept", } } }
--- hijack's vim.ui.select so fzflua (minimal float near cursor) is always used instead
+-- Send all search results to quickfix with alt-q.
+fzf.setup {
+  actions = { files = { true, ['alt-q'] = { fn = fzf.actions.file_sel_to_qf, prefix = 'select-all' } } },
+}
+-- hijack vim.ui.select so fzflua (minimal float near cursor) is always used instead
 fzf.register_ui_select()
+local function change_diff_base(base)
+  local gs = require('gitsigns')
+  gs.change_base(base, true, function(err)
+    if err then
+      vim.notify(tostring(err), vim.log.levels.ERROR)
+      return
+    end
+    vim.cmd.redrawstatus()
+  end)
+end
+local function pick_diff_base()
+  local filename = vim.api.nvim_buf_get_name(0)
+  fzf.git_commits {
+    cwd = filename ~= '' and vim.fn.fnamemodify(filename, ':h') or vim.fn.getcwd(),
+    prompt = '',
+    winopts = { title = 'Change Diff Base' },
+    cmd = 'git log --all --color=always --pretty=format:"%C(yellow)%h%Creset %C(auto)%d%Creset %s"',
+    fzf_opts = { ['--no-sort'] = true },
+    actions = {
+      ['enter'] = function(selected)
+        local sha = (selected[1] or ''):gsub('\27%[[%d;]*m', ''):match('^(%x+)') -- Strip ANSI coloring before parsing the SHA.
+        if not sha then return end
+        change_diff_base(sha)
+      end,
+    },
+  }
+end
+vim.api.nvim_create_user_command('DiffBaseChange', pick_diff_base, {})
+vim.api.nvim_create_user_command('DiffBaseReset', function() change_diff_base('HEAD') end, {})
+vim.keymap.set('n', '<leader>fb', pick_diff_base, { desc = '[f]ind diff [b]ase' })
 vim.keymap.set('n', '<leader>?', fzf.keymaps, { desc = '[󰍉]: find key mappings' })
 vim.keymap.set('n', '<leader><space>', fzf.buffers, { desc = '[󰍉]: find open buffers' })
 vim.keymap.set('n', '<leader>/', fzf.grep_curbuf, { desc = '[󰍉]: find in current buffer' })
@@ -94,7 +128,10 @@ vim.keymap.set('n', '<leader>ff', fzf.files, { desc = '[󰍉]: [f]ind [f]ile' })
 vim.keymap.set('n', '<leader>fo', fzf.lines, { desc = '[󰍉]:[f]ind line in open buffers' })
 vim.keymap.set('n', '<leader>fw', fzf.grep_cword, { desc = '[󰍉]: [f]ind [w]ord' })
 vim.keymap.set('n', '<leader>fg', fzf.live_grep, { desc = '[󰍉]: [f]ind [w]ord' })
-vim.keymap.set('n', '<leader>fs', fzf.git_status, { desc = '[󰍉]: [f]ind git [s]tatus' })
+vim.keymap.set('n', '<leader>fs', function()
+  local base = require('gitsigns.config').config.base or 'HEAD'
+  fzf.git_diff { ref = base, winopts = { title = 'Changed Files vs ' .. base } }
+end, { desc = '[󰍉]: [f]ind changed file[s]' })
 vim.keymap.set('n', '<leader>fd', fzf.diagnostics_workspace, { desc = '[󰍉]: [f]ind [d]iagnostics' })
 vim.keymap.set('n', '<leader>fn', function() fzf.live_grep({ cwd = vim.env.VAULT, winopts = { title="Grep Notes" }}) end, { desc = '[󰍉]: [f]ind in [n]otes' })
 vim.keymap.set('n', 'grr', fzf.lsp_references, { desc = '[󰍉]: find LSP [r]efe[r]ences of a word' })

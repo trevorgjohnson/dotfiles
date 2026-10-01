@@ -14,7 +14,7 @@ triggers:
 
 Collects all open Dependabot/Renovate PRs targeting the repo's integration branch, merges them into
 the current batch branch one at a time (resolving conflicts), runs the verify sequence, closes the
-individual PRs with a comment, then monitors CI once the user pushes.
+individual PRs with a comment, then offers optional post-push checks (CI watch, package audit).
 
 **The skill never merges the batch branch to the integration branch.** The user controls that step.
 
@@ -190,12 +190,15 @@ PRs that **failed** to merge stay open; note them in the summary. Major bumps de
 (Step 2b) were already closed with a ticket-reference comment, so do not re-close them or apply the
 batch comment.
 
-## Step 7 - Push and monitor CI
+## Step 7 - Push, then optional checks
 
 The assistant **cannot** run `git push`; a local git hook blocks it. Ask the user to push the batch
-branch themselves (e.g. `! git push origin <branch>`). Once pushed, monitor CI.
+branch themselves (e.g. `! git push origin <branch>`).
 
-### 7a. Find the runs for the pushed SHA
+Once pushed, **ask which optional checks to run**: CI watch (7a/7b), package audit (7d), both, or
+neither. Do not start either by default. Always do 7c.
+
+### 7a. (Optional) Find the runs for the pushed SHA
 
 List runs for `git rev-parse HEAD`, then inspect their jobs.
 
@@ -204,7 +207,7 @@ jobs (named `CI` on boats, but the name differs per repo, so identify it **by it
 name**). Do not mistake a lightweight `triage`/labeler run (a single quick job) for it; those go
 green in seconds while the real build is still queued.
 
-### 7b. Watch to completion
+### 7b. (Optional) Watch to completion
 
 `gh run watch <run-id> --exit-status`, in the background so other checks (lint, helm lint) can be
 watched in parallel. Report each workflow's final per-job conclusion. CI failure does not roll back
@@ -215,11 +218,33 @@ the batch; note it prominently and let the user decide.
 The batch must **not** be suggested for merge unless the batch PR carries an `Approved` label. Check
 the PR's labels for it and record the result; it gates the merge prompt in the final summary.
 
+### 7d. (Optional) Package audit
+
+Spawn a **fresh-context subagent** (Sonnet, read-only) to judge merge safety from the bumps and
+changelogs, so the verdict isn't biased by the batching work. Give it: repo path, batch branch and
+base, every bump with from/to versions, the local verify results, and instructions to check release
+notes, breaking changes, security advisories, and whether any bump touches production code (e.g. a
+Solidity submodule diff under `contracts/`). Ask for under 250 words: verdict (SAFE / SAFE WITH
+CAVEATS / NOT SAFE), one risk line per bump, and caveats. Relay the verdict in the final summary.
+
+The advisory check is **required**, not best-effort. Give the subagent these commands and have it
+report the output; "couldn't check" is not an acceptable answer unless a command actually errored:
+
+```bash
+# Baseline vs batch: new advisories the batch introduces or clears
+git show origin/$BASE:package.json > $TMP/package.json
+git show origin/$BASE:package-lock.json > $TMP/package-lock.json
+(cd $TMP && npm audit --package-lock-only --json)
+npm audit --package-lock-only --json
+# GitHub Advisory DB per bumped version (repeat for each; use ecosystem=actions for Actions)
+gh api "/advisories?ecosystem=npm&affects=<pkg>@<new-version>" -q 'map(.ghsa_id+" "+.severity)'
+```
+
 ## Step 8 - Final summary
 
 Report: repo, batch branch, merged PRs, closed-as-duplicate PRs (with which PR each duplicated),
 delegated PRs (with ticket key and the reminder to set parent/sprint manually), failed PRs with
-reasons, verify-sequence result, CI result, and whether the `Approved` label is present.
+reasons, verify-sequence result, CI result and audit verdict (if run), and whether the `Approved` label is present.
 
 **Next step depends on the `Approved` label:**
 
