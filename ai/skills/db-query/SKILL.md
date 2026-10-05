@@ -1,19 +1,14 @@
 ---
 name: db-query
-description: >-
-  Execute read-only PostgreSQL queries across local, QA, UAT, and prod environments for
-  the Prometheum platform. Knows all connection strings and enforces read-only mode on
-  all non-localhost connections. Use when investigating data issues, verifying DB state,
-  or querying boats/platform databases as part of an investigation.
+description: Query Prometheum PostgreSQL databases to investigate data or verify state. Enforce read-only access on non-localhost connections.
 argument-hint: '<env> <service> "<SQL query>"'
 ---
 
-# DB Query
-
-Read-only PostgreSQL access across all Prometheum environments. Credentials live in `~/.pgpass`, so
-no password flags are needed.
-
-## Connection map
+Use `psql` with credentials from `~/.pgpass`, without password flags.
+Non-localhost connections require VPN and `PGOPTIONS="-c default_transaction_read_only=on"`.
+The `psql-guard` hook also blocks remote DML.
+Local queries are read-only unless the user explicitly requests writes.
+For remote timeouts or refused connections, check VPN before changing the query.
 
 | Key              | Host                                                                   | Port | Database | User               | VPN? |
 |------------------|------------------------------------------------------------------------|------|----------|--------------------|------|
@@ -26,21 +21,7 @@ no password flags are needed.
 | `prod-boats`     | procap-boats-backend-prod.cpdze5cocd6u.us-east-1.rds.amazonaws.com    | 5432 | boats    | tjohnson           | Yes  |
 | `prod-procap`    | procap-platform-backend-prod.cluster-ro-cpdze5cocd6u.us-east-1.rds.amazonaws.com | 5432 | procap | tjohnson  | Yes  |
 
-## Running a query
-
-Non-localhost connections **must** include `PGOPTIONS="-c default_transaction_read_only=on"`.
-A `psql-guard` hook blocks any DML that slips through.
-
 ```bash
-# Non-localhost (read-only enforced at session level)
 PGOPTIONS="-c default_transaction_read_only=on" \
   psql -h <host> -U <user> -d <database> -c "<SQL>"
-
-# Localhost (read-only by default; writes only when the user explicitly asks)
-psql -h localhost -U prometheum -d postgres -c "<SQL>"
 ```
-
-## VPN
-
-UAT and prod need AWS VPN (split tunnel) active. A timeout or refused connection on a non-local host
-usually means VPN is off, not that the query is wrong.

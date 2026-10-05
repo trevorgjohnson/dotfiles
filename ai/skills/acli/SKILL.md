@@ -1,137 +1,68 @@
 ---
 name: acli
-description: >-
-  Manage Jira work items and Confluence pages, blogs, and spaces with the Atlassian CLI (acli). Use for Jira or Confluence requests, including create, view, search, edit, transition, comment, assign, link, and space management.
+description: Manage Jira work items and Confluence content with the Atlassian CLI. Use for Jira or Confluence requests.
 ---
 
-# Atlassian CLI
-
-Use `acli` for all Jira and Confluence work. Consult the relevant command's `--help` before using an unfamiliar operation.
-
-**Never use the `mcp__claude_ai_Atlassian__*` tools.** `acli` uses local auth scoped to the user's
-Atlassian access and is the established workflow.
+Use `acli` for Jira and Confluence, never `mcp__claude_ai_Atlassian__*` tools.
+Inspect the relevant command's `--help` for unfamiliar operations; do not assume Confluence operations exist.
+A bare Jira key means view the ticket.
+If `acli` is missing, request approval before installing it.
 
 ## Auth
 
-`acli auth login` is interactive (site selection prompt) and cannot run from the Bash tool. If auth
-status is not `✓ Authenticated`, or a command returns 401, tell the user to run it in their own
-terminal and select `prometheum.atlassian.net`. There is no refresh command, so token renewal always
-means the full interactive flow. Wait for them to confirm before continuing.
+If auth status is not `✓ Authenticated` or a command returns 401, ask the user to run `acli auth login` in their terminal and select `prometheum.atlassian.net`.
+Login requires interactive site selection; there is no refresh command.
+Wait for confirmation before continuing.
+“Following apps are not authenticated with your global profile: Jira, Confluence” is informational.
 
-The message "Following apps are not authenticated with your global profile: Jira, Confluence" is
-informational, not a broken session.
+## Local defaults
 
-Install, if missing: `brew tap atlassian/homebrew-acli && brew install acli`.
+Default to INF and Backlog for new tickets unless the user specifies otherwise.
 
-## Route requests
+| Project | Name |
+| --- | --- |
+| INF | Infrastructure |
+| PLAT | Core Platform |
+| PROAT | ProATS |
+| PCAP | ProCap |
+| BLOC | Blockchain |
+| PB | Program Backlog |
+| QA | QA |
+| SUP | Support |
 
-- Jira: use `acli jira`; for work items, start with `acli jira workitem --help` and follow the Jira guidance below.
-- Confluence: use `acli confluence`; available groups are `page`, `blog`, and `space`. Confirm before creating, updating, archiving, restoring, or deleting content or spaces. Do not assume an operation exists; inspect its command help first.
+Suggest existing lowercase or kebab-case labels instead of inventing variants.
 
-## Jira projects
+| Label | Use |
+| --- | --- |
+| `ai` | AI tooling, models, automation |
+| `boats` | BOATs product |
+| `ci` | CI/CD, GitHub Actions |
+| `external` | External-facing or cross-team work |
+| `proats` | ProATS |
+| `procap` | ProCap |
+| `security` | Patches, credentials, CVEs |
+| `tech-debt` | Refactoring, cleanup |
+| `unplanned` | Work outside a sprint or PI |
 
-| Key   | Name            | Notes                          |
-| ----- | --------------- | ------------------------------ |
-| INF   | Infrastructure  | Primary project for infra work |
-| PLAT  | Core Platform   | Platform engineering           |
-| PROAT | ProATS          | ProATS product                 |
-| PCAP  | ProCap          | ProCap product                 |
-| BLOC  | Blockchain      | Blockchain team                |
-| PB    | Program Backlog | Cross-team program items       |
-| QA    | QA              | Quality assurance              |
-| SUP   | Support         | Support tickets                |
+## CLI gotchas
 
-Default to INF unless the user says otherwise. New tickets default to Backlog.
+JQL `!=` fails with `illegal jql escape sequence`; use `not in (value)`.
+Quote multi-word values, such as `status = 'To Do'`; full-text search is `text ~ 'term'`.
+Descriptions must be ADF JSON passed with `--description-file`; `--description` renders raw Markdown.
+Formatted comments need ADF via `--body-file`; `--body` ignores wiki markup and backticks.
+Inline code in ADF text uses the `code` mark.
+`jira workitem edit` cannot set parent or sprint; tell the user which values to set manually.
+Transitions depend on the workflow; on “No allowed transitions found”, inspect the current status and valid alternatives.
+PITM service requests may require `Resolved` instead of `Done`.
+For `A blocks B`, run `acli jira workitem link create --out B --in A --type Blocks`.
+Ignore the misleading success-text order and verify B with `workitem view --fields issuelinks --json`: `inwardIssue.key` must be A.
+Use `--json` for structured reads, `--fields` to limit results, `--count` for totals, and `--csv` for exports where supported.
 
-## Labels
+## Drafting and mutations
 
-Suggest from this list rather than inventing variants. All lowercase or kebab-case.
-
-| Label       | Use for                                      |
-| ----------- | -------------------------------------------- |
-| `ai`        | AI tooling, models, automation               |
-| `boats`     | BOATs product specific                       |
-| `ci`        | CI/CD pipelines, GitHub Actions              |
-| `external`  | External-facing or cross-team requests       |
-| `proats`    | ProATS specific                              |
-| `procap`    | ProCap specific                              |
-| `security`  | Security patches, credential rotation, CVEs  |
-| `tech-debt` | Technical debt, refactoring, cleanup         |
-| `unplanned` | Ad-hoc work not part of a sprint or PI       |
-
-## Gotchas
-
-**JQL: never use `!=`.** `acli`'s JQL parser treats `!` as an escape prefix and errors with
-`illegal jql escape sequence`. Use `not in (value)`. Quote multi-word values (`status = 'To Do'`).
-Full-text search is `text ~ 'term'`.
-
-**Descriptions must be ADF JSON, never plain text.** `--description` renders as raw markdown in Jira.
-Write ADF to `/tmp/<key>-desc.json` and pass `--description-file`. Same for comments: `--body` is
-plain text and ignores both wiki markup and backticks, so formatted comments need `--body-file`.
-For inline code inside an ADF text node, use the `code` mark.
-
-**`acli jira workitem edit` cannot set parent (epic) or sprint.** It exposes only `--summary`,
-`--description[-file]`, `--type`, `--labels`, `--remove-labels`, `--assignee`, `--from-json`,
-`--generate-json`. Do not fight it: create or edit the ticket, then tell the user the parent and
-sprint values to set manually.
-
-**Transitions are workflow-dependent.** Not every status is reachable from every other. Service
-request tickets (PITM) use a different workflow where `Done` may be invalid; try `Resolved`. On
-"No allowed transitions found", check current status and try alternatives.
-
-**`Blocks` link arguments are counterintuitive.** For the intended Jira relation `A blocks B`, run
-`acli jira workitem link create --out B --in A --type Blocks`. The CLI success text prints the arguments in an
-order that reads like the opposite relation. Verify `B` with `workitem view --fields issuelinks --json`: its link
-must contain `inwardIssue.key = A`, which Jira renders as `B is blocked by A`.
-
-## Ticket conventions
-
-Before drafting epics, stories, or tasks, read [TICKET_PRACTICE.md](TICKET_PRACTICE.md). It defines the audience,
-ticket structure, application prefixes, acceptance-criteria style, and brevity limits.
-
-### Summary
-
-Prefix with the target application in brackets. On the shared BLOC board use `[BOATS]` or `[COWS]`, based on the
-codebase receiving the change, rather than `[BLOC]`. Title style is a short imperative verb phrase saying what the
-ticket does, not what the problem is. No colons, dashes, subtitles, or enumerated lists of multiple things. Keep it
-scannable.
-
-- Good: `[BOATS] Fix withdrawal batch validation`
-- Bad: `[PCAP] DB Write Correctness - DirectDeposit Atomicity and Find-or-Create Race Condition`
-
-### Description
-
-Three sections in order, as ADF level-2 headings:
-
-1. **Context**: why this ticket exists. Background, the problem, the trigger (a compiler bug, a
-   deprecation, a compliance requirement). No implementation detail.
-2. **Technical Context**: what needs doing. Specific files, functions, patterns, flags, steps.
-   Bullet list.
-3. **AC**: acceptance criteria. Concrete, verifiable conditions defining done. Bullet list.
-
-Write so someone without the immediate context can pick it up. Wrap every identifier, flag, file
-name, and config key in backticks, in both bullet prose and ADF `code` marks. No em dashes. When
-quoting what a method logs or throws, match the boats-backend phrasing rather than inventing a
-format.
-
-## Creating a ticket
-
-1. Gather fields with `AskUserQuestion` (type, project, assignee, business unit), then collect
-   summary, description, and labels.
-2. Search first, to catch duplicates.
-3. Present the full ticket for review, description prose included.
-4. **Get explicit confirmation. Never run create until the user confirms.**
-5. Write the ADF file, run create with `--description-file`, then show the key and link.
-
-Creating a batch (e.g. from a PRD breakdown): work through [EPIC_PLANNING.md](EPIC_PLANNING.md)
-first (agreed target state before the DAG), then `TaskCreate` per ticket up
-front, mark each completed as it lands, so the user sees live progress.
-
-## Output
-
-`--json` (view, search) for `jq` parsing, `--csv` (search) for export, `--count` (search) for totals
-instead of fetching and counting locally, `--fields` to limit what comes back.
-
-## Arguments
-
-If `$ARGUMENTS` names Jira or Confluence plus an action, route accordingly. If it is only a Jira ticket key (`INF-3097`), view the ticket. Otherwise ask.
+Read [TICKET_PRACTICE.md](TICKET_PRACTICE.md) before drafting tickets and [EPIC_PLANNING.md](EPIC_PLANNING.md) when breaking an epic into tickets.
+Gather missing ticket fields, including type, project, assignee, business unit, summary, description, and labels.
+Search for duplicates before creating tickets.
+Present complete ticket text for explicit approval before creating or updating Jira items.
+Confirm before creating, updating, archiving, restoring, or deleting Confluence content or spaces.
+After approved creation, return the key and link.
