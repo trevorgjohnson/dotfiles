@@ -120,6 +120,7 @@ local function pick_diff_base()
 end
 vim.api.nvim_create_user_command('DiffBaseChange', pick_diff_base, {})
 vim.api.nvim_create_user_command('DiffBaseReset', function() change_diff_base('HEAD') end, {})
+vim.keymap.set('n', '<leader>qh', function() require('gitsigns').setqflist('all') end, { desc = '[q]uickfix all [h]unks against diff base' })
 vim.keymap.set('n', '<leader>fb', pick_diff_base, { desc = '[f]ind diff [b]ase' })
 vim.keymap.set('n', '<leader>?', fzf.keymaps, { desc = '[󰍉]: find key mappings' })
 vim.keymap.set('n', '<leader><space>', fzf.buffers, { desc = '[󰍉]: find open buffers' })
