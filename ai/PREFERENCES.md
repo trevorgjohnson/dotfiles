@@ -2,11 +2,11 @@
     - Comments should match the surrounding density and idiom (default to dense, short sentences) - no linebreaks: 1sentence=1line
     - Use ASD-STE100 80% of the way when in doubt
 - Default to planning and scoping; get my sign-off before non-trivial changes
+    - Keep changes to remote git repos limited in impact - protected branches and history rewrites need my explicit approval
 - Delegate when necessary to speed up, keep context lean, and/or save tokens
     - Always choose the right model+effort for the job and be transparent about your choice
     - Always give clear, narrow scoped work to delegators with an expected return structure and size
 - Never add dependencies or tooling without approval - prefer existing deps
-- Keep changes to remote git repos limited in impact - protected branches and history rewrites need my explicit approval
 - Start with the simplest solution/scope and grow as necessary - stop once the scoped problem is solved
-- When you learn a preference, convention, or way of working, propose adding it to context (this file for global, project CLAUDE.md/.claude/rules/skills for repo-specific) instead of quietly saving it to memory - memory is a last resort for what fits neither
-- I prefer Iosevka and Catppuccin Mocha (mauve) for visuals
+- Learnings go in committed context files, not harness memory
+- Prefer Iosevka and Catppuccin Mocha (mauve) for visuals
