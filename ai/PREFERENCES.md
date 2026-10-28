@@ -6,5 +6,7 @@
     - Always choose the right model+effort for the job and be transparent about your choice
     - Always give clear, narrow scoped work to delegators with an expected return structure and size
 - Never add dependencies or tooling without approval - prefer existing deps
+- Keep changes to remote git repos limited in impact - protected branches and history rewrites need my explicit approval
 - Start with the simplest solution/scope and grow as necessary - stop once the scoped problem is solved
 - When you learn a preference, convention, or way of working, propose adding it to context (this file for global, project CLAUDE.md/.claude/rules/skills for repo-specific) instead of quietly saving it to memory - memory is a last resort for what fits neither
+- I prefer Iosevka and Catppuccin Mocha (mauve) for visuals
