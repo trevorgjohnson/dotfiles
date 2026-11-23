@@ -1,0 +1,73 @@
+#!/bin/bash
+
+# Rows: "[ON/OFF] name  mode  pos(x,y)  model"
+# swaymsg reports all outputs (even disabled), filter live info on power
+# model/make are available for all outputs
+swaymsg -t get_outputs | jq -r '
+  .[] |
+  [ .name,
+    (if .power and .current_mode then
+       "\(.current_mode.width)x\(.current_mode.height)@\(.current_mode.refresh / 1000 | round)Hz"
+     else "" end),
+    (if .power then "pos \(.rect.x),\(.rect.y)" else "" end),
+    "\(.make) \(.model)",
+    (.power | tostring) ] | @tsv' > /tmp/.toggle-display-live
+
+# Configured res/pos from config.d (fallback for disabled outputs)
+grep -h '^output [A-Za-z0-9-]' ~/.config/sway/config.d/* 2>/dev/null \
+    | awk '{ name=$2; res=""; pos="";
+             for (i=3; i<=NF; i++) {
+                 if ($i == "res") { res=$(i+1) }
+                 if ($i == "pos") { pos=$(i+1) "," $(i+2) }
+             }
+             print name "\t" res "\t" pos }' > /tmp/.toggle-display-config
+
+fzf_input=""
+while IFS= read -r row; do
+    mapfile -d $'\t' -t -O 0 fields < <(printf '%s' "$row")
+    name=${fields[0]} res=${fields[1]} pos=${fields[2]} model=${fields[3]} power=${fields[4]}
+    if [[ "$power" == "true" ]]; then
+        # fill missing mode/pos from config for enabled outputs (shouldn't happen, but just in case)
+        [[ -z "$res" ]] && res=$(awk -F'\t' -v n="$name" '$1 == n {print $2}' /tmp/.toggle-display-config)
+        [[ -z "$pos" ]] && pos=$(awk -F'\t' -v n="$name" '$1 == n {print $3}' /tmp/.toggle-display-config)
+        fzf_input+="<span foreground='green'>ON</span>\t$name\t$res\t$pos\t$model\0icon\x1fvideo-display\n"
+    else
+        # disabled: take mode/pos from config
+        cres=$(awk -F'\t' -v n="$name" '$1 == n {print $2}' /tmp/.toggle-display-config)
+        cpos=$(awk -F'\t' -v n="$name" '$1 == n {print $3}' /tmp/.toggle-display-config)
+        fzf_input+="<span foreground='red'>OFF</span>\t$name\t${cres:-$res}\t${cpos:-$pos}\t$model\0icon\x1fvideo-display\n"
+    fi
+done < /tmp/.toggle-display-live
+
+rm -f /tmp/.toggle-display-live /tmp/.toggle-display-config
+
+# sort by position (x,y), name fallback; rofi returns the row index so no markup stripping
+sorted=/tmp/.toggle-display-rows
+printf '%b' "$fzf_input" | sort -t$'\t' -k4,4 -k2,2 > "$sorted"
+
+idx=$(rofi -dmenu -markup-rows -no-custom -format i -p "Toggle display" \
+    -mesg "<b>Enter</b> toggle · <b>Esc</b> cancel" \
+    -display-columns 1,2,3,4,5 -display-column-separator $'\t' < "$sorted") || { rm -f "$sorted"; exit 0; }
+
+row=$(sed -n "$((idx + 1))p" "$sorted")
+rm -f "$sorted"
+
+plain=$(printf '%s' "$row" | sed 's/\x0.*//' | sed 's/<[^>]*>//g')
+name=$(printf '%s' "$plain" | awk -F'\t' '{print $2}')
+
+if printf '%s' "$plain" | grep -q "^ON"; then
+    action="disable" undo="enable"
+else
+    action="enable" undo="disable"
+fi
+
+# toggle immediately, revert unless confirmed within 20s
+swaymsg output "$name" "$action"
+confirm=$(printf 'Keep\nRevert' | rofi -dmenu -p "$name $action - keep? (5s)" \
+    -timeout-delay 5 -timeout-action kb-cancel) || confirm="Revert"
+if [[ "${confirm,,}" == "keep" ]]; then
+    notify-send "Display toggled" "$name $action"
+else
+    swaymsg output "$name" "$undo"
+    notify-send "Display reverted" "$name $undo"
+fi

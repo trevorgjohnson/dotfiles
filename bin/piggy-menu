@@ -33,6 +33,7 @@ go_to_menu() {
   *emoji*) dmoji ;;
   *screenshot*) /home/trevo/bin/screenshot ;;
   *wallpaper*) open_in_term /home/trevo/bin/select-wallpaper ;;
+  *display*) /home/trevo/bin/toggle-display ;;
   *config*) open_in_term /home/trevo/bin/edit-config ;;
   *audio*) open_in_term wiremix ;;
   *wifi*) launch_wifi ;;
@@ -52,6 +53,7 @@ go_to_menu() {
 # 󰞅   Emoji
 #    Screenshot
 # 󰸉   Wallpaper
+# 󰍺   Display
 #    Config
 #    Audio
 #    Wifi
@@ -61,4 +63,4 @@ go_to_menu() {
 # 󰤄   Suspend
 # 󰜉   Restart
 # 󰐥   Shutdown
-go_to_menu "$(menu "Go" "󰀻   Apps\n   Terminal\n   Keybinds\n󰞅   Emoji\n   Screenshot\n󰸉   Wallpaper\n   Config\n   Audio\n   Wifi\n󰂯   Bluetooth\n󰴳   VPN\n󱐋   Power Profile\n󰤄   Suspend\n󰜉   Restart\n󰐥   Shutdown")"
+go_to_menu "$(menu "Go" "󰀻   Apps\n   Terminal\n   Keybinds\n󰞅   Emoji\n   Screenshot\n󰸉   Wallpaper\n󰍺   Display\n   Config\n   Audio\n   Wifi\n󰂯   Bluetooth\n󰴳   VPN\n󱐋   Power Profile\n󰤄   Suspend\n󰜉   Restart\n󰐥   Shutdown")"

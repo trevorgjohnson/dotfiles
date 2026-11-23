@@ -12,7 +12,7 @@ clip_loc    - Directory containing clips to concatenate in lexicographical order
 output.mp4  - Output video name (defaults to output.mp4).
 
 Presets (-p):
-  fast      - Instant video copy with re-encoded audio sync fix (default)
+  fast      - NVENC video re-encode (fixes broken DTS) with audio sync fix (default)
   compress  - H.264 CRF 30 compression with audio sync fix
   raw       - No default flags; allows setting all ffmpeg opts explicitly
 
@@ -70,7 +70,8 @@ fi
 
 case "$PRESET" in
   fast)
-    PRESET_OPTS=("-c:v" "copy" "-c:a" "aac" "-b:a" "192k" "-af" "aresample=async=1:first_pts=0" "-movflags" "+faststart")
+    # -c:v copy preserves source clips' non-monotonic DTS, which stalls players; NVENC re-encode is near-instant
+    PRESET_OPTS=("-c:v" "h264_nvenc" "-preset" "p1" "-cq" "34" "-c:a" "aac" "-b:a" "192k" "-af" "aresample=async=1:first_pts=0" "-movflags" "+faststart")
     ;;
   compress)
     PRESET_OPTS=("-c:v" "libx264" "-crf" "30" "-threads" "0" "-c:a" "aac" "-b:a" "128k" "-af" "aresample=async=1:first_pts=0" "-movflags" "+faststart")
@@ -112,5 +113,5 @@ if (( ${#CLIPS[@]} == 0 )); then
   exit 1
 fi
 
-ffmpeg -f concat -safe 0 -i <(for f in "${CLIPS[@]}"; do printf "file '%s'\n" "$f"; done) "${FINAL_OPTS[@]}" "$OUTPUT_NAME"
+ffmpeg -f concat -safe 0 -i <(for f in "${CLIPS[@]}"; do printf "file '%s'\n" "$f"; done) -vf "scale=in_range=full:out_range=tv,format=yuv420p,setpts=N/FRAME_RATE/TB" -fps_mode cfr "${FINAL_OPTS[@]}" "$OUTPUT_NAME"
 echo "Saved to $OUTPUT_NAME"
